@@ -1,0 +1,26 @@
+80 matches, 825 held-out shots, 10672 named player positions
+       count   mean   std   min    50%    90%    max
+role                                                
+DEF   4037.0  10.78  8.76  0.03   8.52  23.39  47.17
+FWD   2331.0  13.21  9.66  0.06  10.84  28.39  49.61
+GK     825.0   0.39  0.45  0.01   0.28   0.79   8.06
+MID   3479.0  12.83  7.83  0.06  12.45  23.48  41.10
+new vs OLD shipped reconstruction, median by role:
+      err_m  err_nofreeze_m  err_old_m
+role                                  
+DEF    8.52            9.54      17.92
+FWD   10.84           11.75      16.73
+GK     0.28            0.27       0.99
+MID   12.45           13.50      20.57
+overall: new 9.39 m, new without any freeze frames 10.45 m, old 17.08 m
+by side: {False: 8.66, True: 10.7} (True = shooter's team)
+         median  size
+bucket               
+0-5s       2.06  3093
+5-10s      9.59   799
+10-20s    11.60   953
+20-30s    12.17  1078
+30-60s    14.12  2586
+60-120s   13.92  1696
+120s+     12.67   467
+overall median 9.39 m

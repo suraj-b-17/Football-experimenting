@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>⚽ Match Animation</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap');
+    body { font-family: 'Inter', sans-serif; background: #0B0F19; color: #E2E8F0; user-select: none; }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+    .hidden { display: none; }
+    .range-thumb::-webkit-slider-thumb { appearance: none; width: 16px; height: 16px; border-radius: 50%; background: #38BDF8; cursor: pointer; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col overflow-x-hidden">
+
+  <header class="bg-gray-900/90 border-b border-gray-800 px-4 py-2.5">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="font-extrabold text-base tracking-wide text-white">Premier League 2015/16</span>
+          <a href="index.html" class="text-xs text-sky-400 hover:underline">← all matches</a>
+        </div>
+        <div class="text-xs text-gray-400" id="match-meta"></div>
+      </div>
+      <div class="flex items-center bg-gray-950/80 px-4 py-1.5 rounded-xl border border-gray-800 gap-4">
+        <div class="flex items-center gap-2">
+          <span class="font-bold text-sm text-gray-200" id="home-name"></span>
+          <span class="font-black text-2xl text-sky-400 mono" id="score-home"></span>
+        </div>
+        <div class="text-gray-600 font-bold text-lg">:</div>
+        <div class="flex items-center gap-2">
+          <span class="font-black text-2xl text-red-400 mono" id="score-away"></span>
+          <span class="font-bold text-sm text-gray-200" id="away-name"></span>
+        </div>
+        <div class="h-6 w-px bg-gray-800"></div>
+        <div class="flex flex-col items-center">
+          <div class="mono font-black text-xl text-yellow-400" id="clock-display">00:00</div>
+          <span class="text-[10px] uppercase tracking-wider text-gray-400" id="period-display">1ST HALF</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <button id="btn-pitch-mode" class="text-xs px-3 py-1.5 rounded-lg bg-gray-800 hover:bg-gray-700 border border-gray-700 flex items-center gap-1.5"><span>🔄</span><span id="pitch-mode-label">Match Ends</span></button>
+        <button id="btn-trails" class="text-xs px-3 py-1.5 rounded-lg bg-gray-800 hover:bg-gray-700 border border-gray-700 flex items-center gap-1.5"><span>✨</span><span>Trails: ON</span></button>
+        <button id="btn-uncertainty" class="text-xs px-3 py-1.5 rounded-lg bg-gray-800 hover:bg-gray-700 border border-gray-700 flex items-center gap-1.5"><span>◎</span><span>Uncertainty: ON</span></button>
+      </div>
+    </div>
+  </header>
+
+  <div id="load-error" class="hidden bg-red-900/50 border-b border-red-700 text-red-200 text-sm px-4 py-2"></div>
+
+  <main class="max-w-7xl mx-auto w-full p-4 flex-1 grid grid-cols-1 lg:grid-cols-4 gap-4">
+    <div class="lg:col-span-3 flex flex-col gap-3">
+      <div class="relative bg-gray-950 rounded-2xl border border-gray-800 p-2.5 flex flex-col items-center justify-center">
+        <canvas id="pitchCanvas" width="960" height="620" class="w-full rounded-xl max-w-full h-auto block"></canvas>
+        <div class="absolute bottom-5 z-10 bg-gray-900/90 border border-gray-700/80 rounded-xl px-4 py-2 flex items-center gap-3 max-w-[92%]">
+          <div id="action-team-badge" class="w-3.5 h-3.5 rounded-full bg-sky-400 shrink-0"></div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-bold text-sm text-white" id="action-player">Kickoff</span>
+              <span class="text-xs px-2 py-0.5 rounded bg-gray-800 text-gray-300 mono" id="action-type">Start</span>
+            </div>
+            <div class="text-xs text-gray-400" id="action-details"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-gray-900/80 border border-gray-800 rounded-2xl p-4 flex flex-col gap-3">
+        <div class="flex flex-col gap-1">
+          <div class="flex justify-between items-center text-xs text-gray-400 mono">
+            <span>00:00</span><span id="scrub-end">98:30</span>
+          </div>
+          <input type="range" id="time-slider" min="0" max="1000" value="0" step="1" class="w-full h-2.5 bg-gray-800 rounded-lg appearance-none cursor-pointer range-thumb">
+        </div>
+        <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
+          <div class="flex items-center gap-2">
+            <button id="btn-restart" class="p-2 rounded-lg bg-gray-800 hover:bg-gray-700">🔄</button>
+            <button id="btn-prev" class="p-2 rounded-lg bg-gray-800 hover:bg-gray-700">⏮️</button>
+            <button id="btn-play" class="px-5 py-2 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 font-bold flex items-center gap-2"><span id="play-icon">▶️</span><span id="play-text">Play</span></button>
+            <button id="btn-next" class="p-2 rounded-lg bg-gray-800 hover:bg-gray-700">⏭️</button>
+          </div>
+          <div class="flex items-center gap-1.5 bg-gray-950 p-1 rounded-xl border border-gray-800">
+            <span class="text-xs text-gray-400 px-2 font-medium">Speed:</span>
+            <button class="btn-speed px-2.5 py-1 rounded-lg text-xs font-semibold text-gray-400" data-speed="0.5">0.5x</button>
+            <button class="btn-speed px-2.5 py-1 rounded-lg text-xs font-semibold bg-sky-500 text-white" data-speed="1">1x</button>
+            <button class="btn-speed px-2.5 py-1 rounded-lg text-xs font-semibold text-gray-400" data-speed="2">2x</button>
+            <button class="btn-speed px-2.5 py-1 rounded-lg text-xs font-semibold text-gray-400" data-speed="5">5x</button>
+            <button class="btn-speed px-2.5 py-1 rounded-lg text-xs font-semibold text-gray-400" data-speed="10">10x</button>
+          </div>
+          <div class="flex items-center gap-1.5 bg-gray-950 p-1 rounded-xl border border-gray-800" title="Full Realism: the validated Kalman/OU reconstruction and calibrated uncertainty, unchanged. Tactical Clarity: a display-only restyling — see BENCHMARKS.md.">
+            <span class="text-xs text-gray-400 px-2 font-medium">Display:</span>
+            <button class="btn-mode px-2.5 py-1 rounded-lg text-xs font-semibold bg-sky-500 text-white" data-mode="realism">Full Realism</button>
+            <button class="btn-mode px-2.5 py-1 rounded-lg text-xs font-semibold text-gray-400" data-mode="tactical">Tactical Clarity</button>
+          </div>
+          <div class="flex items-center gap-2 flex-wrap">
+            <select id="select-filter-team" class="bg-gray-950 border border-gray-700 rounded-lg text-xs text-gray-200 px-2.5 py-1.5"></select>
+            <select id="select-filter-type" class="bg-gray-950 border border-gray-700 rounded-lg text-xs text-gray-200 px-2.5 py-1.5">
+              <option value="all">⚡ All Events</option><option value="Pass">🎯 Passes</option><option value="Shot">💥 Shots</option>
+              <option value="Tackle">🛡️ Defensive</option><option value="Foul">⚠️ Fouls & Cards</option>
+            </select>
+            <select id="select-filter-player" class="bg-gray-950 border border-gray-700 rounded-lg text-xs text-gray-200 px-2.5 py-1.5 max-w-[140px]"></select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-3">
+      <div class="bg-gray-900/80 border border-gray-800 rounded-2xl p-4 flex flex-col gap-2.5 text-xs">
+        <div>
+          <div class="flex justify-between font-semibold mb-1"><span class="text-sky-400" id="stat-poss-home">50%</span><span class="text-gray-400">Possession</span><span class="text-red-400" id="stat-poss-away">50%</span></div>
+          <div class="w-full h-2 bg-gray-800 rounded-full overflow-hidden flex">
+            <div id="bar-poss-home" class="h-full bg-sky-500" style="width:50%"></div>
+            <div id="bar-poss-away" class="h-full bg-red-500" style="width:50%"></div>
+          </div>
+        </div>
+        <div class="flex justify-between items-center py-1 border-b border-gray-800/60"><span class="font-mono font-bold" id="stat-shots-home">0 (0)</span><span class="text-gray-400">Shots (Target)</span><span class="font-mono font-bold" id="stat-shots-away">0 (0)</span></div>
+        <div class="flex justify-between items-center py-1"><span class="font-mono font-bold" id="stat-fouls-home">0 (0🟨)</span><span class="text-gray-400">Fouls & Cards</span><span class="font-mono font-bold" id="stat-fouls-away">0 (0🟨)</span></div>
+      </div>
+      <div class="bg-gray-900/80 border border-gray-800 rounded-2xl p-4 flex-1 flex flex-col min-h-[300px] max-h-[460px]">
+        <div class="flex items-center justify-between border-b border-gray-800 pb-2 mb-2">
+          <span class="font-bold text-sm text-gray-200">⚡ Event Stream</span>
+          <span class="text-xs text-gray-400 mono" id="event-index-display">1 / 1</span>
+        </div>
+        <div id="event-feed-list" class="flex flex-col gap-1.5 overflow-y-auto flex-1 pr-1"></div>
+      </div>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

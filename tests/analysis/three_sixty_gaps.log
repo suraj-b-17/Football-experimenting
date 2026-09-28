@@ -1,0 +1,27 @@
+
+=== 2015/16 Premier League (StatsBomb, no 360) (20 matches) ===
+named-player gap (s): median 2.57  p90 111.75  n=71190
+
+=== FIFA World Cup 2022 (20 matches) ===
+named-player gap (s): median 2.41  p90 120.68  n=71477
+360: 62849 frames across 20 matches with 360
+visible players/frame: mean 14.96  std 3.46  min 1  max 22
+(of which tagged teammate, anonymous): mean 7.49  std 1.80
+share of locatable events with a matching 360 frame: 87.2% (62849/72105)
+named-player share of player-seconds within 5s of a real position: mean 8.5% across 20 matches
+
+=== Women's World Cup 2023 (20 matches) ===
+named-player gap (s): median 3.00  p90 122.42  n=69314
+360: 62249 frames across 20 matches with 360
+visible players/frame: mean 14.01  std 3.33  min 1  max 22
+(of which tagged teammate, anonymous): mean 7.09  std 1.82
+share of locatable events with a matching 360 frame: 89.0% (62248/69910)
+named-player share of player-seconds within 5s of a real position: mean 9.2% across 20 matches
+
+=== UEFA Euro 2024 (20 matches) ===
+named-player gap (s): median 2.35  p90 114.54  n=72226
+360: 64071 frames across 20 matches with 360
+visible players/frame: mean 16.60  std 3.07  min 1  max 22
+(of which tagged teammate, anonymous): mean 8.21  std 1.65
+share of locatable events with a matching 360 frame: 88.0% (64071/72847)
+named-player share of player-seconds within 5s of a real position: mean 9.0% across 20 matches

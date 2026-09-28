@@ -1,0 +1,13 @@
+testing 650 drops and 8453 retimes >5m
+
+dropped: 647 cases scored (of 650 candidates)
+  flagged (currently dropped/retimed) point fits the ball path BETTER than the kept point: 299 (46.2%)
+  median fit distance: kept=1.96m flagged=1.51m
+
+retimed_far: 8444 cases scored (of 8453 candidates)
+  flagged (currently dropped/retimed) point fits the ball path BETTER than the kept point: 2788 (33.0%)
+  median fit distance: kept=0.12m flagged=5.73m
+
+If the better-fitting point were always kept instead of always the earlier one:
+  of the 650 drops: 299 would flip to keeping the (currently dropped) later point
+  of the 8453 far retimes: 2788 would flip to keeping the (currently kept) earlier point's REPLACEMENT differently — i.e. the earlier point would be the one re-timed/dropped instead

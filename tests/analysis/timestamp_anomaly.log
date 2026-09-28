@@ -1,0 +1,32 @@
+380 matches scanned, 130 events where t jumps backward >2s vs stream order
+of which have a location (could become a bad anchor): 130
+{'match': '3754136', 'index': 1657, 'prev_index': 1656, 't': 0.407, 'prev_t': 2759.669, 'type': 'Ball Receipt*', 'has_loc': True, 'playerId': 9533}
+{'match': '3754037', 'index': 1973, 'prev_index': 1972, 't': 0.391, 'prev_t': 2694.071, 'type': 'Ball Receipt*', 'has_loc': True, 'playerId': 3476}
+{'match': '3754041', 'index': 2145, 'prev_index': 2144, 't': 0.146, 'prev_t': 2696.94, 'type': 'Ball Receipt*', 'has_loc': True, 'playerId': 3450}
+{'match': '3754043', 'index': 1852, 'prev_index': 1851, 't': 0.821, 'prev_t': 2799.545, 'type': 'Ball Receipt*', 'has_loc': True, 'playerId': 3344}
+{'match': '3754048', 'index': 1784, 'prev_index': 1783, 't': 0.366, 'prev_t': 2761.555, 'type': 'Ball Receipt*', 'has_loc': True, 'playerId': 26696}
+{'match': '3754049', 'index': 1645, 'prev_index': 1644, 't': 0.677, 'prev_t': 2810.515, 'type': 'Ball Receipt*', 'has_loc': True, 'playerId': 9528}
+{'match': '3754053', 'index': 1686, 'prev_index': 1685, 't': 0.879, 'prev_t': 2826.348, 'type': 'Ball Receipt*', 'has_loc': True, 'playerId': 3594}
+{'match': '3754091', 'index': 1675, 'prev_index': 1674, 't': 0.436, 'prev_t': 2778.74, 'type': 'Ball Receipt*', 'has_loc': True, 'playerId': 3636}
+{'match': '3753972', 'index': 1770, 'prev_index': 1769, 't': 0.178, 'prev_t': 2879.449, 'type': 'Ball Receipt*', 'has_loc': True, 'playerId': 3608}
+{'match': '3753978', 'index': 1738, 'prev_index': 1737, 't': 1.197, 'prev_t': 2885.017, 'type': 'Ball Receipt*', 'has_loc': True, 'playerId': 3644}
+{'match': '3753974', 'index': 1757, 'prev_index': 1756, 't': 0.286, 'prev_t': 2763.557, 'type': 'Ball Receipt*', 'has_loc': True, 'playerId': 3244}
+{'match': '3754038', 'index': 1899, 'prev_index': 1898, 't': 0.462, 'prev_t': 2880.455, 'type': 'Ball Receipt*', 'has_loc': True, 'playerId': 23635}
+{'match': '3754017', 'index': 1662, 'prev_index': 1661, 't': 0.407, 'prev_t': 2762.243, 'type': 'Ball Receipt*', 'has_loc': True, 'playerId': 7063}
+{'match': '3754023', 'index': 1561, 'prev_index': 1560, 't': 1.05, 'prev_t': 2837.38, 'type': 'Ball Receipt*', 'has_loc': True, 'playerId': 3520}
+{'match': '3753984', 'index': 1688, 'prev_index': 1687, 't': 1.318, 'prev_t': 2948.587, 'type': 'Ball Receipt*', 'has_loc': True, 'playerId': 3491}
+{'match': '3754011', 'index': 1824, 'prev_index': 1823, 't': 0.392, 'prev_t': 2784.28, 'type': 'Ball Receipt*', 'has_loc': True, 'playerId': 10958}
+{'match': '3754028', 'index': 1617, 'prev_index': 1616, 't': 0.706, 'prev_t': 2914.765, 'type': 'Ball Receipt*', 'has_loc': True, 'playerId': 9958}
+{'match': '3754025', 'index': 1775, 'prev_index': 1774, 't': 0.334, 'prev_t': 2768.827, 'type': 'Ball Receipt*', 'has_loc': True, 'playerId': 3957}
+{'match': '3754040', 'index': 2013, 'prev_index': 2012, 't': 1.684, 'prev_t': 2762.173, 'type': 'Ball Receipt*', 'has_loc': True, 'playerId': 10967}
+{'match': '3754067', 'index': 1517, 'prev_index': 1516, 't': 0.42, 'prev_t': 2819.601, 'type': 'Ball Receipt*', 'has_loc': True, 'playerId': 3684}
+{'match': '3754083', 'index': 1866, 'prev_index': 1865, 't': 0.185, 'prev_t': 2762.603, 'type': 'Ball Receipt*', 'has_loc': True, 'playerId': 3381}
+{'match': '3754093', 'index': 1681, 'prev_index': 1680, 't': 0.506, 'prev_t': 2818.797, 'type': 'Ball Receipt*', 'has_loc': True, 'playerId': 3043}
+{'match': '3754104', 'index': 1541, 'prev_index': 1540, 't': 0.44, 'prev_t': 2817.531, 'type': 'Ball Receipt*', 'has_loc': True, 'playerId': 6560}
+{'match': '3754107', 'index': 1892, 'prev_index': 1891, 't': 0.1, 'prev_t': 2759.72, 'type': 'Ball Receipt*', 'has_loc': True, 'playerId': 3311}
+{'match': '3754105', 'index': 1700, 'prev_index': 1699, 't': 0.611, 'prev_t': 2826.194, 'type': 'Ball Receipt*', 'has_loc': True, 'playerId': 4275}
+{'match': '3754115', 'index': 1627, 'prev_index': 1626, 't': 0.272, 'prev_t': 2769.031, 'type': 'Ball Receipt*', 'has_loc': True, 'playerId': 20285}
+{'match': '3754169', 'index': 1753, 'prev_index': 1752, 't': 0.585, 'prev_t': 2883.221, 'type': 'Ball Receipt*', 'has_loc': True, 'playerId': 4429}
+{'match': '3754119', 'index': 1396, 'prev_index': 1395, 't': 0.292, 'prev_t': 2912.295, 'type': 'Ball Receipt*', 'has_loc': True, 'playerId': 42902}
+{'match': '3754133', 'index': 1413, 'prev_index': 1412, 't': 1.425, 'prev_t': 2754.175, 'type': 'Ball Receipt*', 'has_loc': True, 'playerId': 31296}
+{'match': '3754145', 'index': 2258, 'prev_index': 2257, 't': 0.076, 'prev_t': 2763.076, 'type': 'Ball Receipt*', 'has_loc': True, 'playerId': 3087}

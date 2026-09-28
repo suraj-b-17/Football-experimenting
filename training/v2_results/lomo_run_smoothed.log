@@ -1,0 +1,21 @@
+  fold Sample_Game_1 cfg B done (74s)
+  fold Sample_Game_2 cfg B done (83s)
+  fold Sample_Game_3 cfg B done (83s)
+  fold J03WPY cfg B done (83s)
+  fold J03WMX cfg B done (84s)
+  fold J03WN1 cfg B done (84s)
+  fold J03WOH cfg B done (83s)
+  fold J03WOY cfg B done (81s)
+  fold J03WQQ cfg B done (85s)
+  fold J03WR9 cfg B done (84s)
+                      median    mean     p90        n
+method                                               
+OLD                   11.125  13.384  26.576  1248842
+anchor_interp         16.135  19.013  38.257  1248842
+anchor_window_median  19.236  22.078  42.583  1248842
+base_B_kalman          9.725  11.781  23.227  1248842
+base_B_mu             10.038  12.141  23.674  1248842
+coupled_B_kalman       9.714  11.705  23.013  1248842
+coupled_B_mu           9.993  12.037  23.371  1248842
+stage2_B_kalman        9.584  11.581  22.703  1248842
+stage2_B_mu            9.871  11.923  23.086  1248842

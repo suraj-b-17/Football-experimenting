@@ -1,0 +1,11 @@
+80 matches, 10672 held-out named positions
+A_old_shipped         17.08
+B_old_anchor_fixed    15.97
+C_new_no_freeze       10.45
+D_new_shipped          9.39
+      A_old_shipped  B_old_anchor_fixed  C_new_no_freeze  D_new_shipped
+role                                                                   
+DEF           17.92               16.10             9.54           8.52
+FWD           16.73               18.42            11.75          10.84
+GK             0.99                0.93             0.27           0.28
+MID           20.57               19.53            13.50          12.45
