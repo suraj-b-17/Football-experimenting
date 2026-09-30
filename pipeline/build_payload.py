@@ -84,6 +84,12 @@ def build(match_id, competition_id=2, season_id=27, out_dir=None):
             ev["endX"], ev["endY"] = round(end[0], 2), round(end[1], 2)
         if e["type"] == "Pass":
             ev["passOutcome"] = e.get("passOutcome")
+            if e.get("passHeight"):
+                ev["passHeight"] = e["passHeight"]
+        if e.get("receiptOutcome"):
+            ev["receiptOutcome"] = e["receiptOutcome"]
+        if e.get("gkType"):
+            ev["gkType"] = e["gkType"]
         if e["type"] == "Shot":
             ev["isShot"] = True
             ev["shotOutcome"] = e.get("shotOutcome")
@@ -106,7 +112,10 @@ def build(match_id, competition_id=2, season_id=27, out_dir=None):
         "ball": {"frame": "home", "t": [round(float(v), 3) for v in T], "x": r2(X), "y": r2(Y)},
         "maxT": round(match["maxT"], 3),
         "kickoffs": [[round(t, 3), p] for t, p, _ in kicks],
-        "stoppages": [{"start": round(s["start"], 3), "end": round(s["end"], 3), "label": s["label"]} for s in stoppages],
+        "stoppages": [{"start": round(s["start"], 3), "outT": round(s["out_t"], 3), "end": round(s["end"], 3),
+                       "label": s["label"], "kind": s["kind"], "isHome": s["isHome"], "playerId": s["playerId"],
+                       "x": None if s["x"] is None else round(s["x"], 2),
+                       "y": None if s["y"] is None else round(s["y"], 2)} for s in stoppages],
         "dismissals": [{"t": round(t, 3), "playerId": pid, "card": c, "eventType": typ} for t, pid, c, typ in dismissals(match)],
         "anomalies": anomalies,
         "calibration": {"k50": round(cal["k50"], 3), "k68": round(cal["k68"], 3), "k90": round(cal["k90"], 3)},

@@ -16,7 +16,6 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from loader_statsbomb import RESTART_LABELS
 from common.features import role_from_position_name
 
 NON_POSITIONAL = {"Starting XI", "Half Start", "Half End", "Substitution", "Tactical Shift",
@@ -283,9 +282,34 @@ def kickoffs(match):
     return out
 
 
+SET_PIECE_KIND = {"Throw-in": "throw_in", "Goal Kick": "goal_kick", "Corner": "corner", "Free Kick": "free_kick",
+                  "Kick Off": "goal", "Penalty": "penalty"}
+KIND_LABEL = {"throw_in": "Throw-in", "goal_kick": "Goal kick", "corner": "Corner", "free_kick": "Free kick",
+              "foul": "Foul", "offside": "Offside", "goal": "Goal", "penalty": "Penalty"}
+INCIDENT_LOOKBACK_S = 6.0
+
+
 def detect_stoppages(match, min_gap_s=5.0):
-    """Real dead-ball stoppages, read directly off StatsBomb's play_pattern tag
-    on the restart event (see RESTART_LABELS)."""
+    """Real dead-ball stoppages: a gap of at least min_gap_s ending in a
+    set-piece restart, as StatsBomb types the restart event itself
+    (loader_statsbomb.SET_PIECE_PASS / SET_PIECE_SHOT). One per gap, no merging:
+    each has its own restart. A mid-period Kick Off only follows a goal (period
+    starts are not gaps within a period).
+
+    Every field is read off real events:
+      start      the last positional event before the gap
+      out_t      when the ball actually stopped being in play: that event's own
+                 end (t + duration, e.g. a pass arriving out of play), capped at
+                 the restart
+      end        the restart event
+      kind       throw_in / goal_kick / corner / free_kick / goal / penalty; a
+                 free kick is refined to foul or offside when a Foul
+                 Committed/Won, or an offside (a Pass with outcome "Pass
+                 Offside", or an Offside event), happened in the last few
+                 seconds before the gap
+      isHome, x, y, playerId   the team, place (HOME frame) and player of the
+                 restart event itself
+    """
     evs = [e for e in match["events"] if e["type"] not in NON_POSITIONAL]
     evs.sort(key=lambda e: e["t"])
     out = []
@@ -294,25 +318,22 @@ def detect_stoppages(match, min_gap_s=5.0):
         if after["period"] != before["period"]:
             continue
         gap = after["t"] - before["t"]
-        if gap < min_gap_s:
+        if gap < min_gap_s or after.get("setPiece") not in SET_PIECE_KIND:
             continue
-        label = RESTART_LABELS.get(after.get("playPattern"))
-        if label == "Free kick" and before["type"] in ("Foul Committed", "Foul Won"):
-            label = "Foul — free kick"
-        if label is None:
-            continue
-        out.append({"start": before["t"], "end": after["t"], "label": label})
-
-    specific = set(RESTART_LABELS.values()) | {"Foul — free kick"}
-    merged = []
-    for s in out:
-        if merged and s["start"] - merged[-1]["end"] <= 2.0:
-            merged[-1]["end"] = max(merged[-1]["end"], s["end"])
-            if s["label"] in specific and merged[-1]["label"] not in specific:
-                merged[-1]["label"] = s["label"]
-        else:
-            merged.append(dict(s))
-    return merged
+        kind = SET_PIECE_KIND[after["setPiece"]]
+        if kind == "free_kick":
+            recent = [e for e in evs[max(0, i - 6):i] if before["t"] - e["t"] <= INCIDENT_LOOKBACK_S]
+            if any(e.get("passOutcome") == "Pass Offside" or e["type"] == "Offside" for e in recent):
+                kind = "offside"
+            elif any(e["type"] in ("Foul Committed", "Foul Won") for e in recent):
+                kind = "foul"
+        out_t = min(before["t"] + (before.get("duration") or 0.0), after["t"])
+        x, y = after["x"], after["y"]
+        if x is not None and not after["isHome"]:
+            x, y = PITCH_X_M - x, PITCH_Y_M - y
+        out.append({"start": before["t"], "out_t": out_t, "end": after["t"], "label": KIND_LABEL[kind], "kind": kind,
+                    "isHome": after["isHome"], "x": x, "y": y, "playerId": after.get("playerId")})
+    return out
 
 
 if __name__ == "__main__":

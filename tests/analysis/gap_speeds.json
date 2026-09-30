@@ -1,0 +1,66 @@
+{
+ "matches": 380,
+ "caps": {
+  "run": 8.0,
+  "carry": 7.5,
+  "ball": 30.0
+ },
+ "off_ball": {
+  "gaps": 859826,
+  "share_gt_run_cap": 0.0456,
+  "share_gt_duration_matched_real_p99_9": 0.048,
+  "share_gt_9_5": 0.0194,
+  "excluding_freeze_frame_pairs": {
+   "gaps": 634257,
+   "share_gt_run_cap": 0.0582
+  },
+  "median_mps": 0.76,
+  "p99_mps": 9.52,
+  "by_gap_len": {
+   "0-1s": {
+    "n": 94014,
+    "share_gt_run_cap": 0.3726,
+    "share_gt_duration_matched": 0.3732
+   },
+   "1-3s": {
+    "n": 88368,
+    "share_gt_run_cap": 0.0391,
+    "share_gt_duration_matched": 0.0438
+   },
+   "3-10s": {
+    "n": 106730,
+    "share_gt_run_cap": 0.0068,
+    "share_gt_duration_matched": 0.0193
+   },
+   "10-60s": {
+    "n": 297537,
+    "share_gt_run_cap": 0.0,
+    "share_gt_duration_matched": 0.0009
+   },
+   "60-infs": {
+    "n": 273177,
+    "share_gt_run_cap": 0.0,
+    "share_gt_duration_matched": 0.0
+   }
+  }
+ },
+ "carry": {
+  "carries": 276949,
+  "share_gt_carry_cap": 0.0852,
+  "share_gt_9_5": 0.0573,
+  "median_mps": 2.57,
+  "p99_mps": 44.19
+ },
+ "ball_flight": {
+  "flights": 652192,
+  "share_gt_ball_cap": 0.0157,
+  "median_mps": 7.78,
+  "p99_mps": 38.51
+ },
+ "ball_handoff": {
+  "handoffs_gt_0_5m": 236895,
+  "share_gt_ball_cap": 0.5468,
+  "share_zero_time": 0.5204,
+  "median_dist_m": 4.74
+ }
+}

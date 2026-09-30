@@ -72,10 +72,18 @@ async function run(name) {
       await page.evaluate(tt => { pause(); matchClock = tt; currentIndex = currentEventAt(tt); onEventChanged(); }, t);
       await sleep(400);
       r['pixels_' + tag] = await px();
+      r['in_skip_' + tag] = await page.evaluate(tt => typeof inSkip === 'function' && inSkip(tt), t);
       await page.screenshot({ path: path.join(SHOTS, name, `${id}_${tag}.png`) });
     }
-    const ok = r.loaded_match === id && r.pixels_at_load.green > 100000 && r.pixels_0133.home > 50 && r.pixels_0133.away > 50 &&
-      r.playback_clock_advance_s >= 8 && Math.abs(r.scrub.clock - r.scrub.expected) < 0.01 && modes.join() === 'realism,tactical';
+    // both teams drawn in exact team colours at every screenshot not inside a
+    // stoppage skip (a skip dims the pitch on purpose, so exact colours change)
+    const teamsOk = ['0133', '60min'].every(tag => r['in_skip_' + tag] || (r['pixels_' + tag].home > 50 && r['pixels_' + tag].away > 50)) &&
+      ['0133', '60min'].some(tag => !r['in_skip_' + tag]);
+    const ok = r.loaded_match === id && r.pixels_at_load.green > 100000 && teamsOk &&
+      // pacing: 10 s of 1x playback is not exactly 10 s of match (slowed for
+      // fast movement, sped up for idle play / stoppages), but must be of that order
+      r.playback_clock_advance_s >= 5 && r.playback_clock_advance_s <= 25 &&
+      Math.abs(r.scrub.clock - r.scrub.expected) < 0.01 && modes.join() === 'realism,tactical';
     r.ok = ok;
     if (!ok) problems.push(`checks failed for ${id}: ${JSON.stringify(r)}`);
     report.push(r);

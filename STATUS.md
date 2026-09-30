@@ -16,3 +16,4 @@
 - D13/D14/D15 documented; final 380-match rebuild+QA running.
 - Final season QA: max 16.73 m/s (was 234), p99 14.3, median 11.9, 0 anchor misses/1.11M, 0 active-count mismatches. Residual >12m/s (kickoff soft-anchor Kalman transitions) flagged, not yet fixed.
 - Collision distance audit: true-duplicate rule verified correct (0 violations of 580,633); 91.55m case is a drop (John Stones, 3754163), not a merge. No code change needed.
+- Polish round (P1–P5, CHANGELOG_fix.md "Polish round"): pacing from real-tracking speed caps (run 8.0 / carry 7.5 / ball 30 m/s), segment ball model, set-piece-typed stoppages with skip + team banner, on-ball halo + fit-to-neighbour tokens, lofted passes. Tested on 3754129/3754258/3754348 (0 anchor misses, 0 ball frames > 30 m/s); full-season rebuild + QA running.

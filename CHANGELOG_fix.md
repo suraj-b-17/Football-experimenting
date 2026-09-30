@@ -406,3 +406,330 @@ worst case — i.e. "trust the position, assume it happened later than recorded"
 the position." That was the original spec's deliberate choice (retime before dropping); flagging it
 here as a knob that could be tightened (e.g. a distance cap beyond which drop is preferred over
 retime) if wanted, not changing it unprompted.
+
+## Polish round — pacing, the drawn ball, stoppages, crowded duels, pass height
+
+Requested after watching the final build. Tested on Arsenal v Liverpool (3754129), Aston Villa v Man
+City (3754258) and Norwich v Liverpool (3754348) before the season rebuild. "Before" = the build at
+the start of this round: viewer snapshot `tests/baseline/app_before_polish.js`, payloads kept outside
+the repo (`~/.cache/football_anim/polish_before/`). Evidence: `tests/evidence/polish/`. The
+reconstruction itself (model, smoother, every player's knots) is **unchanged**: rebuilt payloads
+differ from the old ones only by the new event/stoppage fields (checked: max position change 0.0 m,
+tracks and model ball path identical).
+
+### P1 — "super dash": diagnosis
+
+**Speed each real gap requires if the animation must cover it in exactly its real time**
+(`tests/analysis/gap_speeds.py`, all 380 matches, payload anchors as displayed; caps from P1-caps):
+
+| gap | count | needs more than the cap |
+|---|---:|---:|
+| off-ball: consecutive anchors of one player (cap 8.0 m/s) | 859,826 | **4.6 %** (5.8 % excluding shot-freeze-frame pairs) |
+| &nbsp;&nbsp;of which gaps < 1 s / 1–3 s / 3–10 s / > 10 s | 94k / 88k / 107k / 571k | 37 % / 3.9 % / 0.7 % / 0 % |
+| with the ball: StatsBomb carries (cap 7.5 m/s) | 276,949 | **8.5 %** (p99 implied speed 44 m/s) |
+| ball flights: pass/shot start → end over its duration (cap 30 m/s) | 652,192 | **1.6 %** |
+| ball handoffs: one ball event's end → the next's start (cap 30 m/s) | 236,895 over 0.5 m | **55 %** — 52 % have **zero** time between them |
+
+**What the viewer drew** (60 fps, Tactical, 3 matches — `tests/drivers/polish_diag.js`,
+`dash_find.js`): some player above 8 m/s in 1.7–2.0 % of all frames; 117–149 "super dash" episodes
+per match (≥ 0.15 s above 8 m/s): ~50 % carries, ~30 % reconstruction between anchors, ~20 % off-ball
+runs to receive a pass; ball faster than 30 m/s in 1,487–1,665 frames per match.
+
+**Shared cause?** Partly. The player dashes and fast carries are the forced 1:1 mapping (a real gap
+too short for its distance) plus the curve/carry drawing spending that speed unevenly. The ball
+"teleport" is mostly *not*: the 52 % zero-time handoffs cannot be fixed by any pacing (no time to
+stretch) — they are StatsBomb recording two different locations at one instant (a pass end and the
+Ball Receipt\* 3.2 m away; an "Incomplete" receipt for the intended receiver followed by the
+interceptor) — and the "ball stays still, then jumps" case was the ball path parking the ball at a
+receipt while the player moved on (P2). So P1 and P2 got separate fixes.
+
+**P1-caps — speed caps, from the real tracking used elsewhere in this project**
+(`tests/analysis/speed_caps.py` → `speed_caps.json`; Metrica ×3 + DFL/IDSSE ×7, 1 s windows; the
+maxima are tracking glitches):
+
+| | p50 | p90 | p99 | p99.9 | chosen cap |
+|---|---:|---:|---:|---:|---:|
+| outfield running (5.7 M windows) | 1.46 | 3.84 | 6.21 | 7.90 | **8.0 m/s** |
+| carrying the ball (49,846 windows) | 2.24 | 5.39 | 7.50 | 8.51 | **7.5 m/s** (p99: carrying is not faster than sprinting; the p99.9 rests on ~50 windows and includes chasing a loose ball) |
+| ball | 3.20 | 11.99 | 19.58 | 30.55 | **30 m/s** |
+
+Real p99.9 running speed falls with the window length (7.9 m/s over 1 s, 6.9 over 5 s, 5.5 over 10 s),
+which is why short gaps are the problem: 37 % of sub-second gaps need more than 8 m/s, almost none
+of the long ones.
+
+### P1 — fix: pacing (`viewer/app.js`, "pacing")
+
+Playback no longer maps match time 1:1. Per display mode, S(t) = playback seconds per match second
+on 0.05 s bins, computed from what is actually drawn (every player, the ball):
+- **stretch**: max over everything drawn of on-screen speed / its cap (carry cap for the player on
+  the ball). Anything faster than its cap makes that moment take longer; max-filtered over ±0.5 s
+  and blurred inside that window so it eases in and the cap still holds everywhere. Fast things are
+  re-sampled at 4 points per bin (a curve can peak ~15 % above its bin average).
+- **compress**: only sustained idle play (every player under 4 m/s and the ball under 12 m/s for
+  ±2 s; the real p90s) may run faster, at most 1.5x.
+- **stoppages**: skipped separately (P3).
+- The user's 0.5x–10x multiplies on top. Nothing is reordered and no location moves: positions are
+  still a pure function of the match clock, the clock only advances at a varying rate, and it is
+  exact at every real event. Computed lazily in 15 s chunks (~20 ms each) by a background filler.
+- Carries are now drawn between their own start / carry_end anchor times (which equal the event
+  times unless D9 re-timed an impossible one) at their real mean speed; the old "anomaly" path that
+  drew them at 9.5 m/s and arrived late is gone — pacing slows them instead. A carry whose start or
+  end anchor was dropped is left to the reconstruction.
+- A handful of pathological inputs (e.g. a 20 m pass recorded as lasting 0.01 s) would need > 3x
+  slow motion over a whole second; those flights are lengthened to need exactly 3x (4–5 per match,
+  logged as `extreme_flights_lengthened`), the same "trust the location, move the time" rule as D9.
+
+**Five former super dashes, speed over playback time** (`tests/evidence/polish/dash_before_after.png`,
+`dash_series_*`):
+
+| example | match | peak before | peak after | dash in playback, before → after |
+|---|---|---:|---:|---|
+| 1 Carry (Monreal): 35.7 m carry recorded as 1.7 s | 3754129 | 9.5 | 7.5 | 3.75 → 4.76 s (+27 %) |
+| 2 Carry (Firmino): 4.3 m carry recorded as 0.29 s | 3754348 | 94.1 | 7.5 | 0.30 → 0.38 s (+27 %) |
+| 3 Off-ball run to receive (Ibe) | 3754129 | 12.0 | 8.4 | 1.38 → 2.02 s (+46 %) |
+| 4 Off-ball run to receive (Sinclair) | 3754258 | 11.6 | 8.0 | 1.42 → 1.99 s (+40 %) |
+| 5 Reconstruction between anchors (Veretout) | 3754258 | 10.9 | 8.0 | 3.38 → 4.44 s (+31 %) |
+
+(Example 2's window is the 0.3 s of the old spike; the carry itself now spans its anchors' times.)
+
+**Three matches, after** (`diag_after.jsonl`, 60 fps of playback, stoppage skips excluded, caps +1 %):
+frames with any player over 8 m/s 1.7–2.0 % → 0.01–0.09 %; player frames over 9.5 m/s → 0; ball
+"still, then jump" 14–30 per match → 0. Full QA per match (`qa.js`): 12–22 player-frames of ~5 M over
+their cap (worst 9.4–11 m/s, single frames), 0 ball frames over 30 m/s, 0 anchor misses.
+
+### P2 — ball stays still, then teleports
+
+Not a side effect of P1 (see the diagnosis). Checked separately in the four situations named
+(`tests/drivers/ball_situations.js`, 3 matches):
+
+| situation | windows (3 matches) | before | after |
+|---|---:|---|---|
+| carry with no end location or duration | 0 | — (StatsBomb carries always have both here) | — |
+| gap between a carry's end and that player's next event (> 0.3 s) | 0 | — (the next event starts where the carry ends) | — |
+| Ball Receipt\* then the same player's next event, no Carry | 68 | ball parked at the receipt, moving up to 43 m/s to catch up; ball–player gap median 0.9–2.0 m, p90 up to 14 m | ball on the player's path the whole time: gap 0.69 m median (the dribble lead), no step over 30 m/s |
+| reception window (pass in flight until 0.5 s after the receipt) | 2,390 | **80 %** contain a > 30 m/s ball jump (median worst step 42 m/s, p99 100–120) | **0** (3754129; the other two are in `ball_situations_after.jsonl`) — ball–receiver gap at the receipt 0.0 m |
+
+Fix: the drawn ball is its own model (`buildBallModel`), a chain of segments each starting where the
+previous one ended (so it cannot jump): flights over the real duration; on a player's drawn path
+through carries **and any gap between two on-ball events of the same player** (eased from the
+recorded location to the next one, 0.7 m lead in the running direction faded at both ends); held by
+a receiver/recoverer until the last moment before someone else's event; rolling at constant speed
+after a release. Real-data conflicts, all logged in `ballStats`: Ball Receipt\* "Incomplete" (the
+intended receiver — the ball never reached him) and keeper events that don't touch the ball (Shot
+Faced, Goal Conceded, Penalty Conceded) are not knots; a flight followed within 0.5 s by another
+on-ball event ends at that event (1,079 of 1,145 flights in 3754129; for most this is the same point,
+but in the cases above the pass end and the receipt are recorded at one instant ~3 m apart, and the
+receiver is where the ball goes); a single touch
+recorded at the same instant as the ball was elsewhere is reached distance/30 m/s later (max 0.5 s;
+81 in 3754129, max 0.18 s). The model's own ball input (`common/ballpath.py`) is untouched — this is
+display only. Continuity check (`qa.js`, every segment boundary): max step 0.06 m.
+
+New payload fields: `receiptOutcome` (Ball Receipt\*), `gkType` (Goal Keeper), `passHeight` (Pass).
+
+**Found only by the season-wide QA, after the 3-match evidence above was captured (P1-4 QA reruns
+below use the fixed version): two remaining ball bugs**, both in how the ball model's knots are
+timed, not in the payload:
+- **Wrong knot far in the future.** `anchorTimeNear` (used to align a knot's time with a D9-retimed
+  player anchor) searches up to 5 s forward. A Carry's end and the very next event's own start often
+  coincide exactly and get merged into one anchor by `resolve_collisions`; when that merged anchor
+  was itself retimed (a genuinely too-fast recorded carry), the FOLLOWING event's own knot — built
+  from its raw, unretimed time — matched that same far-future anchor by position, silently pushing
+  its own start seconds ahead, past other real events, corrupting the knot order. Example (match
+  3754200, Herrera→Rooney, t≈1147–1150 s): Herrera's real 0.08 s/24 m carry was retimed to end 3.0 s
+  later; his following Pass's own knot then also snapped to that same instant, sorting it after
+  Rooney's entire subsequent touch → carry → shot, dropping the pass's flight (its computed duration
+  went negative) and producing a same-instant 900+ m/s hop to patch the gap. Found on **101 of 380**
+  matches (onscreen ball speed >40 m/s), worst 2107 m/s. Fixed: anchor-snapping in the ball model is
+  now applied **only to Carry knots** (the one case tied to `tr.carryObjs`, which needs it for the
+  same reason); every other on-ball event uses its own raw recorded time, matching
+  `common/ballpath.py`'s own authoritative ball proxy.
+- **Instant hop into a flight's own start.** The "touches reached late" hop protection (stretching a
+  too-short real gap to distance/`BALL_CAP_MPS`) only applied when the destination knot was a plain
+  touch, not when it was itself the start of a flight or carry — so a same-player double-touch
+  0.003 s apart, 2.7 m apart, landing right before a Shot, still spiked to 98.6 m/s. Fixed by
+  dropping that restriction; the delay applies to any gap regardless of what it leads into.
+
+Verified on the 4 matches found above (3754129, 3754258, 3754348, 3754200): all now sit right at the
+30 m/s cap (30.1–30.3 m/s) with discontinuities under 0.08 m (was up to 2107 m/s / 3.51 m on
+3754200). Season-wide re-run across all 380 matches in progress; final numbers in the season QA
+summary below.
+
+### P3 — stoppages
+
+**Detection fixed first.** Stoppages were labelled from `play_pattern`, which describes the whole
+possession: a pause *inside* a possession that began with a throw-in was also "Throw-in". On 7
+matches ~15 % of labelled gaps were such pauses (e.g. Norwich v Liverpool showed 12 "goal" restarts
+for 9 goals). Now a stoppage is a ≥ 5 s gap ending in a **set-piece restart as StatsBomb types the
+restart event itself** (`pass.type` Throw-in / Corner / Goal Kick / Free Kick / Kick Off, `shot.type`
+Free Kick / Penalty) — this coincides exactly with "new possession" on those 7 matches. A free kick is
+refined to **foul** or **offside** when a Foul Committed/Won or an offside (Pass outcome "Pass
+Offside" or an Offside event) happened in the 6 s before the gap. Each stoppage now carries the
+restart team, spot (home frame) and taker, and `out_t` (when the ball actually went dead: the last
+event's own end, e.g. a pass arriving out of play). No merging (each has its own restart).
+
+**Sequence on screen** (both display modes; pure function of the match clock):
+1. the real play into it at normal pacing, including the ball flying out when a pass/shot took it
+   there; at `out_t` a pulse at the dead-ball point (white out of play, yellow foul/offside/penalty,
+   gold goal) and the restart banner eases in;
+2. `out_t` + 1.0 s → restart − 1.2 s: the dead time is **skipped in 1.6 s of playback**, easing in and
+   out of the fast-forward, pitch dimmed, a "⏩ skipping 0:29 of stoppage" chip with a progress bar;
+   the ball is carried to the restart spot;
+3. the last 1.2 s before the restart at normal pacing, the taker ringed (dashed, team accent colour);
+4. the restart, then the banner eases out 1.6 s later. Banner: team-coloured stripe and border,
+   e.g. "Throw-in — Arsenal", "Foul — Arsenal free kick", "Offside — Arsenal free kick", "Corner —
+   Liverpool", "Goal kick — Arsenal", "Goal — Liverpool · Norwich City kick off", "Penalty — …".
+
+Short stoppages (dead time under 3 s after the hold/lead-in) keep the banner but are not skipped.
+
+**Five types on Arsenal v Liverpool** (`tests/evidence/polish/stoppage_<kind>_{before,after}.png`,
+7 frames each, real Chrome from `file://`):
+
+| type | real dead time | whole sequence (approach → banner gone) in playback | what's on screen |
+|---|---:|---:|---|
+| foul (Milner on Monreal) | 21.9 s | 7.2 s | Monreal's carry, yellow pulse at the foul, "Foul — Arsenal free kick", dimmed skip, Monreal ringed at the spot, the free kick |
+| throw-in (Škrtel pass out) | 31.6 s | 7.0 s | the pass rolling out at the touchline, white pulse there, "Throw-in — Arsenal", skip, Monreal ringed with the ball on the line, the throw |
+| corner (Firmino shot, Čech save) | 64.6 s (includes Coquelin's injury) | 9.3 s | the shot and save (slowed: a fast approach), "Corner — Liverpool", "skipping 1:02", ball at the flag, Milner ringed, the corner |
+| goal kick | 25.9 s | 7.4 s | ball out, "Goal kick — Arsenal", skip, ball in the six-yard box, the kick |
+| offside (Can) | 28.8 s | 7.0 s | the offside pass and reception, yellow pulse, "Offside — Arsenal free kick", skip, the free kick |
+
+Before, the same moments showed a small yellow "⏩ Foul — free kick" (no team) for the whole
+warped interval, which started at the last event — so the pass going out was itself skipped — with
+no dimming, no restart spot/taker, and a hard cut at the restart.
+
+**Limit, stated plainly**: StatsBomb gives no out-of-play location for a clearance, block or save.
+Across the 3 matches ~60 % of throw-ins, ~75 % of goal kicks and ~65 % of corners are entered via a
+real flight (the ball is seen going out); the rest show the ball where it was last touched until the
+skip carries it to the restart (`stoppage_entry.jsonl`). Fouls, offsides, goals and penalties always
+have a real incident location.
+
+### P4 — crowded duels
+
+Diagnosed on 3 moments of Arsenal v Liverpool (`tests/drivers/cluster_find.js`): the corner that
+Milner delivers (match clock t = 4760 s), a midfield duel (Ramsey, x = 41 m, t = 3569 s), and a
+tackle in the box (Can, x = 97 m, t = 5098 s). Both things were happening: (a) a #1-style speed problem — players around the ball
+reached 9.4–9.5 m/s and the ball jumped (2–4 frames > 30 m/s per moment); (b) a rendering one —
+fixed-size tokens covered each other (57–95 % of frames had overlapping tokens) and nothing said who
+had the ball.
+
+Fix: (a) is P1/P2 (after: 0 ball jumps, nearby players ≤ 6.0–7.5 m/s on screen). (b) The player on
+the ball (owner intervals from the ball model: carrier, holder, same-player gap) gets a soft white
+halo that cross-fades over 0.15 s when possession changes, and is drawn on top of the cluster.
+**A positional push-apart was tried and rejected**: in tight clusters its push direction flipped as
+players passed within centimetres of each other, drawing single-frame 30–60 m/s twitches (measured)
+— exactly what this round removes. **Shrinking tokens to fit their nearest neighbour was also tried,
+then reverted on watching the built video** — it read as an unwanted "avoid clutter" effect rather
+than clarifying who has the ball, so token size is back to the original fixed 9 px (12 px active) in
+both modes; only the halo and draw-order changed. Before/after crops: `clusters_before_after.png`
+(from the shrink-to-fit version — tokens there are smaller than what actually shipped; the halo and
+draw-order are what carried over).
+
+### P5 — ground vs lofted passes (kept)
+
+`pass.height` (Ground / Low / High) was parsed in an earlier round but removed as dead code (T1f); it
+is parsed again and shipped per pass. A lofted pass is drawn raised above a ground shadow by
+h(f) = 4·H·f·(1−f) over the flight fraction f, with H the projectile apex for the pass's **own real
+duration**, H = g·T²/8 (a 65 m keeper kick lasting 3.66 s → 16.4 m); High Pass at least 1.8 m (above
+shoulder, StatsBomb's definition), Low Pass at most 1.5 m (below shoulder), Ground Pass flat.
+Nothing is invented beyond that: the ground position, timing and every recorded location are
+identical for all heights; only the drawn ball is lifted (0.4 px of lift per pitch px), with a faint
+vertical line from the shadow and a dashed ground trail for high passes. It reads clearly in the
+screenshots (`pass_height.png`), so it is kept. Arsenal v Liverpool: 225 high, 167 low, 718 ground passes.
+
+### P6 — off-ball reconstruction still looked like a dash (post-release fix)
+
+Reported after watching a real build: a player would start moving, ramp up fast,
+hold a high pace for a while, then stop abruptly right where the event data
+places their next touch — distinct from carries (fixed in P1/P4 above), which
+already ease in and out. Root cause: pacing (P1) caps *peak* on-screen speed by
+stretching wall-clock time, but never reshapes *how* a player accelerates —
+the underlying reconstruction curve's own velocity profile (from
+`common/smoother.py`'s per-segment Kalman/OU fit) can ramp onto and off a
+required speed abruptly, and stretching time uniformly preserves that shape,
+just at lower absolute speed.
+
+**Fix (`viewer/app.js`, "per-player timing along the drawn path"):** a second,
+independent re-timing layer, applied only to the plain reconstruction curve
+(`baseAt`) — carries and Tactical reception runs already have their own
+correct, capped S-curve profile (P1/P4) and are exempt, checked at the real,
+un-retimed time. For the reconstruction, each player's path between two
+consecutive *fixed* points (every hard real anchor, on-pitch interval /
+segment / period edges, and every carry/reception-window boundary) keeps its
+exact route and its exact position at both fixed points; only *when* along
+that route he is at a given moment changes. Target speed is the
+reconstruction's own speed, Gaussian-smoothed (σ=0.6 s), bounded near each
+fixed point by what the neighbouring stretch allows accelerating/decelerating
+into at `RT_ACCEL_MPS2 = 3.5` (real tracking: 1 s speed changes p99 2.6,
+p99.9 4.1 m/s², `tests/analysis/accel_caps.json`); the stretch's own path
+length is then matched exactly with a smoothstep-shaped correction that
+vanishes at both fixed points, so speed stays continuous through every real
+anchor instead of snapping.
+
+**Two bugs found building this, both from QA before shipping:**
+- **Wrapping carries too.** The first version applied re-timing to
+  `playerPositionAt`'s full output, including carries — re-pacing an
+  already-correctly-paced profile on top of itself pushed carry speeds to
+  13–16 m/s, past their 7.5 m/s cap. Fixed by checking carry/anticipation
+  first, at the real t, and re-timing only the reconstruction fallback.
+- **Missing window boundaries.** A reception-anticipation window's start
+  (`t_pass`) belongs to the *passer's* timeline, not the receiving player's
+  own anchors, so it was never a wall the re-timing knew to stop at. The
+  reconstruction could drift metres from the raw curve leading up to that
+  instant, then snap to the anticipation run's exact defined start the
+  moment the window opened — found via QA as a 243 m/s on-screen spike
+  landing exactly on a `t_pass`. Fixed by also registering every carry's and
+  reception window's own start/end as a wall.
+- **Performance, twice.** The re-timing math's control points were first
+  built on a fixed 0.1 s grid — fine for short gaps, but a stretch can be
+  several minutes long (a player is off any anchor 77 % of the time,
+  BENCHMARKS.md), so this made one match's worth of re-timing take 19 s to
+  build and stutter live playback. Capped control points per stretch at 120
+  regardless of duration (the final position lookup is still continuous, so
+  a coarser internal grid is invisible once smoothed). That still left the
+  *target-speed* smoothing itself scanning a fine grid inside its window,
+  whose cost scaled with total match duration touched, not window size —
+  full QA on one match went from a few seconds to a 3+ minute hang. Replaced
+  with a fixed 12-sample window average, independent of duration. Combined:
+  per-match diagnostic QA time roughly 1.5x of the pre-P6 baseline; live
+  background pacing computation (what actually matters for playback
+  smoothness) unaffected (~31 ms per 15 s chunk, same order as before).
+
+**Verified (3754112, 3754129 — `tests/drivers/qa.js`, `accel_diag.js`):** 0
+anchor misses both modes on both matches (unchanged), ball still capped at
+~30 m/s, carry speeds back to their normal range (8.98–9.43 m/s, matching the
+pre-P6 baseline exactly), on-screen player speed correctly bounded again
+(9.14–9.62 m/s max, was 243/271/135/124 m/s with the two bugs above still
+in). Acceleration (match 3754112, Tactical, real p99.9 acceleration = 4.06
+m/s² is the target from real tracking):
+
+| | p50 | p90 | p99 | p99.9 | share over real p99.9 |
+|---|---:|---:|---:|---:|---:|
+| before P6 | 0.30 | 1.01 | 2.26 | 4.29 | 0.137 % |
+| after P6 | 0.27 | 0.87 | 2.16 | 4.13 | 0.109 % |
+
+A smaller improvement than an earlier (buggy) measurement suggested — once
+carries are correctly excluded from this layer and the window-boundary jumps
+are fixed, most of the season's harshest accelerations turn out to already be
+inside carries (handled separately) rather than plain reconstruction. Drawn
+position vs the raw (non-re-timed) curve at the same real time: median 0.14 m,
+p90 0.53 m, p99 1.6 m, max ~23 m on the longest unobserved stretches — the
+same points along the same path, redistributed in time; no new position error
+since the raw position there was already just the model's regression-based
+guess (already uncertain, shown as such in Full Realism).
+
+### Changed behaviour to be aware of
+
+- **Playback length now varies.** At 1x a match takes ~60–70 % of its match-clock length (Arsenal v
+  Liverpool 4,002 s of 5,706 in Tactical; before: 3,762 s in Tactical, which already warped its
+  stoppages in 1.5 s each, and 5,706 s in Full Realism, which did not). Breakdown for that match:
+  stoppage skips save 1,637 s, idle compression saves ~150 s, slow-downs add ~81 s. BENCHMARKS.md
+  "Playback pacing" has the season numbers.
+- **Full Realism now also skips stoppages and paces** (before, only Tactical warped stoppages). Both
+  modes still show the same reconstruction; they now differ only by knot thinning, pass anticipation
+  and uncertainty rings.
+- The browser test's 10 s playback check is now "5–25 s of match clock" (was ≥ 8 s).
+- **`tests/drivers/qa.js`'s own diagnostic runtime is now ~1.5x per match** (P6's re-timing layer
+  adds real, if bounded, cost to an exhaustive 60 fps sweep of every player's whole match — see P6's
+  "performance, twice"). Season-wide (`pipeline/qa.py`, 12 parallel workers) is estimated at
+  roughly 70–90 minutes rather than the ~20–25 minutes quoted before P6; not yet re-run season-wide
+  at time of writing. Live playback itself is unaffected (background pacing chunk cost ~31 ms per
+  15 s of match, same order as before P6) since it never needs that exhaustive a sweep.

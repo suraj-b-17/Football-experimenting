@@ -30,22 +30,13 @@ SB_X, SB_Y = 120.0, 80.0   # StatsBomb's own coordinate units
 PITCH_X_M, PITCH_Y_M = 105.0, 68.0
 REPO_RAW = "https://raw.githubusercontent.com/statsbomb/open-data/master/data"
 
-# Real dead-ball stoppage evidence, read directly off StatsBomb's own
-# play_pattern tag on the restart event — no heuristic guessing needed.
-RESTART_LABELS = {
-    "From Throw In": "Throw-in",
-    "From Goal Kick": "Goal kick",
-    "From Corner": "Corner",
-    "From Free Kick": "Free kick",
-    # StatsBomb has no distinct "Goal" event type (a goal is a Shot event
-    # with shot.outcome.name == "Goal") — verified directly that every
-    # mid-period "From Kick Off" restart is preceded by exactly that (the
-    # only OTHER time "From Kick Off" appears is the real match kickoff,
-    # which isn't a mid-match gap at all since Half Start/Half End aren't
-    # in the event stream this scans), so the tag alone is a reliable signal
-    # here without needing to separately detect the preceding goal event.
-    "From Kick Off": "Goal — restart",
-}
+# Dead-ball restarts, read off the restart event itself: StatsBomb types the
+# set-piece pass (pass.type) or shot (shot.type). The play_pattern tag is NOT
+# used for this: it describes the whole possession, so a later pause inside a
+# possession that began with a throw-in is also tagged "From Throw In" (~15 % of
+# 5 s+ gaps on 7 matches were such pauses, never a restart).
+SET_PIECE_PASS = {"Throw-in", "Free Kick", "Goal Kick", "Corner", "Kick Off"}
+SET_PIECE_SHOT = {"Free Kick", "Penalty"}
 
 def _fetch(url, dest):
     if not os.path.exists(dest) or os.path.getsize(dest) < 100:
@@ -109,6 +100,16 @@ def load_match(match_id, competition_id=2, season_id=27):
             ev["passOutcome"] = p.get("outcome", {}).get("name", "Complete")
             ev["passRecipientId"] = p.get("recipient", {}).get("id")
             ev["passFlags"] = [k for k in ("through_ball", "cross", "switch", "cut_back") if p.get(k)]
+            ev["passHeight"] = (p.get("height") or {}).get("name")
+            ptype = (p.get("type") or {}).get("name")
+            if ptype in SET_PIECE_PASS:
+                ev["setPiece"] = ptype
+        br = e.get("ball_receipt")
+        if br and br.get("outcome"):
+            ev["receiptOutcome"] = br["outcome"].get("name")
+        gk = e.get("goalkeeper")
+        if gk and gk.get("type"):
+            ev["gkType"] = gk["type"].get("name")
         c = e.get("carry")
         if c and c.get("end_location"):
             ev["carryEnd"] = _to_m(c["end_location"])
@@ -117,6 +118,9 @@ def load_match(match_id, competition_id=2, season_id=27):
             ev["shotOutcome"] = s.get("outcome", {}).get("name")
             ev["shotEnd"] = _to_m(s["end_location"][:2]) if s.get("end_location") else None
             ev["xg"] = s.get("statsbomb_xg")
+            stype = (s.get("type") or {}).get("name")
+            if stype in SET_PIECE_SHOT:
+                ev["setPiece"] = stype
             # Shooter's own frame. Opponents are converted into their own frame
             # where they are used (build_match.add_freeze_frame_anchors).
             ev["freezeFrame"] = [

@@ -732,29 +732,23 @@
    {
     "mode": "realism",
     "name": "Jack Colback",
-    "t": 3781.667,
+    "t": 416.133,
     "dist_m": 0.195,
     "speed_mps": 11.7,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 9.2,
+    "cause": "carry path",
+    "implied_mps": 8.1,
     "anchors": [
      [
-      3781.601,
-      49.79,
-      45.47,
-      0
-     ],
-     [
-      3781.74,
-      49.79,
-      46.75,
+      416.118,
+      36.05,
+      53.64,
       0
      ]
     ],
     "collisions": [],
     "reentry": [],
     "kickoff": false,
-    "carry": false,
+    "carry": true,
     "reception": false
    }
   ],
@@ -4785,6 +4779,34 @@
   "realism_worst_frames": [
    {
     "mode": "realism",
+    "name": "Charlie Daniels",
+    "t": 4505.417,
+    "dist_m": 0.224,
+    "speed_mps": 13.4,
+    "cause": "carry path",
+    "implied_mps": 6.7,
+    "anchors": [
+     [
+      4504.699,
+      70.88,
+      4.25,
+      0
+     ],
+     [
+      4505.416,
+      76.65,
+      7.65,
+      1
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "realism",
     "name": "Modou Barrow",
     "t": 1442.317,
     "dist_m": 0.199,
@@ -4900,27 +4922,30 @@
     "kickoff": false,
     "carry": false,
     "reception": false
-   },
+   }
+  ],
+  "realism_flagged": [],
+  "tactical_worst_frames": [
    {
-    "mode": "realism",
-    "name": "Modou Barrow",
-    "t": 1442.283,
-    "dist_m": 0.197,
-    "speed_mps": 11.8,
+    "mode": "tactical",
+    "name": "Charlie Daniels",
+    "t": 4505.417,
+    "dist_m": 0.224,
+    "speed_mps": 13.4,
     "cause": "carry path",
-    "implied_mps": 9.4,
+    "implied_mps": 6.7,
     "anchors": [
      [
-      1442.101,
-      85.84,
-      49.47,
+      4504.699,
+      70.88,
+      4.25,
       0
      ],
      [
-      1442.518,
-      88.46,
-      52.36,
-      0
+      4505.416,
+      76.65,
+      7.65,
+      1
      ]
     ],
     "collisions": [],
@@ -4928,10 +4953,7 @@
     "kickoff": false,
     "carry": true,
     "reception": false
-   }
-  ],
-  "realism_flagged": [],
-  "tactical_worst_frames": [
+   },
    {
     "mode": "tactical",
     "name": "Modou Barrow",
@@ -5022,34 +5044,6 @@
     "t": 1442.283,
     "dist_m": 0.197,
     "speed_mps": 11.8,
-    "cause": "carry path",
-    "implied_mps": 9.4,
-    "anchors": [
-     [
-      1442.101,
-      85.84,
-      49.47,
-      0
-     ],
-     [
-      1442.518,
-      88.46,
-      52.36,
-      0
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": true,
-    "reception": false
-   },
-   {
-    "mode": "tactical",
-    "name": "Modou Barrow",
-    "t": 1442.35,
-    "dist_m": 0.195,
-    "speed_mps": 11.7,
     "cause": "carry path",
     "implied_mps": 9.4,
     "anchors": [
@@ -7426,6 +7420,28 @@
   "tactical_worst_frames": [
    {
     "mode": "tactical",
+    "name": "Carles Gil",
+    "t": 359.017,
+    "dist_m": 0.197,
+    "speed_mps": 11.8,
+    "cause": "carry path",
+    "implied_mps": 4.8,
+    "anchors": [
+     [
+      359.006,
+      74.46,
+      29.33,
+      1
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "tactical",
     "name": "Enner Valencia",
     "t": 586.567,
     "dist_m": 0.194,
@@ -7535,34 +7551,6 @@
     "kickoff": false,
     "carry": false,
     "reception": false
-   },
-   {
-    "mode": "tactical",
-    "name": "Enner Valencia",
-    "t": 586.533,
-    "dist_m": 0.192,
-    "speed_mps": 11.5,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 8.6,
-    "anchors": [
-     [
-      586.229,
-      48.82,
-      39.02,
-      0
-     ],
-     [
-      586.888,
-      43.23,
-      39.95,
-      0
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
    }
   ],
   "tactical_flagged": [],
@@ -7628,6 +7616,28 @@
    },
    {
     "mode": "realism",
+    "name": "Gast\u00c3\u00b3n Ram\u00c3\u00adrez",
+    "t": 5374.803,
+    "dist_m": 0.194,
+    "speed_mps": 11.7,
+    "cause": "carry path",
+    "implied_mps": 0.3,
+    "anchors": [
+     [
+      5374.802,
+      62.65,
+      54.74,
+      1
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "realism",
     "name": "Angelo Ogbonna",
     "t": 3600.9,
     "dist_m": 0.194,
@@ -7673,40 +7683,6 @@
       3601.227,
       19.78,
       22.78,
-      0
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "realism",
-    "name": "Carl Jenkinson",
-    "t": 750.95,
-    "dist_m": 0.193,
-    "speed_mps": 11.6,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 8.9,
-    "anchors": [
-     [
-      750.848,
-      6.65,
-      32.9,
-      3
-     ],
-     [
-      751.101,
-      5.69,
-      34.94,
-      0
-     ],
-     [
-      751.709,
-      5.69,
-      34.94,
       0
      ]
     ],
@@ -7777,6 +7753,28 @@
    },
    {
     "mode": "tactical",
+    "name": "Gast\u00c3\u00b3n Ram\u00c3\u00adrez",
+    "t": 5374.803,
+    "dist_m": 0.195,
+    "speed_mps": 11.7,
+    "cause": "carry path",
+    "implied_mps": 0.3,
+    "anchors": [
+     [
+      5374.802,
+      62.65,
+      54.74,
+      1
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "tactical",
     "name": "Angelo Ogbonna",
     "t": 3600.9,
     "dist_m": 0.194,
@@ -7822,40 +7820,6 @@
       3601.227,
       19.78,
       22.78,
-      0
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "tactical",
-    "name": "Carl Jenkinson",
-    "t": 750.95,
-    "dist_m": 0.193,
-    "speed_mps": 11.6,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 8.9,
-    "anchors": [
-     [
-      750.848,
-      6.65,
-      32.9,
-      3
-     ],
-     [
-      751.101,
-      5.69,
-      34.94,
-      0
-     ],
-     [
-      751.709,
-      5.69,
-      34.94,
       0
      ]
     ],
@@ -8204,6 +8168,28 @@
    },
    {
     "mode": "realism",
+    "name": "Virgil van Dijk",
+    "t": 4744.233,
+    "dist_m": 0.197,
+    "speed_mps": 11.8,
+    "cause": "carry path",
+    "implied_mps": 9,
+    "anchors": [
+     [
+      4744.217,
+      48.74,
+      9.77,
+      0
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "realism",
     "name": "Sadio Man\u00c3\u00a9",
     "t": 2749.933,
     "dist_m": 0.196,
@@ -8297,38 +8283,6 @@
     "kickoff": false,
     "carry": true,
     "reception": false
-   },
-   {
-    "mode": "realism",
-    "name": "DeAndre Yedlin",
-    "t": 1888.867,
-    "dist_m": 0.194,
-    "speed_mps": 11.6,
-    "cause": "carry path",
-    "implied_mps": 9.5,
-    "anchors": [
-     [
-      1888.593,
-      70.52,
-      45.73,
-      0
-     ]
-    ],
-    "collisions": [
-     {
-      "type": "collision_retimed",
-      "playerId": 3658,
-      "t": 1889.705,
-      "t_new": 1889.917,
-      "dist_m": 12.58,
-      "kind": "event",
-      "dt_s": 1.112
-     }
-    ],
-    "reentry": [],
-    "kickoff": false,
-    "carry": true,
-    "reception": false
    }
   ],
   "realism_flagged": [],
@@ -8360,6 +8314,28 @@
       "dt_s": 1.255
      }
     ],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "tactical",
+    "name": "Virgil van Dijk",
+    "t": 4744.233,
+    "dist_m": 0.197,
+    "speed_mps": 11.8,
+    "cause": "carry path",
+    "implied_mps": 9,
+    "anchors": [
+     [
+      4744.217,
+      48.74,
+      9.77,
+      0
+     ]
+    ],
+    "collisions": [],
     "reentry": [],
     "kickoff": false,
     "carry": true,
@@ -8433,38 +8409,6 @@
     "mode": "tactical",
     "name": "DeAndre Yedlin",
     "t": 1888.883,
-    "dist_m": 0.194,
-    "speed_mps": 11.6,
-    "cause": "carry path",
-    "implied_mps": 9.5,
-    "anchors": [
-     [
-      1888.593,
-      70.52,
-      45.73,
-      0
-     ]
-    ],
-    "collisions": [
-     {
-      "type": "collision_retimed",
-      "playerId": 3658,
-      "t": 1889.705,
-      "t_new": 1889.917,
-      "dist_m": 12.58,
-      "kind": "event",
-      "dt_s": 1.112
-     }
-    ],
-    "reentry": [],
-    "kickoff": false,
-    "carry": true,
-    "reception": false
-   },
-   {
-    "mode": "tactical",
-    "name": "DeAndre Yedlin",
-    "t": 1888.867,
     "dist_m": 0.194,
     "speed_mps": 11.6,
     "cause": "carry path",
@@ -9127,6 +9071,50 @@
   "realism_worst_frames": [
    {
     "mode": "realism",
+    "name": "Michael Carrick",
+    "t": 317.1,
+    "dist_m": 0.207,
+    "speed_mps": 12.4,
+    "cause": "carry path",
+    "implied_mps": 9.2,
+    "anchors": [
+     [
+      317.084,
+      58.36,
+      38.25,
+      0
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "realism",
+    "name": "Nathaniel Clyne",
+    "t": 3383,
+    "dist_m": 0.197,
+    "speed_mps": 11.8,
+    "cause": "carry path",
+    "implied_mps": 1.3,
+    "anchors": [
+     [
+      3382.998,
+      78.14,
+      64.09,
+      0
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "realism",
     "name": "Roberto Firmino",
     "t": 54.317,
     "dist_m": 0.196,
@@ -9208,74 +9196,32 @@
     "kickoff": false,
     "carry": false,
     "reception": false
-   },
-   {
-    "mode": "realism",
-    "name": "Ander Herrera",
-    "t": 326.9,
-    "dist_m": 0.193,
-    "speed_mps": 11.6,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 9.5,
-    "anchors": [
-     [
-      326.642,
-      98.26,
-      53.12,
-      0
-     ]
-    ],
-    "collisions": [
-     {
-      "type": "collision_retimed",
-      "playerId": 3606,
-      "t": 328.138,
-      "t_new": 328.182,
-      "dist_m": 14.63,
-      "kind": "event",
-      "dt_s": 1.496
-     }
-    ],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "realism",
-    "name": "Ander Herrera",
-    "t": 326.883,
-    "dist_m": 0.192,
-    "speed_mps": 11.5,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 9.5,
-    "anchors": [
-     [
-      326.642,
-      98.26,
-      53.12,
-      0
-     ]
-    ],
-    "collisions": [
-     {
-      "type": "collision_retimed",
-      "playerId": 3606,
-      "t": 328.138,
-      "t_new": 328.182,
-      "dist_m": 14.63,
-      "kind": "event",
-      "dt_s": 1.496
-     }
-    ],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
    }
   ],
   "realism_flagged": [],
   "tactical_worst_frames": [
+   {
+    "mode": "tactical",
+    "name": "Michael Carrick",
+    "t": 317.1,
+    "dist_m": 0.206,
+    "speed_mps": 12.3,
+    "cause": "carry path",
+    "implied_mps": 9.2,
+    "anchors": [
+     [
+      317.084,
+      58.36,
+      38.25,
+      0
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
    {
     "mode": "tactical",
     "name": "Roberto Firmino",
@@ -9334,6 +9280,28 @@
    },
    {
     "mode": "tactical",
+    "name": "Nathaniel Clyne",
+    "t": 3383,
+    "dist_m": 0.197,
+    "speed_mps": 11.8,
+    "cause": "carry path",
+    "implied_mps": 1.3,
+    "anchors": [
+     [
+      3382.998,
+      78.14,
+      64.09,
+      0
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "tactical",
     "name": "Roberto Firmino",
     "t": 54.333,
     "dist_m": 0.195,
@@ -9355,66 +9323,6 @@
      ]
     ],
     "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "tactical",
-    "name": "Roberto Firmino",
-    "t": 54.283,
-    "dist_m": 0.194,
-    "speed_mps": 11.6,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 8.2,
-    "anchors": [
-     [
-      54.127,
-      72.27,
-      64.09,
-      0
-     ],
-     [
-      54.494,
-      69.91,
-      65.96,
-      0
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "tactical",
-    "name": "Ander Herrera",
-    "t": 326.9,
-    "dist_m": 0.193,
-    "speed_mps": 11.6,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 9.5,
-    "anchors": [
-     [
-      326.642,
-      98.26,
-      53.12,
-      0
-     ]
-    ],
-    "collisions": [
-     {
-      "type": "collision_retimed",
-      "playerId": 3606,
-      "t": 328.138,
-      "t_new": 328.182,
-      "dist_m": 14.63,
-      "kind": "event",
-      "dt_s": 1.496
-     }
-    ],
     "reentry": [],
     "kickoff": false,
     "carry": false,
@@ -11439,6 +11347,34 @@
   "realism_worst_frames": [
    {
     "mode": "realism",
+    "name": "Victor Wanyama",
+    "t": 5345.367,
+    "dist_m": 0.19,
+    "speed_mps": 11.4,
+    "cause": "carry path",
+    "implied_mps": 9.2,
+    "anchors": [
+     [
+      5345.353,
+      57.84,
+      45.56,
+      0
+     ],
+     [
+      5346.353,
+      65.71,
+      40.72,
+      1
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "realism",
     "name": "Daley Blind",
     "t": 1565.467,
     "dist_m": 0.186,
@@ -11523,58 +11459,30 @@
    },
    {
     "mode": "realism",
-    "name": "Steven Davis",
-    "t": 4956.871,
-    "dist_m": 0.176,
+    "name": "Marcos Rojo",
+    "t": 3825.483,
+    "dist_m": 0.177,
     "speed_mps": 10.6,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 7.9,
+    "cause": "carry path",
+    "implied_mps": 0.2,
     "anchors": [
      [
-      4956.651,
-      24.59,
-      22.1,
+      3824.631,
+      79.8,
+      7.99,
       0
      ],
      [
-      4957.347,
-      22.05,
-      17.26,
-      0
+      3825.482,
+      87.06,
+      7.82,
+      1
      ]
     ],
     "collisions": [],
     "reentry": [],
     "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "realism",
-    "name": "Steven Davis",
-    "t": 4956.904,
-    "dist_m": 0.176,
-    "speed_mps": 10.6,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 7.9,
-    "anchors": [
-     [
-      4956.651,
-      24.59,
-      22.1,
-      0
-     ],
-     [
-      4957.347,
-      22.05,
-      17.26,
-      0
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
+    "carry": true,
     "reception": false
    }
   ],
@@ -11610,6 +11518,34 @@
    },
    {
     "mode": "tactical",
+    "name": "Victor Wanyama",
+    "t": 5345.367,
+    "dist_m": 0.184,
+    "speed_mps": 11.1,
+    "cause": "carry path",
+    "implied_mps": 9.2,
+    "anchors": [
+     [
+      5345.353,
+      57.84,
+      45.56,
+      0
+     ],
+     [
+      5346.353,
+      65.71,
+      40.72,
+      1
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "tactical",
     "name": "Daley Blind",
     "t": 1565.45,
     "dist_m": 0.181,
@@ -11668,34 +11604,6 @@
     "mode": "tactical",
     "name": "Steven Davis",
     "t": 4956.871,
-    "dist_m": 0.176,
-    "speed_mps": 10.6,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 7.9,
-    "anchors": [
-     [
-      4956.651,
-      24.59,
-      22.1,
-      0
-     ],
-     [
-      4957.347,
-      22.05,
-      17.26,
-      0
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "tactical",
-    "name": "Steven Davis",
-    "t": 4956.904,
     "dist_m": 0.176,
     "speed_mps": 10.6,
     "cause": "reconstruction between anchors",
@@ -14618,6 +14526,34 @@
   "tactical_worst_frames": [
    {
     "mode": "tactical",
+    "name": "Benik Afobe",
+    "t": 4203.983,
+    "dist_m": 0.204,
+    "speed_mps": 12.2,
+    "cause": "carry path",
+    "implied_mps": 5.3,
+    "anchors": [
+     [
+      4203.821,
+      74.55,
+      55.5,
+      0
+     ],
+     [
+      4203.981,
+      75.95,
+      55.25,
+      1
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "tactical",
     "name": "Adam Smith",
     "t": 3544.4,
     "dist_m": 0.199,
@@ -14719,34 +14655,6 @@
       3544.532,
       14,
       52.28,
-      0
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "tactical",
-    "name": "James Tomkins",
-    "t": 1878.85,
-    "dist_m": 0.195,
-    "speed_mps": 11.7,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 9.2,
-    "anchors": [
-     [
-      1878.581,
-      20.91,
-      52.19,
-      0
-     ],
-     [
-      1879.8,
-      10.67,
-      47.6,
       0
      ]
     ],
@@ -17396,6 +17304,34 @@
   "realism_worst_frames": [
    {
     "mode": "realism",
+    "name": "Donald Love",
+    "t": 3046.677,
+    "dist_m": 0.198,
+    "speed_mps": 11.9,
+    "cause": "carry path",
+    "implied_mps": 2.8,
+    "anchors": [
+     [
+      3046.008,
+      24.76,
+      56.44,
+      0
+     ],
+     [
+      3046.677,
+      20.65,
+      52.02,
+      1
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "realism",
     "name": "Anthony Martial",
     "t": 948.633,
     "dist_m": 0.194,
@@ -17508,44 +17444,6 @@
     "mode": "realism",
     "name": "Patrick van Aanholt",
     "t": 3873.767,
-    "dist_m": 0.192,
-    "speed_mps": 11.5,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 9.5,
-    "anchors": [
-     [
-      3873.32,
-      16.8,
-      4.5,
-      0
-     ],
-     [
-      3874.603,
-      28.7,
-      1.87,
-      0
-     ]
-    ],
-    "collisions": [
-     {
-      "type": "collision_retimed",
-      "playerId": 3321,
-      "t": 3874.522,
-      "t_new": 3874.603,
-      "dist_m": 12.19,
-      "kind": "event",
-      "dt_s": 1.202
-     }
-    ],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "realism",
-    "name": "Patrick van Aanholt",
-    "t": 3873.817,
     "dist_m": 0.192,
     "speed_mps": 11.5,
     "cause": "reconstruction between anchors",
@@ -17585,6 +17483,34 @@
   "tactical_worst_frames": [
    {
     "mode": "tactical",
+    "name": "Donald Love",
+    "t": 3046.677,
+    "dist_m": 0.198,
+    "speed_mps": 11.9,
+    "cause": "carry path",
+    "implied_mps": 2.8,
+    "anchors": [
+     [
+      3046.008,
+      24.76,
+      56.44,
+      0
+     ],
+     [
+      3046.677,
+      20.65,
+      52.02,
+      1
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "tactical",
     "name": "Anthony Martial",
     "t": 948.633,
     "dist_m": 0.194,
@@ -17697,44 +17623,6 @@
     "mode": "tactical",
     "name": "Patrick van Aanholt",
     "t": 3873.767,
-    "dist_m": 0.192,
-    "speed_mps": 11.5,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 9.5,
-    "anchors": [
-     [
-      3873.32,
-      16.8,
-      4.5,
-      0
-     ],
-     [
-      3874.603,
-      28.7,
-      1.87,
-      0
-     ]
-    ],
-    "collisions": [
-     {
-      "type": "collision_retimed",
-      "playerId": 3321,
-      "t": 3874.522,
-      "t_new": 3874.603,
-      "dist_m": 12.19,
-      "kind": "event",
-      "dt_s": 1.202
-     }
-    ],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "tactical",
-    "name": "Patrick van Aanholt",
-    "t": 3873.817,
     "dist_m": 0.192,
     "speed_mps": 11.5,
     "cause": "reconstruction between anchors",
@@ -18219,36 +18107,30 @@
    },
    {
     "mode": "realism",
-    "name": "N'Golo Kant\u00c3\u00a9",
-    "t": 2920.083,
-    "dist_m": 0.185,
+    "name": "Ross Barkley",
+    "t": 1160.6,
+    "dist_m": 0.186,
     "speed_mps": 11.1,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 8.4,
+    "cause": "carry path",
+    "implied_mps": 9,
     "anchors": [
      [
-      2919.599,
-      48.12,
-      18.36,
+      1160.592,
+      84.44,
+      56.35,
       0
      ],
      [
-      2919.96,
-      50.75,
-      17.94,
-      0
-     ],
-     [
-      2920.152,
-      49.44,
-      18.87,
+      1161.429,
+      90.91,
+      52.45,
       0
      ]
     ],
     "collisions": [],
     "reentry": [],
     "kickoff": false,
-    "carry": false,
+    "carry": true,
     "reception": false
    }
   ],
@@ -26232,6 +26114,28 @@
    {
     "mode": "realism",
     "name": "Danny Ings",
+    "t": 4408.817,
+    "dist_m": 0.2,
+    "speed_mps": 12,
+    "cause": "carry path",
+    "implied_mps": 8.9,
+    "anchors": [
+     [
+      4408.802,
+      82.25,
+      51.25,
+      0
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "realism",
+    "name": "Danny Ings",
     "t": 3276.683,
     "dist_m": 0.187,
     "speed_mps": 11.2,
@@ -26317,34 +26221,6 @@
     "mode": "realism",
     "name": "Danny Ings",
     "t": 3276.717,
-    "dist_m": 0.187,
-    "speed_mps": 11.2,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 8.9,
-    "anchors": [
-     [
-      3276.047,
-      67.9,
-      31.11,
-      1
-     ],
-     [
-      3277.16,
-      75.34,
-      24.65,
-      0
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "realism",
-    "name": "Danny Ings",
-    "t": 3276.65,
     "dist_m": 0.187,
     "speed_mps": 11.2,
     "cause": "reconstruction between anchors",
@@ -26976,72 +26852,6 @@
   "tactical_worst_frames": [
    {
     "mode": "tactical",
-    "name": "Saido Berahino",
-    "t": 4960.201,
-    "dist_m": 0.2,
-    "speed_mps": 12,
-    "cause": "carry path",
-    "implied_mps": 9.3,
-    "anchors": [
-     [
-      4960.551,
-      84.79,
-      46.33,
-      1
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": true,
-    "reception": false
-   },
-   {
-    "mode": "tactical",
-    "name": "Saido Berahino",
-    "t": 4960.184,
-    "dist_m": 0.2,
-    "speed_mps": 12,
-    "cause": "carry path",
-    "implied_mps": 9.3,
-    "anchors": [
-     [
-      4960.551,
-      84.79,
-      46.33,
-      1
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": true,
-    "reception": false
-   },
-   {
-    "mode": "tactical",
-    "name": "Saido Berahino",
-    "t": 4960.217,
-    "dist_m": 0.2,
-    "speed_mps": 12,
-    "cause": "carry path",
-    "implied_mps": 9.3,
-    "anchors": [
-     [
-      4960.551,
-      84.79,
-      46.33,
-      1
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": true,
-    "reception": false
-   },
-   {
-    "mode": "tactical",
     "name": "Darren Fletcher",
     "t": 3437.15,
     "dist_m": 0.2,
@@ -27074,6 +26884,90 @@
     "t": 3437.133,
     "dist_m": 0.2,
     "speed_mps": 12,
+    "cause": "reconstruction between anchors",
+    "implied_mps": 9.4,
+    "anchors": [
+     [
+      3436.891,
+      73.41,
+      54.4,
+      0
+     ],
+     [
+      3437.391,
+      69.12,
+      52.53,
+      0
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": false,
+    "reception": false
+   },
+   {
+    "mode": "tactical",
+    "name": "Kurt Zouma",
+    "t": 2455.7,
+    "dist_m": 0.199,
+    "speed_mps": 12,
+    "cause": "reconstruction between anchors",
+    "implied_mps": 8.5,
+    "anchors": [
+     [
+      2455.521,
+      10.5,
+      41.56,
+      0
+     ],
+     [
+      2455.859,
+      13.21,
+      40.63,
+      0
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": false,
+    "reception": false
+   },
+   {
+    "mode": "tactical",
+    "name": "Kurt Zouma",
+    "t": 2455.717,
+    "dist_m": 0.199,
+    "speed_mps": 11.9,
+    "cause": "reconstruction between anchors",
+    "implied_mps": 8.5,
+    "anchors": [
+     [
+      2455.521,
+      10.5,
+      41.56,
+      0
+     ],
+     [
+      2455.859,
+      13.21,
+      40.63,
+      0
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": false,
+    "reception": false
+   },
+   {
+    "mode": "tactical",
+    "name": "Darren Fletcher",
+    "t": 3437.167,
+    "dist_m": 0.199,
+    "speed_mps": 11.9,
     "cause": "reconstruction between anchors",
     "implied_mps": 9.4,
     "anchors": [
@@ -28605,6 +28499,28 @@
   "realism_worst_frames": [
    {
     "mode": "realism",
+    "name": "Ashley Westwood",
+    "t": 4133.55,
+    "dist_m": 0.203,
+    "speed_mps": 12.2,
+    "cause": "carry path",
+    "implied_mps": 2.6,
+    "anchors": [
+     [
+      4133.55,
+      58.36,
+      55.25,
+      1
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "realism",
     "name": "Jonny Evans",
     "t": 3189.717,
     "dist_m": 0.192,
@@ -28704,38 +28620,6 @@
     "name": "Jonny Evans",
     "t": 3189.683,
     "dist_m": 0.192,
-    "speed_mps": 11.5,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 9.5,
-    "anchors": [
-     [
-      3189.036,
-      21.53,
-      14.62,
-      0
-     ]
-    ],
-    "collisions": [
-     {
-      "type": "collision_retimed",
-      "playerId": 11012,
-      "t": 3191.195,
-      "t_new": 3191.617,
-      "dist_m": 24.52,
-      "kind": "freeze",
-      "dt_s": 2.159
-     }
-    ],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "realism",
-    "name": "Jonny Evans",
-    "t": 3189.75,
-    "dist_m": 0.191,
     "speed_mps": 11.5,
     "cause": "reconstruction between anchors",
     "implied_mps": 9.5,
@@ -28768,6 +28652,28 @@
   "tactical_worst_frames": [
    {
     "mode": "tactical",
+    "name": "Ashley Westwood",
+    "t": 4133.55,
+    "dist_m": 0.203,
+    "speed_mps": 12.2,
+    "cause": "carry path",
+    "implied_mps": 2.6,
+    "anchors": [
+     [
+      4133.55,
+      58.36,
+      55.25,
+      1
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "tactical",
     "name": "Jonny Evans",
     "t": 3189.717,
     "dist_m": 0.192,
@@ -28867,38 +28773,6 @@
     "name": "Jonny Evans",
     "t": 3189.683,
     "dist_m": 0.192,
-    "speed_mps": 11.5,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 9.5,
-    "anchors": [
-     [
-      3189.036,
-      21.53,
-      14.62,
-      0
-     ]
-    ],
-    "collisions": [
-     {
-      "type": "collision_retimed",
-      "playerId": 11012,
-      "t": 3191.195,
-      "t_new": 3191.617,
-      "dist_m": 24.52,
-      "kind": "freeze",
-      "dt_s": 2.159
-     }
-    ],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "tactical",
-    "name": "Jonny Evans",
-    "t": 3189.75,
-    "dist_m": 0.191,
     "speed_mps": 11.5,
     "cause": "reconstruction between anchors",
     "implied_mps": 9.5,
@@ -29006,6 +28880,28 @@
    },
    {
     "mode": "realism",
+    "name": "H\u00c3\u00a9ctor Beller\u00c3\u00adn",
+    "t": 387.183,
+    "dist_m": 0.195,
+    "speed_mps": 11.7,
+    "cause": "carry path",
+    "implied_mps": 1.7,
+    "anchors": [
+     [
+      387.182,
+      57.75,
+      60.43,
+      1
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "realism",
     "name": "Siem Stefan de Jong",
     "t": 5289.863,
     "dist_m": 0.195,
@@ -29044,44 +28940,6 @@
     "t": 4794.617,
     "dist_m": 0.195,
     "speed_mps": 11.7,
-    "cause": "bracketing real anchors imply it (9.5 m/s)",
-    "implied_mps": 9.5,
-    "anchors": [
-     [
-      4794.152,
-      24.59,
-      58.31,
-      0
-     ],
-     [
-      4795.289,
-      15.75,
-      64.52,
-      0
-     ]
-    ],
-    "collisions": [
-     {
-      "type": "collision_retimed",
-      "playerId": 3091,
-      "t": 4795.235,
-      "t_new": 4795.289,
-      "dist_m": 10.8,
-      "kind": "event",
-      "dt_s": 1.083
-     }
-    ],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "realism",
-    "name": "Moussa Sissoko",
-    "t": 4794.6,
-    "dist_m": 0.193,
-    "speed_mps": 11.6,
     "cause": "bracketing real anchors imply it (9.5 m/s)",
     "implied_mps": 9.5,
     "anchors": [
@@ -29195,6 +29053,28 @@
    },
    {
     "mode": "tactical",
+    "name": "H\u00c3\u00a9ctor Beller\u00c3\u00adn",
+    "t": 387.183,
+    "dist_m": 0.194,
+    "speed_mps": 11.7,
+    "cause": "carry path",
+    "implied_mps": 1.7,
+    "anchors": [
+     [
+      387.182,
+      57.75,
+      60.43,
+      1
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "tactical",
     "name": "Moussa Sissoko",
     "t": 4794.6,
     "dist_m": 0.193,
@@ -29260,44 +29140,6 @@
      ]
     ],
     "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "tactical",
-    "name": "Moussa Sissoko",
-    "t": 4794.583,
-    "dist_m": 0.191,
-    "speed_mps": 11.4,
-    "cause": "bracketing real anchors imply it (9.5 m/s)",
-    "implied_mps": 9.5,
-    "anchors": [
-     [
-      4794.152,
-      24.59,
-      58.31,
-      0
-     ],
-     [
-      4795.289,
-      15.75,
-      64.52,
-      0
-     ]
-    ],
-    "collisions": [
-     {
-      "type": "collision_retimed",
-      "playerId": 3091,
-      "t": 4795.235,
-      "t_new": 4795.289,
-      "dist_m": 10.8,
-      "kind": "event",
-      "dt_s": 1.083
-     }
-    ],
     "reentry": [],
     "kickoff": false,
     "carry": false,
@@ -29731,6 +29573,28 @@
   "tactical_worst_frames": [
    {
     "mode": "tactical",
+    "name": "Patrick van Aanholt",
+    "t": 5336.583,
+    "dist_m": 0.212,
+    "speed_mps": 12.7,
+    "cause": "carry path",
+    "implied_mps": 6.8,
+    "anchors": [
+     [
+      5336.583,
+      90.04,
+      17.26,
+      0
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "tactical",
     "name": "Jermain Defoe",
     "t": 5745,
     "dist_m": 0.207,
@@ -29826,34 +29690,6 @@
       3285.108,
       90.48,
       13.43,
-      0
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "tactical",
-    "name": "Wes Brown",
-    "t": 5697.667,
-    "dist_m": 0.192,
-    "speed_mps": 11.5,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 9.4,
-    "anchors": [
-     [
-      5697.617,
-      22.66,
-      23.04,
-      0
-     ],
-     [
-      5697.701,
-      23.45,
-      23.04,
       0
      ]
     ],
@@ -32066,6 +31902,28 @@
    },
    {
     "mode": "realism",
+    "name": "Ayoze P\u00c3\u00a9rez",
+    "t": 2618.383,
+    "dist_m": 0.198,
+    "speed_mps": 11.9,
+    "cause": "carry path",
+    "implied_mps": 8.5,
+    "anchors": [
+     [
+      2618.368,
+      29.84,
+      42.75,
+      0
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "realism",
     "name": "Daryl Janmaat",
     "t": 430.1,
     "dist_m": 0.197,
@@ -32134,28 +31992,6 @@
       0.44,
       40.89,
       3
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "realism",
-    "name": "Pablo Zabaleta",
-    "t": 2096.183,
-    "dist_m": 0.196,
-    "speed_mps": 11.8,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 9.2,
-    "anchors": [
-     [
-      2096.493,
-      75.6,
-      53.12,
-      0
      ]
     ],
     "collisions": [],
@@ -32169,6 +32005,28 @@
   "tactical_worst_frames": [
    {
     "mode": "tactical",
+    "name": "Ayoze P\u00c3\u00a9rez",
+    "t": 2618.383,
+    "dist_m": 0.198,
+    "speed_mps": 11.9,
+    "cause": "carry path",
+    "implied_mps": 8.5,
+    "anchors": [
+     [
+      2618.368,
+      29.84,
+      42.75,
+      0
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "tactical",
     "name": "Daryl Janmaat",
     "t": 430.1,
     "dist_m": 0.197,
@@ -32258,28 +32116,6 @@
       2096.493,
       75.6,
       53.12,
-      0
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "tactical",
-    "name": "Pablo Zabaleta",
-    "t": 2094.983,
-    "dist_m": 0.196,
-    "speed_mps": 11.8,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 9.2,
-    "anchors": [
-     [
-      2094.965,
-      79.36,
-      39.53,
       0
      ]
     ],
@@ -35684,6 +35520,28 @@
   "realism_worst_frames": [
    {
     "mode": "realism",
+    "name": "Troy Deeney",
+    "t": 1985.317,
+    "dist_m": 0.215,
+    "speed_mps": 12.9,
+    "cause": "carry path",
+    "implied_mps": 5,
+    "anchors": [
+     [
+      1985.316,
+      59.85,
+      46.16,
+      1
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "realism",
     "name": "Marko Arnautovi\u00c4\u2021",
     "t": 916.183,
     "dist_m": 0.199,
@@ -35754,28 +35612,6 @@
     "t": 916.217,
     "dist_m": 0.198,
     "speed_mps": 11.9,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 9.1,
-    "anchors": [
-     [
-      916.55,
-      93.01,
-      13.86,
-      0
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "realism",
-    "name": "Marko Arnautovi\u00c4\u2021",
-    "t": 916.15,
-    "dist_m": 0.197,
-    "speed_mps": 11.8,
     "cause": "reconstruction between anchors",
     "implied_mps": 9.1,
     "anchors": [
@@ -35797,6 +35633,28 @@
   "tactical_worst_frames": [
    {
     "mode": "tactical",
+    "name": "Troy Deeney",
+    "t": 1985.317,
+    "dist_m": 0.215,
+    "speed_mps": 12.9,
+    "cause": "carry path",
+    "implied_mps": 5,
+    "anchors": [
+     [
+      1985.316,
+      59.85,
+      46.16,
+      1
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "tactical",
     "name": "Marko Arnautovi\u00c4\u2021",
     "t": 916.183,
     "dist_m": 0.199,
@@ -35867,28 +35725,6 @@
     "t": 916.217,
     "dist_m": 0.198,
     "speed_mps": 11.9,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 9.1,
-    "anchors": [
-     [
-      916.55,
-      93.01,
-      13.86,
-      0
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "tactical",
-    "name": "Marko Arnautovi\u00c4\u2021",
-    "t": 916.15,
-    "dist_m": 0.197,
-    "speed_mps": 11.8,
     "cause": "reconstruction between anchors",
     "implied_mps": 9.1,
     "anchors": [
@@ -36762,6 +36598,34 @@
    },
    {
     "mode": "realism",
+    "name": "Michael Carrick",
+    "t": 3929.333,
+    "dist_m": 0.2,
+    "speed_mps": 12,
+    "cause": "carry path",
+    "implied_mps": 1.3,
+    "anchors": [
+     [
+      3929.096,
+      67.64,
+      42.67,
+      0
+     ],
+     [
+      3929.332,
+      67.02,
+      40.55,
+      1
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "realism",
     "name": "Peter Crouch",
     "t": 552.9,
     "dist_m": 0.198,
@@ -36831,34 +36695,6 @@
       "dt_s": 2.082
      }
     ],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "realism",
-    "name": "Jonathan Walters",
-    "t": 4921.567,
-    "dist_m": 0.197,
-    "speed_mps": 11.8,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 8.8,
-    "anchors": [
-     [
-      4921.355,
-      36.4,
-      58.31,
-      0
-     ],
-     [
-      4921.753,
-      39.81,
-      59.16,
-      0
-     ]
-    ],
-    "collisions": [],
     "reentry": [],
     "kickoff": false,
     "carry": false,
@@ -36945,6 +36781,34 @@
    },
    {
     "mode": "tactical",
+    "name": "Michael Carrick",
+    "t": 3929.333,
+    "dist_m": 0.2,
+    "speed_mps": 12,
+    "cause": "carry path",
+    "implied_mps": 1.3,
+    "anchors": [
+     [
+      3929.096,
+      67.64,
+      42.67,
+      0
+     ],
+     [
+      3929.332,
+      67.02,
+      40.55,
+      1
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "tactical",
     "name": "Peter Crouch",
     "t": 552.9,
     "dist_m": 0.198,
@@ -37017,44 +36881,6 @@
     "reentry": [],
     "kickoff": false,
     "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "tactical",
-    "name": "Phil Bardsley",
-    "t": 3395.94,
-    "dist_m": 0.194,
-    "speed_mps": 11.6,
-    "cause": "carry path",
-    "implied_mps": 9.5,
-    "anchors": [
-     [
-      3395.783,
-      68.16,
-      59.59,
-      1
-     ],
-     [
-      3396.748,
-      69.3,
-      50.49,
-      0
-     ]
-    ],
-    "collisions": [
-     {
-      "type": "collision_retimed",
-      "playerId": 3643,
-      "t": 3396.617,
-      "t_new": 3396.748,
-      "dist_m": 9.17,
-      "kind": "event",
-      "dt_s": 0.834
-     }
-    ],
-    "reentry": [],
-    "kickoff": false,
-    "carry": true,
     "reception": false
    }
   ],
@@ -38399,74 +38225,60 @@
    },
    {
     "mode": "realism",
+    "name": "Wayne Hennessey",
+    "t": 3468.95,
+    "dist_m": 0.187,
+    "speed_mps": 11.2,
+    "cause": "carry path",
+    "implied_mps": 8.8,
+    "anchors": [
+     [
+      3468.936,
+      19.86,
+      40.55,
+      0
+     ],
+     [
+      3469.052,
+      19.69,
+      41.56,
+      1
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "realism",
+    "name": "Martin Kelly",
+    "t": 2075.717,
+    "dist_m": 0.185,
+    "speed_mps": 11.1,
+    "cause": "carry path",
+    "implied_mps": 1.3,
+    "anchors": [
+     [
+      2075.713,
+      27.04,
+      62.47,
+      1
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "realism",
     "name": "Jason Puncheon",
     "t": 2858.933,
     "dist_m": 0.184,
     "speed_mps": 11,
-    "cause": "bracketing real anchors imply it (9.5 m/s)",
-    "implied_mps": 9.5,
-    "anchors": [
-     [
-      2858.762,
-      57.31,
-      52.87,
-      0
-     ]
-    ],
-    "collisions": [
-     {
-      "type": "collision_retimed",
-      "playerId": 19688,
-      "t": 2860.038,
-      "t_new": 2860.131,
-      "dist_m": 13.01,
-      "kind": "event",
-      "dt_s": 1.276
-     }
-    ],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "realism",
-    "name": "Jason Puncheon",
-    "t": 2858.917,
-    "dist_m": 0.183,
-    "speed_mps": 11,
-    "cause": "bracketing real anchors imply it (9.5 m/s)",
-    "implied_mps": 9.5,
-    "anchors": [
-     [
-      2858.762,
-      57.31,
-      52.87,
-      0
-     ]
-    ],
-    "collisions": [
-     {
-      "type": "collision_retimed",
-      "playerId": 19688,
-      "t": 2860.038,
-      "t_new": 2860.131,
-      "dist_m": 13.01,
-      "kind": "event",
-      "dt_s": 1.276
-     }
-    ],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "realism",
-    "name": "Jason Puncheon",
-    "t": 2858.95,
-    "dist_m": 0.182,
-    "speed_mps": 10.9,
     "cause": "bracketing real anchors imply it (9.5 m/s)",
     "implied_mps": 9.5,
     "anchors": [
@@ -40856,8 +40668,8 @@
     "mode": "realism",
     "name": "Eden Hazard",
     "t": 2964.8,
-    "dist_m": 0.209,
-    "speed_mps": 12.5,
+    "dist_m": 0.217,
+    "speed_mps": 13,
     "cause": "carry path",
     "implied_mps": 8.3,
     "anchors": [
@@ -40871,6 +40683,34 @@
       2965.636,
       55.82,
       27.2,
+      1
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "realism",
+    "name": "Nemanja Mati\u00c4\u2021",
+    "t": 1415.967,
+    "dist_m": 0.196,
+    "speed_mps": 11.7,
+    "cause": "carry path",
+    "implied_mps": 8.8,
+    "anchors": [
+     [
+      1415.95,
+      43.14,
+      11.13,
+      0
+     ],
+     [
+      1416.78,
+      50.05,
+      13.6,
       1
      ]
     ],
@@ -40963,28 +40803,6 @@
     "kickoff": false,
     "carry": false,
     "reception": false
-   },
-   {
-    "mode": "realism",
-    "name": "DeAndre Yedlin",
-    "t": 3037.033,
-    "dist_m": 0.182,
-    "speed_mps": 10.9,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 8.1,
-    "anchors": [
-     [
-      3037.09,
-      76.04,
-      50.49,
-      0
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
    }
   ],
   "realism_flagged": [],
@@ -40993,8 +40811,8 @@
     "mode": "tactical",
     "name": "Eden Hazard",
     "t": 2964.8,
-    "dist_m": 0.209,
-    "speed_mps": 12.5,
+    "dist_m": 0.217,
+    "speed_mps": 13,
     "cause": "carry path",
     "implied_mps": 8.3,
     "anchors": [
@@ -41008,6 +40826,34 @@
       2965.636,
       55.82,
       27.2,
+      1
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "tactical",
+    "name": "Nemanja Mati\u00c4\u2021",
+    "t": 1415.967,
+    "dist_m": 0.196,
+    "speed_mps": 11.7,
+    "cause": "carry path",
+    "implied_mps": 8.8,
+    "anchors": [
+     [
+      1415.95,
+      43.14,
+      11.13,
+      0
+     ],
+     [
+      1416.78,
+      50.05,
+      13.6,
       1
      ]
     ],
@@ -41092,34 +40938,6 @@
       4370.94,
       7.61,
       28.22,
-      0
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "tactical",
-    "name": "Patrick van Aanholt",
-    "t": 1168.417,
-    "dist_m": 0.183,
-    "speed_mps": 11,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 7.7,
-    "anchors": [
-     [
-      1168.314,
-      64.66,
-      11.22,
-      0
-     ],
-     [
-      1168.474,
-      63.7,
-      11.98,
       0
      ]
     ],
@@ -41476,6 +41294,34 @@
    },
    {
     "mode": "realism",
+    "name": "Raheem Sterling",
+    "t": 5264.627,
+    "dist_m": 0.188,
+    "speed_mps": 11.3,
+    "cause": "carry path",
+    "implied_mps": 2.8,
+    "anchors": [
+     [
+      5263.981,
+      68.77,
+      10.29,
+      0
+     ],
+     [
+      5264.625,
+      62.74,
+      9.95,
+      0
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "realism",
     "name": "Ga\u00c3\u00abl Clichy",
     "t": 2870.317,
     "dist_m": 0.187,
@@ -41529,34 +41375,6 @@
     "kickoff": false,
     "carry": false,
     "reception": false
-   },
-   {
-    "mode": "realism",
-    "name": "Ga\u00c3\u00abl Clichy",
-    "t": 2870.3,
-    "dist_m": 0.187,
-    "speed_mps": 11.2,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 9.4,
-    "anchors": [
-     [
-      2869.854,
-      65.98,
-      4.42,
-      0
-     ],
-     [
-      2870.906,
-      56.26,
-      2.38,
-      0
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
    }
   ],
   "realism_flagged": [],
@@ -41581,6 +41399,34 @@
     "reentry": [],
     "kickoff": false,
     "carry": false,
+    "reception": false
+   },
+   {
+    "mode": "tactical",
+    "name": "Raheem Sterling",
+    "t": 5264.627,
+    "dist_m": 0.188,
+    "speed_mps": 11.3,
+    "cause": "carry path",
+    "implied_mps": 2.8,
+    "anchors": [
+     [
+      5263.981,
+      68.77,
+      10.29,
+      0
+     ],
+     [
+      5264.625,
+      62.74,
+      9.95,
+      0
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
     "reception": false
    },
    {
@@ -41643,34 +41489,6 @@
     "mode": "tactical",
     "name": "Ga\u00c3\u00abl Clichy",
     "t": 2870.333,
-    "dist_m": 0.187,
-    "speed_mps": 11.2,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 9.4,
-    "anchors": [
-     [
-      2869.854,
-      65.98,
-      4.42,
-      0
-     ],
-     [
-      2870.906,
-      56.26,
-      2.38,
-      0
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "tactical",
-    "name": "Ga\u00c3\u00abl Clichy",
-    "t": 2870.3,
     "dist_m": 0.187,
     "speed_mps": 11.2,
     "cause": "reconstruction between anchors",
@@ -44422,30 +44240,24 @@
    },
    {
     "mode": "tactical",
-    "name": "Billy Jones",
-    "t": 2898.433,
+    "name": "Adam Johnson",
+    "t": 3412.083,
     "dist_m": 0.191,
     "speed_mps": 11.4,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 7.9,
+    "cause": "carry path",
+    "implied_mps": 0.7,
     "anchors": [
      [
-      2898.118,
-      37.1,
-      12.75,
-      0
-     ],
-     [
-      2898.83,
-      42.35,
-      14.79,
-      0
+      3412.083,
+      96.07,
+      55.34,
+      1
      ]
     ],
     "collisions": [],
     "reentry": [],
     "kickoff": false,
-    "carry": false,
+    "carry": true,
     "reception": false
    }
   ],
@@ -45385,6 +45197,34 @@
   "realism_worst_frames": [
    {
     "mode": "realism",
+    "name": "Cameron Jerome",
+    "t": 4603.25,
+    "dist_m": 0.196,
+    "speed_mps": 11.7,
+    "cause": "carry path",
+    "implied_mps": 1.1,
+    "anchors": [
+     [
+      4603.13,
+      71.31,
+      50.23,
+      0
+     ],
+     [
+      4603.25,
+      70.35,
+      50.58,
+      1
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "realism",
     "name": "Kevin Mirallas",
     "t": 2537.783,
     "dist_m": 0.195,
@@ -45500,34 +45340,6 @@
       65.28,
       0
      ],
-     [
-      2537.295,
-      81.73,
-      66.47,
-      0
-     ],
-     [
-      2538.284,
-      84.7,
-      58.14,
-      0
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": true,
-    "reception": false
-   },
-   {
-    "mode": "realism",
-    "name": "Kevin Mirallas",
-    "t": 2537.817,
-    "dist_m": 0.194,
-    "speed_mps": 11.6,
-    "cause": "carry path",
-    "implied_mps": 8.9,
-    "anchors": [
      [
       2537.295,
       81.73,
@@ -45552,6 +45364,34 @@
   "tactical_worst_frames": [
    {
     "mode": "tactical",
+    "name": "Cameron Jerome",
+    "t": 4603.25,
+    "dist_m": 0.196,
+    "speed_mps": 11.7,
+    "cause": "carry path",
+    "implied_mps": 1.1,
+    "anchors": [
+     [
+      4603.13,
+      71.31,
+      50.23,
+      0
+     ],
+     [
+      4603.25,
+      70.35,
+      50.58,
+      1
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "tactical",
     "name": "Kevin Mirallas",
     "t": 2537.783,
     "dist_m": 0.195,
@@ -45667,34 +45507,6 @@
       65.28,
       0
      ],
-     [
-      2537.295,
-      81.73,
-      66.47,
-      0
-     ],
-     [
-      2538.284,
-      84.7,
-      58.14,
-      0
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": true,
-    "reception": false
-   },
-   {
-    "mode": "tactical",
-    "name": "Kevin Mirallas",
-    "t": 2537.817,
-    "dist_m": 0.194,
-    "speed_mps": 11.7,
-    "cause": "carry path",
-    "implied_mps": 8.9,
-    "anchors": [
      [
       2537.295,
       81.73,
@@ -46469,6 +46281,28 @@
    },
    {
     "mode": "tactical",
+    "name": "Alex Oxlade-Chamberlain",
+    "t": 2849.467,
+    "dist_m": 0.192,
+    "speed_mps": 11.5,
+    "cause": "carry path",
+    "implied_mps": 0.2,
+    "anchors": [
+     [
+      2849.465,
+      80.67,
+      56.44,
+      0
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "tactical",
     "name": "Nacho Monreal",
     "t": 1636.15,
     "dist_m": 0.188,
@@ -46550,34 +46384,6 @@
     "kickoff": false,
     "carry": false,
     "reception": false
-   },
-   {
-    "mode": "tactical",
-    "name": "Nacho Monreal",
-    "t": 1636.117,
-    "dist_m": 0.185,
-    "speed_mps": 11.1,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 8.7,
-    "anchors": [
-     [
-      1635.66,
-      12.95,
-      54.31,
-      0
-     ],
-     [
-      1636.401,
-      6.56,
-      54.83,
-      0
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
    }
   ],
   "tactical_flagged": [],
@@ -46585,6 +46391,34 @@
  },
  "3754127": {
   "realism_worst_frames": [
+   {
+    "mode": "realism",
+    "name": "Marko Arnautovi\u00c4\u2021",
+    "t": 2627.983,
+    "dist_m": 0.204,
+    "speed_mps": 12.2,
+    "cause": "carry path",
+    "implied_mps": 8.3,
+    "anchors": [
+     [
+      2627.973,
+      94.24,
+      24.65,
+      0
+     ],
+     [
+      2628.472,
+      97.91,
+      26.52,
+      1
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
    {
     "mode": "realism",
     "name": "Ross Barkley",
@@ -46685,28 +46519,6 @@
     "mode": "realism",
     "name": "Marko Arnautovi\u00c4\u2021",
     "t": 4803.7,
-    "dist_m": 0.196,
-    "speed_mps": 11.8,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 9.3,
-    "anchors": [
-     [
-      4803.048,
-      69.48,
-      5.78,
-      1
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "realism",
-    "name": "Marko Arnautovi\u00c4\u2021",
-    "t": 4803.717,
     "dist_m": 0.196,
     "speed_mps": 11.8,
     "cause": "reconstruction between anchors",
@@ -48044,6 +47856,28 @@
   "realism_worst_frames": [
    {
     "mode": "realism",
+    "name": "Erik Pieters",
+    "t": 3435.65,
+    "dist_m": 0.199,
+    "speed_mps": 11.9,
+    "cause": "carry path",
+    "implied_mps": 9.1,
+    "anchors": [
+     [
+      3435.634,
+      35.61,
+      24.05,
+      0
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "realism",
     "name": "Jonathan Walters",
     "t": 4852.542,
     "dist_m": 0.199,
@@ -48145,28 +47979,6 @@
       4419.586,
       40.69,
       33.91,
-      0
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "realism",
-    "name": "Geoff Cameron",
-    "t": 4570.333,
-    "dist_m": 0.196,
-    "speed_mps": 11.7,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 8.2,
-    "anchors": [
-     [
-      4570.808,
-      28.79,
-      26.18,
       0
      ]
     ],
@@ -50309,6 +50121,28 @@
    {
     "mode": "realism",
     "name": "Shane Long",
+    "t": 5042.65,
+    "dist_m": 0.197,
+    "speed_mps": 11.8,
+    "cause": "carry path",
+    "implied_mps": 9.1,
+    "anchors": [
+     [
+      5042.637,
+      55.65,
+      58.14,
+      0
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "realism",
+    "name": "Shane Long",
     "t": 5667.683,
     "dist_m": 0.196,
     "speed_mps": 11.8,
@@ -50340,34 +50174,6 @@
     "t": 5667.733,
     "dist_m": 0.196,
     "speed_mps": 11.8,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 8.9,
-    "anchors": [
-     [
-      5667.087,
-      77.61,
-      9.52,
-      1
-     ],
-     [
-      5668.394,
-      88.99,
-      7.14,
-      0
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "realism",
-    "name": "Shane Long",
-    "t": 5667.667,
-    "dist_m": 0.196,
-    "speed_mps": 11.7,
     "cause": "reconstruction between anchors",
     "implied_mps": 8.9,
     "anchors": [
@@ -50541,6 +50347,28 @@
   "realism_worst_frames": [
    {
     "mode": "realism",
+    "name": "Ross Barkley",
+    "t": 2962.217,
+    "dist_m": 0.194,
+    "speed_mps": 11.7,
+    "cause": "carry path",
+    "implied_mps": 0.4,
+    "anchors": [
+     [
+      2962.215,
+      85.66,
+      43.86,
+      0
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "realism",
     "name": "Gareth Barry",
     "t": 869.25,
     "dist_m": 0.193,
@@ -50627,34 +50455,6 @@
     "mode": "realism",
     "name": "Gareth Barry",
     "t": 869.283,
-    "dist_m": 0.192,
-    "speed_mps": 11.5,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 9.1,
-    "anchors": [
-     [
-      868.756,
-      49.79,
-      28.9,
-      0
-     ],
-     [
-      869.72,
-      50.75,
-      20.14,
-      0
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "realism",
-    "name": "Gareth Barry",
-    "t": 869.217,
     "dist_m": 0.192,
     "speed_mps": 11.5,
     "cause": "reconstruction between anchors",
@@ -50684,6 +50484,28 @@
   "tactical_worst_frames": [
    {
     "mode": "tactical",
+    "name": "Ross Barkley",
+    "t": 2962.217,
+    "dist_m": 0.193,
+    "speed_mps": 11.6,
+    "cause": "carry path",
+    "implied_mps": 0.4,
+    "anchors": [
+     [
+      2962.215,
+      85.66,
+      43.86,
+      0
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "tactical",
     "name": "Gareth Barry",
     "t": 869.25,
     "dist_m": 0.193,
@@ -50770,34 +50592,6 @@
     "mode": "tactical",
     "name": "Gareth Barry",
     "t": 869.283,
-    "dist_m": 0.192,
-    "speed_mps": 11.5,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 9.1,
-    "anchors": [
-     [
-      868.756,
-      49.79,
-      28.9,
-      0
-     ],
-     [
-      869.72,
-      50.75,
-      20.14,
-      0
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "tactical",
-    "name": "Gareth Barry",
-    "t": 869.217,
     "dist_m": 0.192,
     "speed_mps": 11.5,
     "cause": "reconstruction between anchors",
@@ -52424,6 +52218,28 @@
    },
    {
     "mode": "realism",
+    "name": "Stephen Ireland",
+    "t": 5773.985,
+    "dist_m": 0.191,
+    "speed_mps": 11.5,
+    "cause": "carry path",
+    "implied_mps": 9.1,
+    "anchors": [
+     [
+      5773.974,
+      50.05,
+      29.75,
+      0
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "realism",
     "name": "Bojan",
     "t": 2411.733,
     "dist_m": 0.191,
@@ -52485,42 +52301,60 @@
     "kickoff": false,
     "carry": false,
     "reception": false
-   },
-   {
-    "mode": "realism",
-    "name": "Bojan",
-    "t": 2411.75,
-    "dist_m": 0.191,
-    "speed_mps": 11.5,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 9.5,
-    "anchors": [
-     [
-      2411.09,
-      48.74,
-      37.4,
-      0
-     ]
-    ],
-    "collisions": [
-     {
-      "type": "collision_retimed",
-      "playerId": 4913,
-      "t": 2413.527,
-      "t_new": 2413.622,
-      "dist_m": 24.05,
-      "kind": "event",
-      "dt_s": 2.437
-     }
-    ],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
    }
   ],
   "realism_flagged": [],
   "tactical_worst_frames": [
+   {
+    "mode": "tactical",
+    "name": "Xherdan Shaqiri",
+    "t": 5326.95,
+    "dist_m": 0.19,
+    "speed_mps": 11.4,
+    "cause": "carry path",
+    "implied_mps": 8.7,
+    "anchors": [
+     [
+      5326.934,
+      21.35,
+      56.35,
+      0
+     ],
+     [
+      5327.066,
+      20.21,
+      56.53,
+      1
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "tactical",
+    "name": "Stephen Ireland",
+    "t": 5773.985,
+    "dist_m": 0.188,
+    "speed_mps": 11.3,
+    "cause": "carry path",
+    "implied_mps": 9.1,
+    "anchors": [
+     [
+      5773.974,
+      50.05,
+      29.75,
+      0
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
    {
     "mode": "tactical",
     "name": "Bojan",
@@ -52589,70 +52423,6 @@
     "mode": "tactical",
     "name": "Bojan",
     "t": 2411.733,
-    "dist_m": 0.187,
-    "speed_mps": 11.2,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 9.5,
-    "anchors": [
-     [
-      2411.09,
-      48.74,
-      37.4,
-      0
-     ]
-    ],
-    "collisions": [
-     {
-      "type": "collision_retimed",
-      "playerId": 4913,
-      "t": 2413.527,
-      "t_new": 2413.622,
-      "dist_m": 24.05,
-      "kind": "event",
-      "dt_s": 2.437
-     }
-    ],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "tactical",
-    "name": "Bojan",
-    "t": 2411.683,
-    "dist_m": 0.187,
-    "speed_mps": 11.2,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 9.5,
-    "anchors": [
-     [
-      2411.09,
-      48.74,
-      37.4,
-      0
-     ]
-    ],
-    "collisions": [
-     {
-      "type": "collision_retimed",
-      "playerId": 4913,
-      "t": 2413.527,
-      "t_new": 2413.622,
-      "dist_m": 24.05,
-      "kind": "event",
-      "dt_s": 2.437
-     }
-    ],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "tactical",
-    "name": "Bojan",
-    "t": 2411.75,
     "dist_m": 0.187,
     "speed_mps": 11.2,
     "cause": "reconstruction between anchors",
@@ -55227,6 +54997,34 @@
    },
    {
     "mode": "realism",
+    "name": "James McClean",
+    "t": 4530.883,
+    "dist_m": 0.188,
+    "speed_mps": 11.3,
+    "cause": "carry path",
+    "implied_mps": 9.3,
+    "anchors": [
+     [
+      4530.868,
+      76.91,
+      18.45,
+      0
+     ],
+     [
+      4531.129,
+      76.12,
+      20.74,
+      0
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "realism",
     "name": "Craig Dawson",
     "t": 2629.283,
     "dist_m": 0.185,
@@ -55271,46 +55069,24 @@
    },
    {
     "mode": "realism",
-    "name": "Craig Dawson",
-    "t": 2629.267,
+    "name": "Allan Nyom",
+    "t": 3757.75,
     "dist_m": 0.185,
     "speed_mps": 11.1,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 9,
+    "cause": "carry path",
+    "implied_mps": 9.2,
     "anchors": [
      [
-      2629.812,
-      76.91,
-      54.4,
-      3
+      3757.736,
+      61.25,
+      62.98,
+      0
      ]
     ],
     "collisions": [],
     "reentry": [],
     "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "realism",
-    "name": "Craig Dawson",
-    "t": 2629.317,
-    "dist_m": 0.185,
-    "speed_mps": 11.1,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 9,
-    "anchors": [
-     [
-      2629.812,
-      76.91,
-      54.4,
-      3
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
+    "carry": true,
     "reception": false
    }
   ],
@@ -55356,6 +55132,62 @@
    },
    {
     "mode": "tactical",
+    "name": "James McClean",
+    "t": 4530.883,
+    "dist_m": 0.188,
+    "speed_mps": 11.3,
+    "cause": "carry path",
+    "implied_mps": 9.3,
+    "anchors": [
+     [
+      4530.868,
+      76.91,
+      18.45,
+      0
+     ],
+     [
+      4531.129,
+      76.12,
+      20.74,
+      0
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "tactical",
+    "name": "Allan Nyom",
+    "t": 3395.433,
+    "dist_m": 0.183,
+    "speed_mps": 11,
+    "cause": "carry path",
+    "implied_mps": 1.8,
+    "anchors": [
+     [
+      3395.38,
+      49.09,
+      61.37,
+      0
+     ],
+     [
+      3395.432,
+      48.65,
+      61.37,
+      1
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "tactical",
     "name": "Craig Dawson",
     "t": 2629.283,
     "dist_m": 0.182,
@@ -55380,50 +55212,6 @@
     "mode": "tactical",
     "name": "Craig Dawson",
     "t": 2629.3,
-    "dist_m": 0.182,
-    "speed_mps": 10.9,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 9,
-    "anchors": [
-     [
-      2629.812,
-      76.91,
-      54.4,
-      3
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "tactical",
-    "name": "Craig Dawson",
-    "t": 2629.267,
-    "dist_m": 0.182,
-    "speed_mps": 10.9,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 9,
-    "anchors": [
-     [
-      2629.812,
-      76.91,
-      54.4,
-      3
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "tactical",
-    "name": "Craig Dawson",
-    "t": 2629.317,
     "dist_m": 0.182,
     "speed_mps": 10.9,
     "cause": "reconstruction between anchors",
@@ -55807,42 +55595,32 @@
    },
    {
     "mode": "realism",
-    "name": "Joshua King",
-    "t": 1123.967,
-    "dist_m": 0.192,
-    "speed_mps": 11.5,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 9.5,
+    "name": "Gerard Deulofeu",
+    "t": 2598.933,
+    "dist_m": 0.193,
+    "speed_mps": 11.6,
+    "cause": "carry path",
+    "implied_mps": 7.5,
     "anchors": [
      [
-      1123.82,
-      55.65,
-      37.83,
+      2598.922,
+      73.85,
+      56.95,
       0
      ]
     ],
-    "collisions": [
-     {
-      "type": "collision_retimed",
-      "playerId": 3346,
-      "t": 1124.772,
-      "t_new": 1124.987,
-      "dist_m": 11.08,
-      "kind": "event",
-      "dt_s": 0.952
-     }
-    ],
+    "collisions": [],
     "reentry": [],
     "kickoff": false,
-    "carry": false,
+    "carry": true,
     "reception": false
    },
    {
     "mode": "realism",
     "name": "Joshua King",
-    "t": 1123.917,
-    "dist_m": 0.19,
-    "speed_mps": 11.4,
+    "t": 1123.967,
+    "dist_m": 0.192,
+    "speed_mps": 11.5,
     "cause": "reconstruction between anchors",
     "implied_mps": 9.5,
     "anchors": [
@@ -58551,6 +58329,28 @@
    {
     "mode": "realism",
     "name": "Gerard Deulofeu",
+    "t": 3686.383,
+    "dist_m": 0.19,
+    "speed_mps": 11.4,
+    "cause": "carry path",
+    "implied_mps": 3.2,
+    "anchors": [
+     [
+      3686.382,
+      70.26,
+      52.61,
+      1
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "realism",
+    "name": "Gerard Deulofeu",
     "t": 1290.917,
     "dist_m": 0.19,
     "speed_mps": 11.4,
@@ -58586,38 +58386,6 @@
     "t": 1290.9,
     "dist_m": 0.19,
     "speed_mps": 11.4,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 9.5,
-    "anchors": [
-     [
-      1290.774,
-      47.77,
-      66.13,
-      0
-     ]
-    ],
-    "collisions": [
-     {
-      "type": "collision_retimed",
-      "playerId": 3726,
-      "t": 1292.597,
-      "t_new": 1293.45,
-      "dist_m": 25.42,
-      "kind": "event",
-      "dt_s": 1.823
-     }
-    ],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "realism",
-    "name": "Gerard Deulofeu",
-    "t": 1290.933,
-    "dist_m": 0.188,
-    "speed_mps": 11.3,
     "cause": "reconstruction between anchors",
     "implied_mps": 9.5,
     "anchors": [
@@ -58712,6 +58480,28 @@
    {
     "mode": "tactical",
     "name": "Gerard Deulofeu",
+    "t": 3686.383,
+    "dist_m": 0.19,
+    "speed_mps": 11.4,
+    "cause": "carry path",
+    "implied_mps": 3.2,
+    "anchors": [
+     [
+      3686.382,
+      70.26,
+      52.61,
+      1
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "tactical",
+    "name": "Gerard Deulofeu",
     "t": 1290.917,
     "dist_m": 0.19,
     "speed_mps": 11.4,
@@ -58747,38 +58537,6 @@
     "t": 1290.9,
     "dist_m": 0.19,
     "speed_mps": 11.4,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 9.5,
-    "anchors": [
-     [
-      1290.774,
-      47.77,
-      66.13,
-      0
-     ]
-    ],
-    "collisions": [
-     {
-      "type": "collision_retimed",
-      "playerId": 3726,
-      "t": 1292.597,
-      "t_new": 1293.45,
-      "dist_m": 25.42,
-      "kind": "event",
-      "dt_s": 1.823
-     }
-    ],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "tactical",
-    "name": "Gerard Deulofeu",
-    "t": 1290.933,
-    "dist_m": 0.188,
-    "speed_mps": 11.3,
     "cause": "reconstruction between anchors",
     "implied_mps": 9.5,
     "anchors": [
@@ -58891,31 +58649,37 @@
    },
    {
     "mode": "realism",
-    "name": "Wilfried Bony",
-    "t": 2220.133,
+    "name": "Nathan Redmond",
+    "t": 2952.648,
     "dist_m": 0.187,
     "speed_mps": 11.2,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 8.9,
+    "cause": "carry path",
+    "implied_mps": 0.4,
     "anchors": [
      [
-      2220.325,
-      65.8,
-      44.11,
+      2952.064,
+      39.81,
+      25.33,
+      0
+     ],
+     [
+      2952.647,
+      45.06,
+      23.89,
       0
      ]
     ],
     "collisions": [],
     "reentry": [],
     "kickoff": false,
-    "carry": false,
+    "carry": true,
     "reception": false
    },
    {
     "mode": "realism",
     "name": "Wilfried Bony",
-    "t": 2220.1,
-    "dist_m": 0.186,
+    "t": 2220.133,
+    "dist_m": 0.187,
     "speed_mps": 11.2,
     "cause": "reconstruction between anchors",
     "implied_mps": 8.9,
@@ -58962,6 +58726,34 @@
     "reentry": [],
     "kickoff": false,
     "carry": false,
+    "reception": false
+   },
+   {
+    "mode": "tactical",
+    "name": "Nathan Redmond",
+    "t": 2952.648,
+    "dist_m": 0.189,
+    "speed_mps": 11.3,
+    "cause": "carry path",
+    "implied_mps": 0.4,
+    "anchors": [
+     [
+      2952.064,
+      39.81,
+      25.33,
+      0
+     ],
+     [
+      2952.647,
+      45.06,
+      23.89,
+      0
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
     "reception": false
    },
    {
@@ -59021,34 +58813,6 @@
       2220.325,
       65.8,
       44.11,
-      0
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "tactical",
-    "name": "Fernandinho",
-    "t": 184.8,
-    "dist_m": 0.187,
-    "speed_mps": 11.2,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 7.8,
-    "anchors": [
-     [
-      184.714,
-      71.84,
-      7.48,
-      0
-     ],
-     [
-      184.904,
-      70.35,
-      7.48,
       0
      ]
     ],
@@ -60609,6 +60373,28 @@
    },
    {
     "mode": "realism",
+    "name": "Theo Walcott",
+    "t": 5526.9,
+    "dist_m": 0.203,
+    "speed_mps": 12.2,
+    "cause": "carry path",
+    "implied_mps": 9.4,
+    "anchors": [
+     [
+      5526.887,
+      92.05,
+      48.79,
+      0
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "realism",
     "name": "Mesut \u00c3\u2013zil",
     "t": 1763.95,
     "dist_m": 0.199,
@@ -60667,34 +60453,6 @@
     "mode": "realism",
     "name": "Mesut \u00c3\u2013zil",
     "t": 1763.967,
-    "dist_m": 0.195,
-    "speed_mps": 11.7,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 9.3,
-    "anchors": [
-     [
-      1763.827,
-      38.59,
-      23.38,
-      0
-     ],
-     [
-      1764.308,
-      41.82,
-      20.31,
-      0
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "realism",
-    "name": "Mesut \u00c3\u2013zil",
-    "t": 1764.117,
     "dist_m": 0.195,
     "speed_mps": 11.7,
     "cause": "reconstruction between anchors",
@@ -60960,37 +60718,31 @@
    },
    {
     "mode": "realism",
-    "name": "Mikel Arteta",
-    "t": 4069.403,
+    "name": "Aaron Ramsey",
+    "t": 3905.783,
     "dist_m": 0.192,
     "speed_mps": 11.5,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 8.9,
+    "cause": "carry path",
+    "implied_mps": 0.8,
     "anchors": [
      [
-      4069.153,
-      66.59,
-      26.86,
-      0
-     ],
-     [
-      4069.651,
-      62.74,
-      29.07,
+      3905.783,
+      86.45,
+      46.92,
       0
      ]
     ],
     "collisions": [],
     "reentry": [],
     "kickoff": false,
-    "carry": false,
+    "carry": true,
     "reception": false
    },
    {
     "mode": "realism",
     "name": "Mikel Arteta",
-    "t": 4069.453,
-    "dist_m": 0.191,
+    "t": 4069.403,
+    "dist_m": 0.192,
     "speed_mps": 11.5,
     "cause": "reconstruction between anchors",
     "implied_mps": 8.9,
@@ -61109,38 +60861,32 @@
    },
    {
     "mode": "tactical",
-    "name": "Mikel Arteta",
-    "t": 4069.453,
+    "name": "Aaron Ramsey",
+    "t": 3905.783,
     "dist_m": 0.192,
     "speed_mps": 11.5,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 8.9,
+    "cause": "carry path",
+    "implied_mps": 0.8,
     "anchors": [
      [
-      4069.153,
-      66.59,
-      26.86,
-      0
-     ],
-     [
-      4069.651,
-      62.74,
-      29.07,
+      3905.783,
+      86.45,
+      46.92,
       0
      ]
     ],
     "collisions": [],
     "reentry": [],
     "kickoff": false,
-    "carry": false,
+    "carry": true,
     "reception": false
    },
    {
     "mode": "tactical",
     "name": "Mikel Arteta",
-    "t": 4069.403,
-    "dist_m": 0.191,
-    "speed_mps": 11.4,
+    "t": 4069.453,
+    "dist_m": 0.192,
+    "speed_mps": 11.5,
     "cause": "reconstruction between anchors",
     "implied_mps": 8.9,
     "anchors": [
@@ -65440,6 +65186,34 @@
    },
    {
     "mode": "realism",
+    "name": "Jason Puncheon",
+    "t": 3679.5,
+    "dist_m": 0.199,
+    "speed_mps": 11.9,
+    "cause": "carry path",
+    "implied_mps": 0.5,
+    "anchors": [
+     [
+      3678.636,
+      57.84,
+      16.75,
+      0
+     ],
+     [
+      3679.5,
+      65.45,
+      15.04,
+      1
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "realism",
     "name": "Gabriel Agbonlahor",
     "t": 4820.817,
     "dist_m": 0.187,
@@ -65481,28 +65255,6 @@
     "kickoff": true,
     "carry": false,
     "reception": false
-   },
-   {
-    "mode": "realism",
-    "name": "Gabriel Agbonlahor",
-    "t": 4820.8,
-    "dist_m": 0.187,
-    "speed_mps": 11.2,
-    "cause": "kickoff soft anchor",
-    "implied_mps": 0.4,
-    "anchors": [
-     [
-      4821.76,
-      67.02,
-      18.02,
-      4
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": true,
-    "carry": false,
-    "reception": false
    }
   ],
   "realism_flagged": [],
@@ -65527,6 +65279,34 @@
     "reentry": [],
     "kickoff": false,
     "carry": false,
+    "reception": false
+   },
+   {
+    "mode": "tactical",
+    "name": "Jason Puncheon",
+    "t": 3679.5,
+    "dist_m": 0.199,
+    "speed_mps": 11.9,
+    "cause": "carry path",
+    "implied_mps": 0.5,
+    "anchors": [
+     [
+      3678.636,
+      57.84,
+      16.75,
+      0
+     ],
+     [
+      3679.5,
+      65.45,
+      15.04,
+      1
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
     "reception": false
    },
    {
@@ -65640,28 +65420,6 @@
     ],
     "reentry": [],
     "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "tactical",
-    "name": "Gabriel Agbonlahor",
-    "t": 4820.817,
-    "dist_m": 0.188,
-    "speed_mps": 11.3,
-    "cause": "kickoff soft anchor",
-    "implied_mps": 0.4,
-    "anchors": [
-     [
-      4821.76,
-      67.02,
-      18.02,
-      4
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": true,
     "carry": false,
     "reception": false
    }
@@ -66387,6 +66145,28 @@
    },
    {
     "mode": "realism",
+    "name": "Kevin De Bruyne",
+    "t": 952.383,
+    "dist_m": 0.197,
+    "speed_mps": 11.8,
+    "cause": "carry path",
+    "implied_mps": 8.8,
+    "anchors": [
+     [
+      952.37,
+      19.25,
+      18.45,
+      0
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "realism",
     "name": "Dan Gosling",
     "t": 12.55,
     "dist_m": 0.195,
@@ -66433,28 +66213,6 @@
       67.38,
       21.25,
       0
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "realism",
-    "name": "Fernandinho",
-    "t": 3538.333,
-    "dist_m": 0.188,
-    "speed_mps": 11.3,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 8.8,
-    "anchors": [
-     [
-      3538.957,
-      22.22,
-      35.27,
-      3
      ]
     ],
     "collisions": [],
@@ -67358,34 +67116,24 @@
    },
    {
     "mode": "realism",
-    "name": "Shane Long",
-    "t": 3916.483,
+    "name": "Ibrahim Afellay",
+    "t": 3887.25,
     "dist_m": 0.189,
     "speed_mps": 11.3,
-    "cause": "bracketing real anchors imply it (9.5 m/s)",
-    "implied_mps": 9.5,
+    "cause": "carry path",
+    "implied_mps": 8.8,
     "anchors": [
      [
-      3916.052,
-      54.78,
-      3.74,
+      3887.238,
+      62.65,
+      47.17,
       0
      ]
     ],
-    "collisions": [
-     {
-      "type": "collision_retimed",
-      "playerId": 3842,
-      "t": 3917.124,
-      "t_new": 3919.226,
-      "dist_m": 30.15,
-      "kind": "event",
-      "dt_s": 1.072
-     }
-    ],
+    "collisions": [],
     "reentry": [],
     "kickoff": false,
-    "carry": false,
+    "carry": true,
     "reception": false
    }
   ],
@@ -68333,6 +68081,28 @@
   "realism_worst_frames": [
    {
     "mode": "realism",
+    "name": "Marouane Fellaini",
+    "t": 184.633,
+    "dist_m": 0.197,
+    "speed_mps": 11.8,
+    "cause": "carry path",
+    "implied_mps": 0.8,
+    "anchors": [
+     [
+      184.633,
+      31.15,
+      4.17,
+      1
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "realism",
     "name": "James Ward-Prowse",
     "t": 4246.677,
     "dist_m": 0.195,
@@ -68442,38 +68212,32 @@
     "kickoff": false,
     "carry": false,
     "reception": false
-   },
+   }
+  ],
+  "realism_flagged": [],
+  "tactical_worst_frames": [
    {
-    "mode": "realism",
-    "name": "Jordy Clasie",
-    "t": 2196.667,
-    "dist_m": 0.193,
-    "speed_mps": 11.6,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 9,
+    "mode": "tactical",
+    "name": "Marouane Fellaini",
+    "t": 184.633,
+    "dist_m": 0.197,
+    "speed_mps": 11.8,
+    "cause": "carry path",
+    "implied_mps": 0.8,
     "anchors": [
      [
-      2196.4,
-      49.44,
-      27.8,
-      0
-     ],
-     [
-      2196.914,
-      49.35,
-      23.2,
-      0
+      184.633,
+      31.15,
+      4.17,
+      1
      ]
     ],
     "collisions": [],
     "reentry": [],
     "kickoff": false,
-    "carry": false,
+    "carry": true,
     "reception": false
-   }
-  ],
-  "realism_flagged": [],
-  "tactical_worst_frames": [
+   },
    {
     "mode": "tactical",
     "name": "James Ward-Prowse",
@@ -68577,34 +68341,6 @@
       4246.946,
       25.99,
       58.48,
-      0
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "tactical",
-    "name": "Jordy Clasie",
-    "t": 2196.667,
-    "dist_m": 0.19,
-    "speed_mps": 11.4,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 9,
-    "anchors": [
-     [
-      2196.4,
-      49.44,
-      27.8,
-      0
-     ],
-     [
-      2196.914,
-      49.35,
-      23.2,
       0
      ]
     ],
@@ -69015,30 +68751,30 @@
    },
    {
     "mode": "realism",
-    "name": "Glen Johnson",
-    "t": 1045.317,
-    "dist_m": 0.188,
-    "speed_mps": 11.3,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 8.5,
+    "name": "Erik Pieters",
+    "t": 2884.033,
+    "dist_m": 0.19,
+    "speed_mps": 11.4,
+    "cause": "carry path",
+    "implied_mps": 8.9,
     "anchors": [
      [
-      1045.859,
-      65.19,
-      60.95,
+      2884.017,
+      27.65,
+      19.8,
       0
      ]
     ],
     "collisions": [],
     "reentry": [],
     "kickoff": false,
-    "carry": false,
+    "carry": true,
     "reception": false
    },
    {
     "mode": "realism",
     "name": "Glen Johnson",
-    "t": 1045.3,
+    "t": 1045.317,
     "dist_m": 0.188,
     "speed_mps": 11.3,
     "cause": "reconstruction between anchors",
@@ -75267,6 +75003,34 @@
   "realism_worst_frames": [
    {
     "mode": "realism",
+    "name": "Wayne Rooney",
+    "t": 5528.467,
+    "dist_m": 0.2,
+    "speed_mps": 12,
+    "cause": "carry path",
+    "implied_mps": 0,
+    "anchors": [
+     [
+      5527.77,
+      84.26,
+      27.37,
+      0
+     ],
+     [
+      5528.466,
+      86.45,
+      33.06,
+      1
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "realism",
     "name": "Yohan Cabaye",
     "t": 1021.683,
     "dist_m": 0.199,
@@ -75376,38 +75140,38 @@
     "kickoff": false,
     "carry": false,
     "reception": false
-   },
+   }
+  ],
+  "realism_flagged": [],
+  "tactical_worst_frames": [
    {
-    "mode": "realism",
-    "name": "Yohan Cabaye",
-    "t": 1021.65,
-    "dist_m": 0.195,
-    "speed_mps": 11.7,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 8.7,
+    "mode": "tactical",
+    "name": "Wayne Rooney",
+    "t": 5528.467,
+    "dist_m": 0.2,
+    "speed_mps": 12,
+    "cause": "carry path",
+    "implied_mps": 0,
     "anchors": [
      [
-      1021.456,
-      28.7,
-      58.22,
+      5527.77,
+      84.26,
+      27.37,
       0
      ],
      [
-      1021.989,
-      24.32,
-      59.67,
-      0
+      5528.466,
+      86.45,
+      33.06,
+      1
      ]
     ],
     "collisions": [],
     "reentry": [],
     "kickoff": false,
-    "carry": false,
+    "carry": true,
     "reception": false
-   }
-  ],
-  "realism_flagged": [],
-  "tactical_worst_frames": [
+   },
    {
     "mode": "tactical",
     "name": "Wilfried Zaha",
@@ -75497,34 +75261,6 @@
     "name": "Dwight Gayle",
     "t": 2370.733,
     "dist_m": 0.186,
-    "speed_mps": 11.1,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 7.7,
-    "anchors": [
-     [
-      2370.576,
-      93.1,
-      28.3,
-      0
-     ],
-     [
-      2370.87,
-      94.68,
-      29.92,
-      0
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "tactical",
-    "name": "Dwight Gayle",
-    "t": 2370.717,
-    "dist_m": 0.185,
     "speed_mps": 11.1,
     "cause": "reconstruction between anchors",
     "implied_mps": 7.7,
@@ -77075,6 +76811,28 @@
   "realism_worst_frames": [
    {
     "mode": "realism",
+    "name": "Wes Morgan",
+    "t": 3566.15,
+    "dist_m": 0.201,
+    "speed_mps": 12,
+    "cause": "carry path",
+    "implied_mps": 8.4,
+    "anchors": [
+     [
+      3566.135,
+      49.35,
+      39.35,
+      0
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "realism",
     "name": "Cesc F\u00c3\u00a0bregas",
     "t": 4632.667,
     "dist_m": 0.198,
@@ -77170,37 +76928,6 @@
     "mode": "realism",
     "name": "Cesc F\u00c3\u00a0bregas",
     "t": 4632.7,
-    "dist_m": 0.198,
-    "speed_mps": 11.9,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 8.9,
-    "anchors": [
-     [
-      4631.99,
-      55.48,
-      9.27,
-      0
-     ]
-    ],
-    "collisions": [
-     {
-      "type": "collision_dropped",
-      "playerId": 3478,
-      "t": 4633.483,
-      "dist_m": 18.96,
-      "kind": "event",
-      "dt_s": 1.493
-     }
-    ],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "realism",
-    "name": "Cesc F\u00c3\u00a0bregas",
-    "t": 4632.633,
     "dist_m": 0.198,
     "speed_mps": 11.9,
     "cause": "reconstruction between anchors",
@@ -77546,29 +77273,23 @@
    {
     "mode": "realism",
     "name": "Alberto Moreno",
-    "t": 2331.767,
-    "dist_m": 0.191,
+    "t": 3692,
+    "dist_m": 0.192,
     "speed_mps": 11.5,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 9.2,
+    "cause": "carry path",
+    "implied_mps": 6.8,
     "anchors": [
      [
-      2331.292,
-      19.51,
-      58.65,
-      0
-     ],
-     [
-      2332.04,
-      24.59,
-      63.33,
-      0
+      3691.984,
+      81.02,
+      4.25,
+      1
      ]
     ],
     "collisions": [],
     "reentry": [],
     "kickoff": false,
-    "carry": false,
+    "carry": true,
     "reception": false
    }
   ],
@@ -77707,29 +77428,23 @@
    {
     "mode": "tactical",
     "name": "Alberto Moreno",
-    "t": 2331.767,
-    "dist_m": 0.191,
+    "t": 3692,
+    "dist_m": 0.192,
     "speed_mps": 11.5,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 9.2,
+    "cause": "carry path",
+    "implied_mps": 6.8,
     "anchors": [
      [
-      2331.292,
-      19.51,
-      58.65,
-      0
-     ],
-     [
-      2332.04,
-      24.59,
-      63.33,
-      0
+      3691.984,
+      81.02,
+      4.25,
+      1
      ]
     ],
     "collisions": [],
     "reentry": [],
     "kickoff": false,
-    "carry": false,
+    "carry": true,
     "reception": false
    }
   ],
@@ -78346,6 +78061,28 @@
   "realism_worst_frames": [
    {
     "mode": "realism",
+    "name": "S\u00c3\u00a9amus Coleman",
+    "t": 2689.133,
+    "dist_m": 0.204,
+    "speed_mps": 12.2,
+    "cause": "carry path",
+    "implied_mps": 9.4,
+    "anchors": [
+     [
+      2689.118,
+      48.65,
+      57.72,
+      0
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "realism",
     "name": "Vincent Kompany",
     "t": 3056.2,
     "dist_m": 0.197,
@@ -78416,28 +78153,6 @@
     "t": 3056.233,
     "dist_m": 0.196,
     "speed_mps": 11.8,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 8.5,
-    "anchors": [
-     [
-      3056.552,
-      49.09,
-      55.59,
-      0
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "realism",
-    "name": "Vincent Kompany",
-    "t": 3056.167,
-    "dist_m": 0.196,
-    "speed_mps": 11.7,
     "cause": "reconstruction between anchors",
     "implied_mps": 8.5,
     "anchors": [
@@ -78459,6 +78174,28 @@
   "tactical_worst_frames": [
    {
     "mode": "tactical",
+    "name": "S\u00c3\u00a9amus Coleman",
+    "t": 2689.133,
+    "dist_m": 0.201,
+    "speed_mps": 12.1,
+    "cause": "carry path",
+    "implied_mps": 9.4,
+    "anchors": [
+     [
+      2689.118,
+      48.65,
+      57.72,
+      0
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "tactical",
     "name": "Vincent Kompany",
     "t": 3056.2,
     "dist_m": 0.197,
@@ -78529,28 +78266,6 @@
     "t": 3056.233,
     "dist_m": 0.196,
     "speed_mps": 11.8,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 8.5,
-    "anchors": [
-     [
-      3056.552,
-      49.09,
-      55.59,
-      0
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "tactical",
-    "name": "Vincent Kompany",
-    "t": 3056.167,
-    "dist_m": 0.196,
-    "speed_mps": 11.7,
     "cause": "reconstruction between anchors",
     "implied_mps": 8.5,
     "anchors": [
@@ -79121,6 +78836,28 @@
    },
    {
     "mode": "realism",
+    "name": "Chris Brunt",
+    "t": 491.133,
+    "dist_m": 0.196,
+    "speed_mps": 11.7,
+    "cause": "carry path",
+    "implied_mps": 2.2,
+    "anchors": [
+     [
+      491.133,
+      68.95,
+      3.57,
+      1
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "realism",
     "name": "Saido Berahino",
     "t": 1962.6,
     "dist_m": 0.195,
@@ -79195,40 +78932,6 @@
     "reentry": [],
     "kickoff": false,
     "carry": true,
-    "reception": false
-   },
-   {
-    "mode": "realism",
-    "name": "Connor Wickham",
-    "t": 2224.933,
-    "dist_m": 0.194,
-    "speed_mps": 11.6,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 8.6,
-    "anchors": [
-     [
-      2224.77,
-      35.26,
-      17.77,
-      0
-     ],
-     [
-      2225.096,
-      38.06,
-      17.59,
-      0
-     ],
-     [
-      2225.557,
-      37.45,
-      17.42,
-      0
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
     "reception": false
    }
   ],
@@ -80833,6 +80536,28 @@
   "realism_worst_frames": [
    {
     "mode": "realism",
+    "name": "Lewis Grabban",
+    "t": 3819.133,
+    "dist_m": 0.213,
+    "speed_mps": 12.8,
+    "cause": "carry path",
+    "implied_mps": 8.9,
+    "anchors": [
+     [
+      3819.117,
+      40.25,
+      38.25,
+      0
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "realism",
     "name": "Callum Wilson",
     "t": 5282.175,
     "dist_m": 0.192,
@@ -80901,28 +80626,6 @@
     "mode": "realism",
     "name": "Callum Wilson",
     "t": 5282.142,
-    "dist_m": 0.19,
-    "speed_mps": 11.4,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 8.6,
-    "anchors": [
-     [
-      5282.469,
-      42,
-      28.73,
-      0
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "realism",
-    "name": "Callum Wilson",
-    "t": 5282.209,
     "dist_m": 0.19,
     "speed_mps": 11.4,
     "cause": "reconstruction between anchors",
@@ -80946,6 +80649,28 @@
   "tactical_worst_frames": [
    {
     "mode": "tactical",
+    "name": "Lewis Grabban",
+    "t": 3819.133,
+    "dist_m": 0.211,
+    "speed_mps": 12.7,
+    "cause": "carry path",
+    "implied_mps": 8.9,
+    "anchors": [
+     [
+      3819.117,
+      40.25,
+      38.25,
+      0
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "tactical",
     "name": "Callum Wilson",
     "t": 5282.175,
     "dist_m": 0.192,
@@ -81014,28 +80739,6 @@
     "mode": "tactical",
     "name": "Callum Wilson",
     "t": 5282.142,
-    "dist_m": 0.19,
-    "speed_mps": 11.4,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 8.6,
-    "anchors": [
-     [
-      5282.469,
-      42,
-      28.73,
-      0
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "tactical",
-    "name": "Callum Wilson",
-    "t": 5282.209,
     "dist_m": 0.19,
     "speed_mps": 11.4,
     "cause": "reconstruction between anchors",
@@ -90301,37 +90004,31 @@
    },
    {
     "mode": "realism",
-    "name": "Joshua King",
-    "t": 3894.164,
+    "name": "Adam Smith",
+    "t": 3600.2,
     "dist_m": 0.194,
-    "speed_mps": 11.6,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 8.4,
+    "speed_mps": 11.7,
+    "cause": "carry path",
+    "implied_mps": 1.9,
     "anchors": [
      [
-      3893.995,
-      42.17,
-      20.14,
-      0
-     ],
-     [
-      3894.364,
-      44.62,
-      18.27,
-      0
+      3600.199,
+      67.02,
+      45.05,
+      1
      ]
     ],
     "collisions": [],
     "reentry": [],
     "kickoff": false,
-    "carry": false,
+    "carry": true,
     "reception": false
    },
    {
     "mode": "realism",
     "name": "Joshua King",
-    "t": 3894.231,
-    "dist_m": 0.193,
+    "t": 3894.164,
+    "dist_m": 0.194,
     "speed_mps": 11.6,
     "cause": "reconstruction between anchors",
     "implied_mps": 8.4,
@@ -90358,6 +90055,28 @@
   ],
   "realism_flagged": [],
   "tactical_worst_frames": [
+   {
+    "mode": "tactical",
+    "name": "Adam Smith",
+    "t": 3600.2,
+    "dist_m": 0.194,
+    "speed_mps": 11.6,
+    "cause": "carry path",
+    "implied_mps": 1.9,
+    "anchors": [
+     [
+      3600.199,
+      67.02,
+      45.05,
+      1
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
    {
     "mode": "tactical",
     "name": "Steve Cook",
@@ -90445,28 +90164,6 @@
     "kickoff": false,
     "carry": false,
     "reception": false
-   },
-   {
-    "mode": "tactical",
-    "name": "Steve Cook",
-    "t": 579.233,
-    "dist_m": 0.192,
-    "speed_mps": 11.5,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 9,
-    "anchors": [
-     [
-      579.793,
-      72.19,
-      12.16,
-      0
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
    }
   ],
   "tactical_flagged": [],
@@ -90474,6 +90171,50 @@
  },
  "3754275": {
   "realism_worst_frames": [
+   {
+    "mode": "realism",
+    "name": "Christian Fuchs",
+    "t": 4094.6,
+    "dist_m": 0.2,
+    "speed_mps": 12,
+    "cause": "carry path",
+    "implied_mps": 9.4,
+    "anchors": [
+     [
+      4094.585,
+      59.15,
+      14.88,
+      0
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "realism",
+    "name": "N'Golo Kant\u00c3\u00a9",
+    "t": 4969.167,
+    "dist_m": 0.198,
+    "speed_mps": 11.9,
+    "cause": "carry path",
+    "implied_mps": 7.8,
+    "anchors": [
+     [
+      4969.157,
+      73.85,
+      64.86,
+      0
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
    {
     "mode": "realism",
     "name": "Lucas Leiva",
@@ -90531,36 +90272,6 @@
     "mode": "realism",
     "name": "Alberto Moreno",
     "t": 624.517,
-    "dist_m": 0.189,
-    "speed_mps": 11.3,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 7.8,
-    "anchors": [],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "realism",
-    "name": "Alberto Moreno",
-    "t": 624.483,
-    "dist_m": 0.189,
-    "speed_mps": 11.3,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 7.8,
-    "anchors": [],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "realism",
-    "name": "Alberto Moreno",
-    "t": 624.533,
     "dist_m": 0.189,
     "speed_mps": 11.3,
     "cause": "reconstruction between anchors",
@@ -90586,6 +90297,28 @@
   "tactical_worst_frames": [
    {
     "mode": "tactical",
+    "name": "N'Golo Kant\u00c3\u00a9",
+    "t": 4969.167,
+    "dist_m": 0.198,
+    "speed_mps": 11.9,
+    "cause": "carry path",
+    "implied_mps": 7.8,
+    "anchors": [
+     [
+      4969.157,
+      73.85,
+      64.86,
+      0
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "tactical",
     "name": "Lucas Leiva",
     "t": 3106.983,
     "dist_m": 0.192,
@@ -90624,6 +90357,28 @@
    },
    {
     "mode": "tactical",
+    "name": "Christian Fuchs",
+    "t": 4094.6,
+    "dist_m": 0.191,
+    "speed_mps": 11.5,
+    "cause": "carry path",
+    "implied_mps": 9.4,
+    "anchors": [
+     [
+      4094.585,
+      59.15,
+      14.88,
+      0
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "tactical",
     "name": "Alberto Moreno",
     "t": 624.5,
     "dist_m": 0.189,
@@ -90641,36 +90396,6 @@
     "mode": "tactical",
     "name": "Alberto Moreno",
     "t": 624.517,
-    "dist_m": 0.189,
-    "speed_mps": 11.3,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 7.8,
-    "anchors": [],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "tactical",
-    "name": "Alberto Moreno",
-    "t": 624.483,
-    "dist_m": 0.189,
-    "speed_mps": 11.3,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 7.8,
-    "anchors": [],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "tactical",
-    "name": "Alberto Moreno",
-    "t": 624.533,
     "dist_m": 0.189,
     "speed_mps": 11.3,
     "cause": "reconstruction between anchors",
@@ -90697,6 +90422,28 @@
  },
  "3754276": {
   "realism_worst_frames": [
+   {
+    "mode": "realism",
+    "name": "Siem Stefan de Jong",
+    "t": 2946.833,
+    "dist_m": 0.209,
+    "speed_mps": 12.5,
+    "cause": "carry path",
+    "implied_mps": 2.1,
+    "anchors": [
+     [
+      2946.831,
+      56.26,
+      49.05,
+      1
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
    {
     "mode": "realism",
     "name": "Papiss Demba Ciss\u00c3\u00a9",
@@ -90822,38 +90569,32 @@
     "kickoff": false,
     "carry": false,
     "reception": false
-   },
+   }
+  ],
+  "realism_flagged": [],
+  "tactical_worst_frames": [
    {
-    "mode": "realism",
-    "name": "Daryl Janmaat",
-    "t": 1513.433,
-    "dist_m": 0.194,
-    "speed_mps": 11.7,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 7.8,
+    "mode": "tactical",
+    "name": "Siem Stefan de Jong",
+    "t": 2946.833,
+    "dist_m": 0.21,
+    "speed_mps": 12.6,
+    "cause": "carry path",
+    "implied_mps": 2.1,
     "anchors": [
      [
-      1513.277,
-      33.43,
-      58.65,
-      0
-     ],
-     [
-      1513.596,
-      35.7,
-      59.67,
-      0
+      2946.831,
+      56.26,
+      49.05,
+      1
      ]
     ],
     "collisions": [],
     "reentry": [],
     "kickoff": false,
-    "carry": false,
+    "carry": true,
     "reception": false
-   }
-  ],
-  "realism_flagged": [],
-  "tactical_worst_frames": [
+   },
    {
     "mode": "tactical",
     "name": "Eric Dier",
@@ -90981,44 +90722,6 @@
      ]
     ],
     "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "tactical",
-    "name": "Eric Dier",
-    "t": 1774.9,
-    "dist_m": 0.193,
-    "speed_mps": 11.6,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 9.5,
-    "anchors": [
-     [
-      1774.752,
-      30.54,
-      62.13,
-      0
-     ],
-     [
-      1775.812,
-      40.6,
-      61.8,
-      0
-     ]
-    ],
-    "collisions": [
-     {
-      "type": "collision_retimed",
-      "playerId": 10956,
-      "t": 1775.56,
-      "t_new": 1775.812,
-      "dist_m": 10.07,
-      "kind": "event",
-      "dt_s": 0.808
-     }
-    ],
     "reentry": [],
     "kickoff": false,
     "carry": false,
@@ -91468,36 +91171,30 @@
    },
    {
     "mode": "realism",
-    "name": "V\u00c3\u00adctor Ibarbo",
-    "t": 5261.504,
-    "dist_m": 0.182,
-    "speed_mps": 10.9,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 7.4,
+    "name": "Troy Deeney",
+    "t": 3822.183,
+    "dist_m": 0.183,
+    "speed_mps": 11,
+    "cause": "carry path",
+    "implied_mps": 8.2,
     "anchors": [
      [
-      5261.163,
-      68.16,
-      65.62,
-      0
-     ],
-     [
-      5261.802,
-      72.8,
-      64.77,
+      3822.169,
+      29.84,
+      48.36,
       0
      ]
     ],
     "collisions": [],
     "reentry": [],
     "kickoff": false,
-    "carry": false,
+    "carry": true,
     "reception": false
    },
    {
     "mode": "realism",
     "name": "V\u00c3\u00adctor Ibarbo",
-    "t": 5261.471,
+    "t": 5261.504,
     "dist_m": 0.182,
     "speed_mps": 10.9,
     "cause": "reconstruction between anchors",
@@ -91673,6 +91370,34 @@
   "realism_worst_frames": [
    {
     "mode": "realism",
+    "name": "Jonas Olsson",
+    "t": 2811.667,
+    "dist_m": 0.201,
+    "speed_mps": 12.1,
+    "cause": "carry path",
+    "implied_mps": 0.8,
+    "anchors": [
+     [
+      2811.303,
+      42.7,
+      42.75,
+      0
+     ],
+     [
+      2811.665,
+      40.34,
+      40.55,
+      1
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "realism",
     "name": "Boaz Myhill",
     "t": 503.133,
     "dist_m": 0.196,
@@ -91806,38 +91531,38 @@
     "kickoff": false,
     "carry": false,
     "reception": false
-   },
+   }
+  ],
+  "realism_flagged": [],
+  "tactical_worst_frames": [
    {
-    "mode": "realism",
-    "name": "Claudio Yacob",
-    "t": 901.767,
-    "dist_m": 0.192,
-    "speed_mps": 11.5,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 8.1,
+    "mode": "tactical",
+    "name": "Jonas Olsson",
+    "t": 2811.667,
+    "dist_m": 0.203,
+    "speed_mps": 12.2,
+    "cause": "carry path",
+    "implied_mps": 0.8,
     "anchors": [
      [
-      901.619,
-      36.66,
-      7.31,
+      2811.303,
+      42.7,
+      42.75,
       0
      ],
      [
-      901.87,
-      35.88,
-      5.44,
-      0
+      2811.665,
+      40.34,
+      40.55,
+      1
      ]
     ],
     "collisions": [],
     "reentry": [],
     "kickoff": false,
-    "carry": false,
+    "carry": true,
     "reception": false
-   }
-  ],
-  "realism_flagged": [],
-  "tactical_worst_frames": [
+   },
    {
     "mode": "tactical",
     "name": "Boaz Myhill",
@@ -91952,34 +91677,6 @@
     "t": 901.733,
     "dist_m": 0.192,
     "speed_mps": 11.5,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 8.1,
-    "anchors": [
-     [
-      901.619,
-      36.66,
-      7.31,
-      0
-     ],
-     [
-      901.87,
-      35.88,
-      5.44,
-      0
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "tactical",
-    "name": "Claudio Yacob",
-    "t": 901.767,
-    "dist_m": 0.19,
-    "speed_mps": 11.4,
     "cause": "reconstruction between anchors",
     "implied_mps": 8.1,
     "anchors": [
@@ -93445,6 +93142,28 @@
   "realism_worst_frames": [
    {
     "mode": "realism",
+    "name": "James Tomkins",
+    "t": 814.567,
+    "dist_m": 0.199,
+    "speed_mps": 11.9,
+    "cause": "carry path",
+    "implied_mps": 1.5,
+    "anchors": [
+     [
+      814.567,
+      68.95,
+      61.8,
+      1
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "realism",
     "name": "Carlos S\u00c3\u00a1nchez",
     "t": 878.9,
     "dist_m": 0.193,
@@ -93560,32 +93279,32 @@
     "kickoff": false,
     "carry": false,
     "reception": true
-   },
+   }
+  ],
+  "realism_flagged": [],
+  "tactical_worst_frames": [
    {
-    "mode": "realism",
-    "name": "Leandro Bacuna",
-    "t": 4568.133,
-    "dist_m": 0.191,
-    "speed_mps": 11.4,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 9.4,
+    "mode": "tactical",
+    "name": "James Tomkins",
+    "t": 814.567,
+    "dist_m": 0.199,
+    "speed_mps": 11.9,
+    "cause": "carry path",
+    "implied_mps": 1.5,
     "anchors": [
      [
-      4568.343,
-      40.95,
-      55.5,
-      0
+      814.567,
+      68.95,
+      61.8,
+      1
      ]
     ],
     "collisions": [],
     "reentry": [],
     "kickoff": false,
-    "carry": false,
-    "reception": true
-   }
-  ],
-  "realism_flagged": [],
-  "tactical_worst_frames": [
+    "carry": true,
+    "reception": false
+   },
    {
     "mode": "tactical",
     "name": "Carlos S\u00c3\u00a1nchez",
@@ -93688,38 +93407,6 @@
     "t": 878.933,
     "dist_m": 0.193,
     "speed_mps": 11.6,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 9.5,
-    "anchors": [
-     [
-      878.679,
-      88.02,
-      30.17,
-      0
-     ]
-    ],
-    "collisions": [
-     {
-      "type": "collision_retimed",
-      "playerId": 5685,
-      "t": 879.89,
-      "t_new": 880.156,
-      "dist_m": 14.03,
-      "kind": "event",
-      "dt_s": 1.211
-     }
-    ],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "tactical",
-    "name": "Carlos S\u00c3\u00a1nchez",
-    "t": 878.867,
-    "dist_m": 0.192,
-    "speed_mps": 11.5,
     "cause": "reconstruction between anchors",
     "implied_mps": 9.5,
     "anchors": [
@@ -94450,6 +94137,28 @@
   "realism_worst_frames": [
    {
     "mode": "realism",
+    "name": "Eden Hazard",
+    "t": 1402.517,
+    "dist_m": 0.201,
+    "speed_mps": 12,
+    "cause": "carry path",
+    "implied_mps": 9.1,
+    "anchors": [
+     [
+      1402.5,
+      47.34,
+      18.87,
+      0
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "realism",
     "name": "Mark Noble",
     "t": 3082.483,
     "dist_m": 0.185,
@@ -94538,34 +94247,6 @@
     "t": 3082.517,
     "dist_m": 0.184,
     "speed_mps": 11,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 8.2,
-    "anchors": [
-     [
-      3082.203,
-      37.19,
-      57.97,
-      0
-     ],
-     [
-      3082.763,
-      39.9,
-      61.71,
-      0
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "realism",
-    "name": "Mark Noble",
-    "t": 3082.45,
-    "dist_m": 0.182,
-    "speed_mps": 10.9,
     "cause": "reconstruction between anchors",
     "implied_mps": 8.2,
     "anchors": [
@@ -94593,6 +94274,28 @@
   "tactical_worst_frames": [
    {
     "mode": "tactical",
+    "name": "Eden Hazard",
+    "t": 1402.517,
+    "dist_m": 0.201,
+    "speed_mps": 12,
+    "cause": "carry path",
+    "implied_mps": 9.1,
+    "anchors": [
+     [
+      1402.5,
+      47.34,
+      18.87,
+      0
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "tactical",
     "name": "Mark Noble",
     "t": 3082.483,
     "dist_m": 0.184,
@@ -94681,34 +94384,6 @@
     "t": 3082.517,
     "dist_m": 0.183,
     "speed_mps": 11,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 8.2,
-    "anchors": [
-     [
-      3082.203,
-      37.19,
-      57.97,
-      0
-     ],
-     [
-      3082.763,
-      39.9,
-      61.71,
-      0
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "tactical",
-    "name": "Mark Noble",
-    "t": 3082.45,
-    "dist_m": 0.181,
-    "speed_mps": 10.9,
     "cause": "reconstruction between anchors",
     "implied_mps": 8.2,
     "anchors": [
@@ -95999,6 +95674,28 @@
   "realism_worst_frames": [
    {
     "mode": "realism",
+    "name": "Eden Hazard",
+    "t": 815.5,
+    "dist_m": 0.197,
+    "speed_mps": 11.8,
+    "cause": "carry path",
+    "implied_mps": 4.9,
+    "anchors": [
+     [
+      815.496,
+      82.95,
+      18.87,
+      1
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "realism",
     "name": "Ryan Shawcross",
     "t": 818.35,
     "dist_m": 0.191,
@@ -96116,42 +95813,32 @@
     "kickoff": false,
     "carry": false,
     "reception": false
-   },
-   {
-    "mode": "realism",
-    "name": "Jonathan Walters",
-    "t": 3863.867,
-    "dist_m": 0.189,
-    "speed_mps": 11.3,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 9.5,
-    "anchors": [
-     [
-      3863.662,
-      72.71,
-      44.88,
-      0
-     ]
-    ],
-    "collisions": [
-     {
-      "type": "collision_retimed",
-      "playerId": 3670,
-      "t": 3864.689,
-      "t_new": 3865.406,
-      "dist_m": 16.57,
-      "kind": "event",
-      "dt_s": 1.027
-     }
-    ],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
    }
   ],
   "realism_flagged": [],
   "tactical_worst_frames": [
+   {
+    "mode": "tactical",
+    "name": "Eden Hazard",
+    "t": 815.5,
+    "dist_m": 0.197,
+    "speed_mps": 11.8,
+    "cause": "carry path",
+    "implied_mps": 4.9,
+    "anchors": [
+     [
+      815.496,
+      82.95,
+      18.87,
+      1
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
    {
     "mode": "tactical",
     "name": "Geoff Cameron",
@@ -96279,34 +95966,6 @@
     "kickoff": false,
     "carry": true,
     "reception": true
-   },
-   {
-    "mode": "tactical",
-    "name": "Ryan Shawcross",
-    "t": 818.35,
-    "dist_m": 0.191,
-    "speed_mps": 11.5,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 7.8,
-    "anchors": [
-     [
-      818.231,
-      12.77,
-      32.55,
-      0
-     ],
-     [
-      818.443,
-      14,
-      33.66,
-      3
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
    }
   ],
   "tactical_flagged": [],
@@ -98420,32 +98079,38 @@
    },
    {
     "mode": "tactical",
-    "name": "Jonas Olsson",
-    "t": 2250.083,
-    "dist_m": 0.183,
-    "speed_mps": 11,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 9.4,
+    "name": "Claudio Yacob",
+    "t": 2489.667,
+    "dist_m": 0.188,
+    "speed_mps": 11.3,
+    "cause": "carry path",
+    "implied_mps": 8.8,
     "anchors": [
      [
-      2250.224,
-      12.86,
-      27.88,
+      2489.651,
+      32.64,
+      10.88,
       0
+     ],
+     [
+      2489.855,
+      34.04,
+      9.77,
+      1
      ]
     ],
     "collisions": [],
     "reentry": [],
     "kickoff": false,
-    "carry": false,
+    "carry": true,
     "reception": false
    },
    {
     "mode": "tactical",
     "name": "Jonas Olsson",
-    "t": 2250.067,
-    "dist_m": 0.182,
-    "speed_mps": 10.9,
+    "t": 2250.083,
+    "dist_m": 0.183,
+    "speed_mps": 11,
     "cause": "reconstruction between anchors",
     "implied_mps": 9.4,
     "anchors": [
@@ -98468,6 +98133,28 @@
  },
  "3754302": {
   "realism_worst_frames": [
+   {
+    "mode": "realism",
+    "name": "C\u00c3\u00a9dric Soares",
+    "t": 2728.071,
+    "dist_m": 0.2,
+    "speed_mps": 12,
+    "cause": "carry path",
+    "implied_mps": 0.1,
+    "anchors": [
+     [
+      2728.071,
+      50.75,
+      60.69,
+      1
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
    {
     "mode": "realism",
     "name": "Graziano Pell\u00c3\u00a8",
@@ -98591,38 +98278,32 @@
     "kickoff": false,
     "carry": false,
     "reception": false
-   },
+   }
+  ],
+  "realism_flagged": [],
+  "tactical_worst_frames": [
    {
-    "mode": "realism",
-    "name": "Kasper Schmeichel",
-    "t": 3316.667,
-    "dist_m": 0.187,
-    "speed_mps": 11.2,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 7.8,
+    "mode": "tactical",
+    "name": "C\u00c3\u00a9dric Soares",
+    "t": 2728.071,
+    "dist_m": 0.2,
+    "speed_mps": 12,
+    "cause": "carry path",
+    "implied_mps": 0.1,
     "anchors": [
      [
-      3316.375,
-      25.72,
-      35.7,
-      0
-     ],
-     [
-      3316.956,
-      25.38,
-      40.2,
-      0
+      2728.071,
+      50.75,
+      60.69,
+      1
      ]
     ],
     "collisions": [],
     "reentry": [],
     "kickoff": false,
-    "carry": false,
+    "carry": true,
     "reception": false
-   }
-  ],
-  "realism_flagged": [],
-  "tactical_worst_frames": [
+   },
    {
     "mode": "tactical",
     "name": "Graziano Pell\u00c3\u00a8",
@@ -98738,28 +98419,6 @@
       74.561,
       85.75,
       22.19,
-      0
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "tactical",
-    "name": "Marc Albrighton",
-    "t": 5824.75,
-    "dist_m": 0.185,
-    "speed_mps": 11.1,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 9.5,
-    "anchors": [
-     [
-      5824.187,
-      69.21,
-      47.6,
       0
      ]
     ],
@@ -99077,30 +98736,30 @@
    },
    {
     "mode": "tactical",
-    "name": "Mile Jedinak",
-    "t": 1693.167,
-    "dist_m": 0.188,
+    "name": "Marouane Chamakh",
+    "t": 4650.753,
+    "dist_m": 0.189,
     "speed_mps": 11.3,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 8.2,
+    "cause": "carry path",
+    "implied_mps": 1.3,
     "anchors": [
      [
-      1692.877,
-      43.14,
-      49.98,
+      4650.615,
+      74.9,
+      13.77,
       0
      ],
      [
-      1693.452,
-      45.06,
-      45.65,
-      0
+      4650.751,
+      73.85,
+      14.37,
+      1
      ]
     ],
     "collisions": [],
     "reentry": [],
     "kickoff": false,
-    "carry": false,
+    "carry": true,
     "reception": false
    }
   ],
@@ -103272,6 +102931,34 @@
   "realism_worst_frames": [
    {
     "mode": "realism",
+    "name": "Mesut \u00c3\u2013zil",
+    "t": 2001.517,
+    "dist_m": 0.204,
+    "speed_mps": 12.2,
+    "cause": "carry path",
+    "implied_mps": 5.9,
+    "anchors": [
+     [
+      2000.958,
+      47.43,
+      6.46,
+      0
+     ],
+     [
+      2001.515,
+      52.06,
+      4.25,
+      1
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "realism",
     "name": "Christian Eriksen",
     "t": 2550.867,
     "dist_m": 0.199,
@@ -103373,28 +103060,6 @@
       2551.612,
       72.54,
       37.91,
-      0
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "realism",
-    "name": "Gabriel Paulista",
-    "t": 1681.767,
-    "dist_m": 0.198,
-    "speed_mps": 11.9,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 9.4,
-    "anchors": [
-     [
-      1681.315,
-      30.01,
-      25.24,
       0
      ]
     ],
@@ -103409,6 +103074,34 @@
   "tactical_worst_frames": [
    {
     "mode": "tactical",
+    "name": "Mesut \u00c3\u2013zil",
+    "t": 2001.517,
+    "dist_m": 0.207,
+    "speed_mps": 12.4,
+    "cause": "carry path",
+    "implied_mps": 5.9,
+    "anchors": [
+     [
+      2000.958,
+      47.43,
+      6.46,
+      0
+     ],
+     [
+      2001.515,
+      52.06,
+      4.25,
+      1
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "tactical",
     "name": "Christian Eriksen",
     "t": 2550.867,
     "dist_m": 0.199,
@@ -103510,34 +103203,6 @@
       1684.112,
       57.4,
       45.9,
-      0
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "tactical",
-    "name": "H\u00c3\u00a9ctor Beller\u00c3\u00adn",
-    "t": 526.733,
-    "dist_m": 0.198,
-    "speed_mps": 11.9,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 9.2,
-    "anchors": [
-     [
-      526.278,
-      60.02,
-      57.88,
-      0
-     ],
-     [
-      527.018,
-      53.9,
-      54.91,
       0
      ]
     ],
@@ -103908,6 +103573,34 @@
   "realism_worst_frames": [
    {
     "mode": "realism",
+    "name": "Aleksandar Kolarov",
+    "t": 5625.25,
+    "dist_m": 0.211,
+    "speed_mps": 12.7,
+    "cause": "carry path",
+    "implied_mps": 0.4,
+    "anchors": [
+     [
+      5624.802,
+      90.65,
+      12.49,
+      0
+     ],
+     [
+      5625.25,
+      93.45,
+      9.95,
+      1
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "realism",
     "name": "Fernandinho",
     "t": 2124.883,
     "dist_m": 0.198,
@@ -104017,38 +103710,38 @@
     "kickoff": false,
     "carry": false,
     "reception": false
-   },
+   }
+  ],
+  "realism_flagged": [],
+  "tactical_worst_frames": [
    {
-    "mode": "realism",
-    "name": "Du\u00c5\u00a1an Tadi\u00c4\u2021",
-    "t": 1622.783,
-    "dist_m": 0.188,
-    "speed_mps": 11.3,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 9.2,
+    "mode": "tactical",
+    "name": "Aleksandar Kolarov",
+    "t": 5625.25,
+    "dist_m": 0.211,
+    "speed_mps": 12.7,
+    "cause": "carry path",
+    "implied_mps": 0.4,
     "anchors": [
      [
-      1622.284,
-      43.92,
-      31.11,
+      5624.802,
+      90.65,
+      12.49,
       0
      ],
      [
-      1623.047,
-      50.49,
-      33.66,
-      0
+      5625.25,
+      93.45,
+      9.95,
+      1
      ]
     ],
     "collisions": [],
     "reentry": [],
     "kickoff": false,
-    "carry": false,
+    "carry": true,
     "reception": false
-   }
-  ],
-  "realism_flagged": [],
-  "tactical_worst_frames": [
+   },
    {
     "mode": "tactical",
     "name": "Fernandinho",
@@ -104141,34 +103834,6 @@
       77.7,
       32.05,
       3
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "tactical",
-    "name": "Du\u00c5\u00a1an Tadi\u00c4\u2021",
-    "t": 1622.767,
-    "dist_m": 0.187,
-    "speed_mps": 11.2,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 9.2,
-    "anchors": [
-     [
-      1622.284,
-      43.92,
-      31.11,
-      0
-     ],
-     [
-      1623.047,
-      50.49,
-      33.66,
-      0
      ]
     ],
     "collisions": [],
@@ -106223,30 +105888,24 @@
    },
    {
     "mode": "tactical",
-    "name": "Alan Hutton",
-    "t": 4171.65,
+    "name": "Bryan Oviedo",
+    "t": 2947.767,
     "dist_m": 0.198,
     "speed_mps": 11.9,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 8.2,
+    "cause": "carry path",
+    "implied_mps": 1.2,
     "anchors": [
      [
-      4170.758,
-      65.01,
-      53.04,
+      2947.766,
+      65.36,
+      60.86,
       1
-     ],
-     [
-      4171.081,
-      64.05,
-      51.77,
-      0
      ]
     ],
     "collisions": [],
     "reentry": [],
     "kickoff": false,
-    "carry": false,
+    "carry": true,
     "reception": false
    }
   ],
@@ -106400,6 +106059,34 @@
   "tactical_worst_frames": [
    {
     "mode": "tactical",
+    "name": "\u00c3\u20acngel Rangel",
+    "t": 4480.783,
+    "dist_m": 0.199,
+    "speed_mps": 11.9,
+    "cause": "carry path",
+    "implied_mps": 0.3,
+    "anchors": [
+     [
+      4480.709,
+      57.05,
+      65.03,
+      0
+     ],
+     [
+      4480.783,
+      57.05,
+      64.34,
+      1
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "tactical",
     "name": "Jes\u00c3\u00bas Navas",
     "t": 5530.394,
     "dist_m": 0.198,
@@ -106474,34 +106161,6 @@
       86.89,
       65.88,
       0
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": true,
-    "reception": false
-   },
-   {
-    "mode": "tactical",
-    "name": "\u00c3\u20acngel Rangel",
-    "t": 4480.783,
-    "dist_m": 0.195,
-    "speed_mps": 11.7,
-    "cause": "carry path",
-    "implied_mps": 0.3,
-    "anchors": [
-     [
-      4480.709,
-      57.05,
-      65.03,
-      0
-     ],
-     [
-      4480.783,
-      57.05,
-      64.34,
-      1
      ]
     ],
     "collisions": [],
@@ -108948,6 +108607,56 @@
    },
    {
     "mode": "realism",
+    "name": "Oriol Romeu",
+    "t": 4366.367,
+    "dist_m": 0.204,
+    "speed_mps": 12.2,
+    "cause": "carry path",
+    "implied_mps": 0.3,
+    "anchors": [
+     [
+      4365.513,
+      72.71,
+      52.28,
+      0
+     ],
+     [
+      4366.365,
+      80.15,
+      50.15,
+      1
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "realism",
+    "name": "Andre Wisdom",
+    "t": 2073.425,
+    "dist_m": 0.197,
+    "speed_mps": 11.8,
+    "cause": "carry path",
+    "implied_mps": 1.9,
+    "anchors": [
+     [
+      2073.421,
+      56.35,
+      59.75,
+      1
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "realism",
     "name": "Robert Brady",
     "t": 1732.117,
     "dist_m": 0.197,
@@ -109001,66 +108710,38 @@
     "kickoff": false,
     "carry": false,
     "reception": false
-   },
-   {
-    "mode": "realism",
-    "name": "Robert Brady",
-    "t": 1731.933,
-    "dist_m": 0.195,
-    "speed_mps": 11.7,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 9.2,
-    "anchors": [
-     [
-      1731.773,
-      33.16,
-      3.06,
-      0
-     ],
-     [
-      1732.314,
-      38.06,
-      2.12,
-      0
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "realism",
-    "name": "Robert Brady",
-    "t": 1732.133,
-    "dist_m": 0.195,
-    "speed_mps": 11.7,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 9.2,
-    "anchors": [
-     [
-      1731.773,
-      33.16,
-      3.06,
-      0
-     ],
-     [
-      1732.314,
-      38.06,
-      2.12,
-      0
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
    }
   ],
   "realism_flagged": [],
   "tactical_worst_frames": [
+   {
+    "mode": "tactical",
+    "name": "Oriol Romeu",
+    "t": 4366.367,
+    "dist_m": 0.204,
+    "speed_mps": 12.2,
+    "cause": "carry path",
+    "implied_mps": 0.3,
+    "anchors": [
+     [
+      4365.513,
+      72.71,
+      52.28,
+      0
+     ],
+     [
+      4366.365,
+      80.15,
+      50.15,
+      1
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
    {
     "mode": "tactical",
     "name": "Robert Brady",
@@ -109168,44 +108849,6 @@
      ]
     ],
     "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "tactical",
-    "name": "Juanmi",
-    "t": 5650.805,
-    "dist_m": 0.196,
-    "speed_mps": 11.7,
-    "cause": "bracketing real anchors imply it (9.5 m/s)",
-    "implied_mps": 9.5,
-    "anchors": [
-     [
-      5650.441,
-      87.06,
-      20.48,
-      0
-     ],
-     [
-      5651.678,
-      97.39,
-      26.09,
-      0
-     ]
-    ],
-    "collisions": [
-     {
-      "type": "collision_retimed",
-      "playerId": 6695,
-      "t": 5651.655,
-      "t_new": 5651.678,
-      "dist_m": 11.75,
-      "kind": "event",
-      "dt_s": 1.214
-     }
-    ],
     "reentry": [],
     "kickoff": false,
     "carry": false,
@@ -112983,6 +112626,28 @@
   "realism_worst_frames": [
    {
     "mode": "realism",
+    "name": "Nathaniel Clyne",
+    "t": 665.633,
+    "dist_m": 0.19,
+    "speed_mps": 11.4,
+    "cause": "carry path",
+    "implied_mps": 0.7,
+    "anchors": [
+     [
+      665.633,
+      93.45,
+      65.11,
+      1
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "realism",
     "name": "Martin \u00c5\u00a0krtel",
     "t": 123.75,
     "dist_m": 0.181,
@@ -113069,34 +112734,6 @@
     "mode": "realism",
     "name": "Martin \u00c5\u00a0krtel",
     "t": 123.783,
-    "dist_m": 0.181,
-    "speed_mps": 10.9,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 8.9,
-    "anchors": [
-     [
-      123.238,
-      40.43,
-      52.87,
-      0
-     ],
-     [
-      124.536,
-      28.88,
-      53.38,
-      0
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "realism",
-    "name": "Martin \u00c5\u00a0krtel",
-    "t": 123.717,
     "dist_m": 0.181,
     "speed_mps": 10.9,
     "cause": "reconstruction between anchors",
@@ -113126,6 +112763,28 @@
   "tactical_worst_frames": [
    {
     "mode": "tactical",
+    "name": "Nathaniel Clyne",
+    "t": 665.633,
+    "dist_m": 0.19,
+    "speed_mps": 11.4,
+    "cause": "carry path",
+    "implied_mps": 0.7,
+    "anchors": [
+     [
+      665.633,
+      93.45,
+      65.11,
+      1
+     ]
+    ],
+    "collisions": [],
+    "reentry": [],
+    "kickoff": false,
+    "carry": true,
+    "reception": false
+   },
+   {
+    "mode": "tactical",
     "name": "Martin \u00c5\u00a0krtel",
     "t": 123.75,
     "dist_m": 0.181,
@@ -113212,34 +112871,6 @@
     "mode": "tactical",
     "name": "Martin \u00c5\u00a0krtel",
     "t": 123.783,
-    "dist_m": 0.181,
-    "speed_mps": 10.9,
-    "cause": "reconstruction between anchors",
-    "implied_mps": 8.9,
-    "anchors": [
-     [
-      123.238,
-      40.43,
-      52.87,
-      0
-     ],
-     [
-      124.536,
-      28.88,
-      53.38,
-      0
-     ]
-    ],
-    "collisions": [],
-    "reentry": [],
-    "kickoff": false,
-    "carry": false,
-    "reception": false
-   },
-   {
-    "mode": "tactical",
-    "name": "Martin \u00c5\u00a0krtel",
-    "t": 123.717,
     "dist_m": 0.181,
     "speed_mps": 10.9,
     "cause": "reconstruction between anchors",

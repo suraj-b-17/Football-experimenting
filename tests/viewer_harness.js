@@ -58,4 +58,5 @@ global.window.addEventListener = () => {};
 
 const appSrc = fs.readFileSync(appPath, 'utf8').replace(/\nboot\(\);\s*$/, '\n');
 const driver = fs.readFileSync(driverPath, 'utf8');
-eval(appSrc + '\n(async () => { await boot();\n' + driver + '\n})().catch(e => { console.error(e); process.exit(1); });');
+// exit explicitly: the viewer keeps a background timer (pacing filler) alive
+eval(appSrc + '\n(async () => { await boot();\n' + driver + '\n})().then(() => process.stdout.write("", () => process.exit(0)), e => { console.error(e); process.exit(1); });');

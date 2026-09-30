@@ -53,9 +53,26 @@ Measured separately (details and every table in `BENCHMARKS.md`):
   nobody teleports. The measured accuracy gain is real but modest: about 14 % on tracking and about
   45 % at real StatsBomb shots.
 
+## Playback pacing — replays no longer run at exactly match speed
+
+Since the polish round (`CHANGELOG_fix.md`, "Polish round"), **1x playback is not a strict 1:1 copy
+of the match clock**, in both display modes:
+
+- Whenever something on screen would move faster than real players or balls do (sprinting over
+  8.0 m/s, carrying over 7.5 m/s, the ball over 30 m/s — caps measured on the real tracking data),
+  playback slows down locally instead of drawing a "super dash". Every real event still happens at
+  its own match-clock time and place; the clock readout is exact at every real event and moves at a
+  varying rate in between.
+- Sustained idle play may run up to 1.5x, and the dead time of a stoppage (throw-in, corner, goal
+  kick, foul, offside, goal, penalty) is skipped in 1.6 s under a dimmed "skipping" overlay, after
+  the ball going out / the foul has been shown and with a team-coloured restart banner.
+- The speed buttons (0.5x–10x) multiply on top. A whole match at 1x now takes roughly 60–70 % of
+  its real duration (BENCHMARKS.md, "Playback pacing").
+
 ## What changed in this round
 
-See `CHANGELOG_fix.md` for every fix, the decision log and the before/after evidence. In short:
+See `CHANGELOG_fix.md` for every fix, the decision log and the before/after evidence. The polish
+round (pacing, the drawn ball, stoppages, crowded duels, pass height) is its last section. Before that:
 one shared feature definition for training, evaluation and production (the old model was trained on
 features it never saw in production); training inputs simulated to match StatsBomb's real sparsity;
 the ball proxy built the same way in training and production; red cards and second yellows on any
@@ -75,8 +92,9 @@ anchors; carries drawn on their real path with the ball on the carrier; per-matc
 - `pipeline/` — StatsBomb loader, `build_match.py` (anchors, intervals, roles, kickoffs),
   `apply_to_match.py`, `build_payload.py`, `run_season.py`, `qa.py`.
 - `viewer/` — `viewer.html` + `app.js`, one generic viewer for every match. Opens in **Tactical
-  Clarity** (less wobble, receivers run onto passes, dead-ball stoppages compressed); **Full Realism**
-  shows every knot of the same reconstruction plus uncertainty rings.
+  Clarity** (less wobble, receivers run onto passes); **Full Realism** shows every knot of the same
+  reconstruction plus uncertainty rings. Pacing, stoppage skips, the ball model, the "on the ball"
+  halo and lofted-pass drawing are the same in both.
 - `tests/` — the Node harness that runs the real `app.js` headlessly, drivers, analyses, and the
   before (`tests/baseline/`) / after (`tests/evidence/`) evidence.
 - `models/`, `output/` — generated.

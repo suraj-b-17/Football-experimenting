@@ -6,6 +6,7 @@ Usage:
   python run_season.py                 # all 380 matches
   python run_season.py --limit 10       # first 10 (smoke test)
   python run_season.py --matches 3754348 3754129   # specific match_ids only
+  python run_season.py --workers 6              # parallel build
 """
 import argparse
 import json
@@ -59,6 +60,15 @@ reconstruction — see BENCHMARKS.md.</p>
         f.write(page)
 
 
+def _build_one(mid, competition_id, season_id):
+    t0 = time.time()
+    try:
+        _, size = build(mid, competition_id, season_id)
+        return True, size, time.time() - t0, None
+    except Exception as e:
+        return False, 0, time.time() - t0, f"{e}\n{traceback.format_exc()}"
+
+
 def write_site(built):
     import shutil
     build_index(built)
@@ -74,6 +84,7 @@ if __name__ == "__main__":
     ap.add_argument("--limit", type=int, default=None)
     ap.add_argument("--matches", nargs="*", default=None)
     ap.add_argument("--site-only", action="store_true", help="rewrite index.html + viewer files for the payloads already built")
+    ap.add_argument("--workers", type=int, default=1, help="build matches in this many parallel processes")
     args = ap.parse_args()
     if args.site_only:
         have = {f[:-3] for f in os.listdir(os.path.join(OUTPUT_DIR, "data")) if f.endswith(".js")}
@@ -89,7 +100,22 @@ if __name__ == "__main__":
         all_ids = all_ids[: args.limit]
 
     built, failed = [], []
-    for i, (mid, info) in enumerate(all_ids):
+    if args.workers > 1:
+        from concurrent.futures import ProcessPoolExecutor, as_completed
+        with ProcessPoolExecutor(args.workers) as ex:
+            futs = {ex.submit(_build_one, mid, args.competition_id, args.season_id): (mid, info) for mid, info in all_ids}
+            for i, fut in enumerate(as_completed(futs)):
+                mid, info = futs[fut]
+                ok, size, secs, err = fut.result()
+                if ok:
+                    built.append((mid, info))
+                    print(f"[{i+1}/{len(all_ids)}] {mid}: {info['home_team']['home_team_name']} "
+                          f"{info['home_score']}-{info['away_score']} {info['away_team']['away_team_name']} "
+                          f"-> {size/1e6:.2f}MB ({secs:.0f}s)", flush=True)
+                else:
+                    failed.append((mid, err))
+                    print(f"[{i+1}/{len(all_ids)}] {mid}: FAILED — {err}", flush=True)
+    for i, (mid, info) in enumerate(all_ids if args.workers <= 1 else []):
         t0 = time.time()
         try:
             path, size = build(mid, args.competition_id, args.season_id)

@@ -138,6 +138,52 @@ for (const mode of ['realism', 'tactical']) {
     [mode + '_flagged']: flagged.concat(misses),
   });
 }
+// On-screen checks under pacing (what a viewer actually sees at 1x, 60 fps):
+// speeds per second of PLAYBACK, stoppage skips excluded (dimmed, labelled
+// fast-forward), period cuts excluded. Caps +1 % for float rounding.
+for (const mode of ['realism', 'tactical']) {
+  displayMode = mode;
+  const cutsP = (MATCH_DATA.periods || []).slice(1).map(p => p.start);
+  let t = 0, frames = 0, pOver = 0, bOver = 0, pMax = 0, bMax = 0, pFrames = 0, skipPb = 0, skipMatch = 0;
+  const pv = [];
+  let prev = null, prevB = null;
+  while (t < maxT) {
+    const t1 = paceAdvance(t, DTq);
+    const skipping = inSkip(t) || inSkip(t1), cut = cutsP.some(c => t < c && t1 >= c);
+    if (skipping) { skipPb += DTq; skipMatch += t1 - t; prev = null; prevB = null; t = t1; continue; }
+    const fr = framePositions(t1, false), b = ballStateAt(t1);
+    const cur = new Map(fr.map(f => [f.tr, f]));
+    if (prev && !cut) {
+      for (const f of fr) {
+        const q = prev.get(f.tr); if (!q) continue;
+        const v = Math.hypot(f.x - q.x, f.y - q.y) / DTq, cap = Math.max(f.own, q.own) > 0.5 ? 7.5 : 8.0;
+        pFrames++; pMax = Math.max(pMax, v); if (v > cap * 1.01) pOver++;
+        if ((frames & 7) === 0) pv.push(v);
+      }
+      const vb = Math.hypot(b.x - prevB.x, b.y - prevB.y) / DTq;
+      bMax = Math.max(bMax, vb); if (vb > 30 * 1.01) bOver++;
+    }
+    prev = cur; prevB = b; t = t1; frames++;
+  }
+  pv.sort((a, b) => a - b);
+  // ball continuity at every segment boundary of the ball model
+  let disc = 0;
+  for (const g of BM.G) { const a = ballModelAt(g.ta - 1e-4), c = ballModelAt(g.ta + 1e-4); disc = Math.max(disc, Math.hypot(a.x - c.x, a.y - c.y)); }
+  const P = paceProfile(mode);
+  let stretched = 0, compressed = 0;
+  for (let i = 0; i < P.S.length && i * PACE_BIN_S < maxT; i++) { if (P.S[i] > 1.001) stretched += (P.S[i] - 1) * PACE_BIN_S; else if (P.S[i] < 0.999) compressed += (1 - P.S[i]) * PACE_BIN_S; }
+  Object.assign(res, {
+    [mode + '_onscreen_player_max_mps']: +pMax.toFixed(2), [mode + '_onscreen_player_p999_mps']: +pv[Math.floor(pv.length * 0.999)].toFixed(2),
+    [mode + '_onscreen_player_frames_over_cap']: pOver, [mode + '_onscreen_player_frames']: pFrames,
+    [mode + '_onscreen_ball_max_mps']: +bMax.toFixed(1), [mode + '_onscreen_ball_frames_over_30']: bOver,
+    [mode + '_ball_discontinuity_max_m']: +disc.toFixed(4),
+    [mode + '_playback_1x_s']: +(frames * DTq + skipPb).toFixed(1), [mode + '_match_s']: +maxT.toFixed(1),
+    [mode + '_skips']: SKIPS.length, [mode + '_skip_match_s']: +skipMatch.toFixed(1), [mode + '_skip_playback_s']: +skipPb.toFixed(1),
+    [mode + '_stretch_added_s']: +stretched.toFixed(1), [mode + '_compress_saved_s']: +compressed.toFixed(1),
+    [mode + '_pace_max_S']: +Math.max(...P.S.slice(0, Math.ceil(maxT / PACE_BIN_S))).toFixed(2), [mode + '_pace_bins_at_stretch_max']: P.capped,
+  });
+}
+Object.assign(res, { ball_model: ballStats, stoppages: STOPS.length });
 // active player counts vs substitutions / cards / player off, sampled every 10 s
 const sorted = timeline.map(i => events[i]);
 let countErrors = 0, maxActive = 0;

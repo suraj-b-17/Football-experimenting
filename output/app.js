@@ -1,14 +1,19 @@
-// Match viewer. Loads output/data/<match>.json (pipeline/build_payload.py).
+// Match viewer. Loads output/data/<match>.js (pipeline/build_payload.py).
 //
 // Both display modes draw the SAME smoothed reconstruction (per-player segments
 // on a 1 s grid plus every real anchor time, so real anchors are knots of the
 // displayed path). Differences:
 //   Full Realism     all knots, uncertainty rings.
 //   Tactical Clarity non-anchor knots thinned to every 3 s (less wobble; every
-//                    anchor kept), pass anticipation, stoppage compression with
-//                    labels, no rings.
-// In both modes a Carry is drawn from its real start to its real end over its
-// real duration, and the ball is drawn from the same ball path the model uses.
+//                    anchor kept), pass anticipation, no rings.
+// In both modes a Carry is drawn from its real start to its real end.
+//
+// Everything drawn is a pure function of the match clock (positions, ball,
+// banners, overlays). Pacing only decides how fast the match clock advances per
+// second of playback (see "pacing"): it slows down wherever something on screen
+// would otherwise move faster than real players/balls do, speeds up sustained
+// idle play a little, and skips the dead time of stoppages. It never reorders
+// events or moves a real location, and the clock is exact at every real event.
 
 // Works from file:// (double-click): match data is a plain script,
 // data/<id>.js, that sets window.MATCH_DATA_<id>. No fetch/XHR anywhere.
@@ -24,16 +29,33 @@ let currentIndex = 0, isPlaying = false, playbackSpeed = 1.0, lastTimestamp = 0;
 let showTrails = true, showUncertainty = true, matchEndsMode = true;
 let filterTeam = 'all', filterType = 'all', filterPlayer = 'all';
 let displayMode = params.get('mode') || hashParams.get('mode') || DEFAULT_MODE;
-let activeStoppage = null, activeStoppageSpeed = 0;
 let matchClock = 0;
 let events = [], timeline = [], totalEvents = 0, maxT = 6000;
 let PITCH_LEN_M = 105, PITCH_WID_M = 68;
-const BASE_SPS = 1.0;
-const MAX_SPEED_MPS = 9.5;
-const STOPPAGE_WARP_REAL_SECONDS = 1.5;
+const MAX_SPEED_MPS = 9.5;       // reconstruction curve limits (tangent clamp), unchanged
 const TACTICAL_KNOT_S = 3;
 const BALL_OFFSET_M = 0.7;
 const HARD_KINDS = new Set([0, 1, 2, 3]);
+// On-screen speed caps, from real tracking (tests/analysis/speed_caps.json:
+// Metrica + DFL/IDSSE, 1 s windows): running p99.9 = 7.9 m/s, carrying p99 =
+// 7.5 m/s (p99.9 8.5 rests on ~50 windows and includes chasing a loose ball),
+// ball p99.9 = 30.6 m/s.
+const RUN_CAP_MPS = 8.0, CARRY_CAP_MPS = 7.5, BALL_CAP_MPS = 30.0;
+// Idle play may be sped up (at most COMPRESS_MAX) only while every player
+// stays under PLAYER_COMFORT_MPS (real p90 = 3.8) and the ball under
+// BALL_COMFORT_MPS (real p90 = 12.0) for SLACK_DILATE_S either side.
+const PLAYER_COMFORT_MPS = 4.0, BALL_COMFORT_MPS = 12.0, COMPRESS_MAX = 1.5;
+const PACE_BIN_S = 0.05, PACE_CHUNK_S = 15;
+const STRETCH_DILATE_S = 0.5, STRETCH_SIGMA_S = 0.15, SLACK_DILATE_S = 2.0, SLACK_SIGMA_S = 0.6;
+const STRETCH_MAX = 12;          // beyond this a data error is retimed instead (logged)
+// Stoppages: the real play into the stoppage is shown, then the dead time is
+// skipped in SKIP_PLAYBACK_S, then the restart set-up is shown.
+const HOLD_OUT_S = 1.0, LEAD_IN_S = 1.2, SKIP_MIN_S = 3.0, SKIP_PLAYBACK_S = 1.6;
+const BANNER_FADE_S = 0.4, BANNER_AFTER_S = 1.6;
+const TOKEN_R_PX = 9, TOKEN_ACTIVE_R_PX = 12;
+const OWNER_RAMP_S = 0.15;
+const BALL_GLIDE_MPS = 15.0;
+const LOFT_SCALE = 0.4;          // screen pixels of lift per pixel of pitch metre
 // Display-only "real spacing": stretches each team's outfield shape about its
 // centroid by 1.2 (matches real team length/width/back-line spread in held-out
 // tracking) but makes held-out positional error WORSE (9.68 -> 9.91 m), so it is
@@ -62,11 +84,14 @@ async function boot() {
   maxT = MATCH_DATA.maxT;
   timeline = events.map((e, i) => i).sort((a, b) => events[a].t - events[b].t);
   prepareTracks();
+  buildStoppages();
+  buildBallModel();
   initHeader();
   buildRunningStats();
   wireControls();
   onEventChanged();
   requestAnimationFrame(render);
+  setTimeout(fillPace, 50);
 }
 
 function loadMatchScript(id) {
@@ -166,16 +191,43 @@ function curveAt(c, t) {
 
 // Trapezoidal speed profile over f in [0,1]: accelerate for fraction r, cruise,
 // decelerate for r. Peak speed = mean / (1 - r). r is chosen so the peak stays
-// <= MAX_SPEED_MPS; r=0 is constant speed.
-function rampFor(meanSpeed) { return Math.max(0, Math.min(0.25, 1 - meanSpeed / MAX_SPEED_MPS)); }
+// <= cap; r=0 is constant speed (a mean above the cap is left to pacing).
+function rampFor(meanSpeed, cap) { return Math.max(0, Math.min(0.25, 1 - meanSpeed / cap)); }
+// Integral of smoothstep(u) from 0 to x (x in [0,1]): x^3 - x^4/2, which is 0
+// at x=0, 0.5 at x=1 -- exactly half of a same-height rectangle, same as a
+// linear ramp's triangle. That's what lets this reuse the old trapezoid's
+// timing/peak-speed math unchanged (same r, same peak = 1/(1-r), same total
+// distance in duration 1) while replacing its velocity SHAPE.
+function smoothRampArea(x) { return x * x * x - x * x * x * x / 2; }
+
+// Eased trapezoid: accelerate for fraction r of the duration, cruise at peak
+// speed, decelerate for r. Unlike a plain (linear-velocity) ramp, this one's
+// velocity is a smoothstep S-curve, so acceleration itself eases to zero at
+// both ends of each ramp -- no sudden kink where cruise speed is reached or
+// left. The closer a carry's mean speed sits to its cap, the shorter r gets
+// (see rampFor), so this matters most on exactly the fastest, most visible
+// carries -- a plain trapezoid there looked like "snaps up to speed, cruises,
+// slams to a stop" (reported after watching a real build).
 function trapezoid(f, r) {
   if (r <= 1e-6) return f;
-  const k = 1 / (2 * r * (1 - r));
-  if (f < r) return f * f * k;
-  if (f > 1 - r) return 1 - (1 - f) * (1 - f) * k;
-  return (f - r / 2) / (1 - r);
+  const peak = 1 / (1 - r);
+  if (f < r) return peak * r * smoothRampArea(f / r);
+  if (f > 1 - r) return 1 - peak * r * smoothRampArea((1 - f) / r);
+  return peak * r * 0.5 + peak * (f - r);
 }
 function smoothstep(f) { f = Math.max(0, Math.min(1, f)); return f * f * (3 - 2 * f); }
+
+// Time of this player's real anchor at exactly this (own-frame) location: the
+// event time itself, unless build_match re-timed it later (D9, up to 5 s) or
+// kept an identical duplicate up to MERGE_S earlier instead. null when that
+// anchor was dropped.
+function anchorTimeNear(tr, x, y, t) {
+  const A = tr.anchors;
+  for (let i = Math.max(0, bsearch(tr.anchorT, t - 0.06)); i < A.length && A[i][0] <= t + 5; i++) {
+    if (A[i][0] >= t - 0.06 && Math.abs(A[i][1] - x) < 0.011 && Math.abs(A[i][2] - y) < 0.011) return A[i][0];
+  }
+  return null;
+}
 
 // ---- per-track preparation ---------------------------------------------------
 
@@ -210,16 +262,22 @@ function prepareTracks() {
         tr.tact.push(makeCurve(full.map(i => s.t[i]), full.map(i => s.x[i]), full.map(i => s.y[i]), null));
       }
       tr.segStart = tr.segs.map(s => s.t[0]);
-      // carries: [t0, t1, x0, y0, x1, y1, anomaly]
+      // carries: [t0, t1, x0, y0, x1, y1, anomaly]. Drawn between the times of
+      // the player's own start / carry_end anchors: those equal the event times
+      // unless build_match re-timed a physically impossible one (D9; that is
+      // also what "anomaly" carries are). A carry whose start or end anchor
+      // was dropped is left to the reconstruction (ok=false), which does not
+      // pass through that location.
       tr.carryObjs = (tr.carries || []).map(c => {
-        const [t0, t1, x0, y0, x1, y1, anom] = c;
+        const [et0, et1, x0, y0, x1, y1, anom] = c;
+        const ts = anchorTimeNear(tr, x0, y0, et0), te = anchorTimeNear(tr, x1, y1, et1);
+        const t0 = ts ?? et0, t1 = te ?? et1;
         const len = Math.hypot(x1 - x0, y1 - y0), dur = Math.max(t1 - t0, 1e-3);
         const mean = len / dur;
-        const tEnd = anom ? t0 + len / MAX_SPEED_MPS : t1;   // capped: arrives later, logged in payload.anomalies
-        const obj = { t0, t1, tEnd, x0, y0, x1, y1, len, anom: !!anom, r: anom ? 0 : rampFor(mean), ok: true };
+        const obj = { t0, t1, tEnd: t1, x0, y0, x1, y1, len, anom: !!anom, r: rampFor(mean, CARRY_CAP_MPS), ok: ts != null && te != null && t1 > t0 };
         // an inner real anchor off the straight path would be violated: keep the reconstruction there
         for (const a of tr.anchors) {
-          if (a[0] > t0 + 0.02 && a[0] < t1 - 0.02) {
+          if (obj.ok && a[0] > t0 + 0.02 && a[0] < t1 - 0.02) {
             const p = carryPathAt(obj, a[0]);
             if (Math.hypot(p[0] - a[1], p[1] - a[2]) > 0.5) { obj.ok = false; break; }
           }
@@ -232,6 +290,7 @@ function prepareTracks() {
         return { ...r, ok: !inner };
       });
       tr.recT0 = tr.recObjs.map(r => r.t_pass);
+      prepareRetime(tr);
     }
   }
 }
@@ -260,23 +319,17 @@ function activeCarry(tr, t) {
   const i = bsearch(tr.carryT0, t);
   for (let k = i; k >= 0 && k >= i - 2; k--) {
     const c = tr.carryObjs[k];
-    if (c && c.ok && t >= c.t0 && t <= c.tEnd + (c.anom ? 0.5 : 0)) return c;
+    if (c && c.ok && t >= c.t0 && t <= c.tEnd) return c;
   }
   return null;
 }
 
-function carryPosition(tr, t, base) {
+// The reconstruction passes through the carry's start and end anchors, so the
+// real carry path is position-continuous with it at both edges without any
+// blending (CHANGELOG_fix.md, D6).
+function carryPosition(tr, t) {
   const c = activeCarry(tr, t);
-  if (!c) return null;
-  if (t <= c.tEnd) {
-    // The reconstruction passes through the carry's real start (t0) and end
-    // (t1) anchors, so the real carry path is position-continuous with it at
-    // both edges without any blending; a blend weight measurably added speed
-    // above the 9.5 m/s cap on fast real carries (CHANGELOG_fix.md, D6).
-    return carryPathAt(c, t);
-  }
-  const w = smoothstep((t - c.tEnd) / 0.5);  // anomaly: blend back into the reconstruction
-  return [c.x1 + (base[0] - c.x1) * w, c.y1 + (base[1] - c.y1) * w];
+  return c ? carryPathAt(c, t) : null;
 }
 
 function anticipation(tr, t) {
@@ -287,15 +340,17 @@ function anticipation(tr, t) {
     const p0 = baseAt(tr, r.t_pass, 'tactical'), p1 = baseAt(tr, r.t_receive, 'tactical');
     const dur = r.t_receive - r.t_pass, mean = Math.hypot(p1[0] - p0[0], p1[1] - p0[1]) / dur;
     if (mean > MAX_SPEED_MPS) return null;
-    const s = trapezoid((t - r.t_pass) / dur, rampFor(mean));
+    const s = trapezoid((t - r.t_pass) / dur, rampFor(mean, RUN_CAP_MPS));
     return [p0[0] + (p1[0] - p0[0]) * s, p0[1] + (p1[1] - p0[1]) * s];
   }
   return null;
 }
 
-function playerPositionAt(tr, t) {
+// The reconstruction as built: smoothed curve, carries on their real path,
+// receiver runs (Tactical). playerPositionAt re-times this along its own path.
+function rawPlayerPositionAt(tr, t) {
   const base = baseAt(tr, t, displayMode);
-  const c = carryPosition(tr, t, base);
+  const c = carryPosition(tr, t);
   if (c) return [c[0], c[1], displayMode === 'realism' ? base[2] : null];
   if (displayMode === 'tactical') {
     const a = anticipation(tr, t);
@@ -305,46 +360,467 @@ function playerPositionAt(tr, t) {
   return base;
 }
 
+// Retiming applies ONLY to the plain reconstruction curve (baseAt): a carry
+// and a tactical-mode reception run already have their own correct, designed
+// speed profile (the S-curve trapezoid, capped at CARRY_CAP_MPS/RUN_CAP_MPS)
+// and must be checked at the REAL t, not a retimed one -- retiming them too
+// would re-pace an already-correct profile on top of itself (found via QA:
+// carry speeds jumped to 13-16 m/s, well past their 7.5 m/s cap, when this
+// wrapped both the carry and the reconstruction curve instead).
+function playerPositionAt(tr, t) {
+  const c = carryPosition(tr, t);
+  if (c) return [c[0], c[1], displayMode === 'realism' ? baseAt(tr, t, displayMode)[2] : null];
+  if (displayMode === 'tactical') {
+    const a = anticipation(tr, t);
+    if (a) return [a[0], a[1], null];
+  }
+  return baseAt(tr, retimeT(tr, t), displayMode);
+}
+
+// ---- per-player timing along the drawn path -------------------------------------
+// Applies to the plain reconstruction curve (baseAt) only -- a carry and a
+// tactical-mode reception run keep their own already-correct speed profile
+// untouched (see playerPositionAt). Each player's path between two
+// consecutive "fixed" times (every hard real anchor, plus on-pitch interval /
+// segment / period edges) keeps its exact route and its exact position at
+// both fixed times; only how fast he moves along it is re-timed. Target
+// speed = the reconstruction's own speed,
+// Gaussian-smoothed over RT_SIGMA_S, and limited near each fixed time to what
+// the neighbouring stretch of path allows him to speed up / slow down from at
+// RT_ACCEL_MPS2 (real tracking: 1 s speed changes p99 2.6, p99.9 4.1 m/s^2,
+// tests/analysis/accel_caps.json). The stretch's own length is then matched
+// exactly with a correction that vanishes at both fixed times, so speed is
+// continuous through every anchor: a player running into an event keeps
+// running through it instead of stopping dead, and a burst between two
+// anchors ramps up and down instead of snapping (found by watching a build:
+// drawn players went 0 -> 7+ m/s or 8 -> 0.6 m/s within one second).
+// Positions at every anchor are unchanged; between anchors the drawn player
+// is somewhere else along the same path (accel_diag.js reports how far).
+const RT_DT = 0.1, RT_SIGMA_S = 0.6, RT_ACCEL_MPS2 = 3.5;
+// A stretch's own u[]/v[]/tau[] control points are capped at RT_MAX_PTS,
+// independent of RT_DT: retimeT's OUTPUT is still looked up at the exact
+// continuous time asked for (baseAt is never snapped to this
+// grid), so a coarser control grid only changes how finely the pacing curve
+// ITSELF is resolved -- invisible once it's already smoothed over
+// RT_SIGMA_S. Needed because a stretch can be several minutes long (a player
+// far from any anchor is common -- BENCHMARKS.md, "77% of the time"): at
+// RT_DT resolution that is thousands of points, and rtBuild's iterative
+// solve is at least O(points) per iteration.
+const RT_MAX_PTS = 120;
+const rtState = {};
+function rtFor(tr) {
+  const M = rtState[displayMode] || (rtState[displayMode] = new Map());
+  let s = M.get(tr);
+  if (!s) { s = { geo: new Map(), iv: new Map(), bnd: new Map() }; M.set(tr, s); }
+  return s;
+}
+
+function prepareRetime(tr) {
+  const walls = [];
+  for (const [a, b] of tr.intervals) walls.push(a, b);
+  for (const s of tr.segs) walls.push(s.t[0], s.t[s.t.length - 1]);
+  for (const p of (MATCH_DATA.periods || [])) walls.push(p.start);
+  const fixed = walls.slice();
+  for (const a of tr.anchors) if (HARD_KINDS.has(a[3]) && trackActiveAt(tr, a[0])) fixed.push(a[0]);
+  // Also fix every boundary of a carry or (Tactical) reception-anticipation
+  // window: playerPositionAt checks those using the real, un-retimed t and
+  // hands off to their own already-correct position there, so retimeT must
+  // be the identity at exactly that instant too, or the retimed curve can
+  // drift metres from the raw one leading up to the hand-off and then snap
+  // (found via QA: onscreen speed up to 243 m/s exactly at a t_pass, the
+  // reception window's own start -- it belongs to the PASSER's timeline, not
+  // this player's own anchors, so it was never a wall to begin with).
+  for (const c of tr.carryObjs) if (c.ok) { fixed.push(c.t0); fixed.push(c.tEnd); }
+  for (const r of tr.recObjs) if (r.ok) { fixed.push(r.t_pass); fixed.push(r.t_receive); }
+  const uniq = arr => { arr.sort((a, b) => a - b); const o = []; for (const v of arr) if (!o.length || v - o[o.length - 1] > 1e-6) o.push(v); return o; };
+  tr.walls = uniq(walls);
+  tr.fixT = uniq(fixed);
+}
+
+function isWall(tr, t) { const i = bsearch(tr.walls, t + 1e-7); return i >= 0 && Math.abs(tr.walls[i] - t) < 1e-6; }
+
+// Smoothed speed at time x, from SMOOTH_N samples spread evenly across
+// [x-R, x+R] (clipped to [lo, hi]; no smoothing across a wall). Fixed sample
+// count regardless of window size or match duration -- a per-RT_DT-cell grid
+// here made every call's cost scale with how much of the match had been
+// visited, not with the (small, fixed) window itself: building every stretch
+// for one player over a full match went from ~1s to ~45s once long
+// off-ball stretches were common (found via QA timing out at 3+ minutes).
+const SMOOTH_N = 12;
+function smoothSpeed(tr, st, x, lo, hi) {
+  const R = 3 * RT_SIGMA_S;
+  const a = Math.max(lo, x - R), b = Math.min(hi, x + R);
+  if (b - a < 1e-6) return null;
+  const h = (b - a) / SMOOTH_N;
+  let sw = 0, sv = 0, prev = baseAt(tr, a, displayMode);
+  for (let i = 1; i <= SMOOTH_N; i++) {
+    const p = baseAt(tr, a + i * h, displayMode);
+    const c = a + (i - 0.5) * h, w = Math.exp(-0.5 * ((c - x) / RT_SIGMA_S) ** 2);
+    sv += w * Math.hypot(p[0] - prev[0], p[1] - prev[1]) / h; sw += w;
+    prev = p;
+  }
+  return sw > 1e-6 ? sv / sw : null;
+}
+
+// Geometry of fixed stretch k: times T (fixed ends + global grid points
+// inside) and cumulative arc length L.
+function rtGeo(tr, st, k) {
+  let g = st.geo.get(k);
+  if (g) return g;
+  const a = tr.fixT[k], b = tr.fixT[k + 1];
+  const step = Math.max(RT_DT, (b - a) / RT_MAX_PTS);
+  const T = [a];
+  for (let x = a + step; x < b - 1e-6; x += step) T.push(x);
+  T.push(b);
+  const L = new Float64Array(T.length);
+  let prev = baseAt(tr, a, displayMode);
+  for (let i = 1; i < T.length; i++) {
+    const p = baseAt(tr, T[i], displayMode);
+    L[i] = L[i - 1] + Math.hypot(p[0] - prev[0], p[1] - prev[1]);
+    prev = p;
+  }
+  g = { T: Float64Array.from(T), L, a, b };
+  st.geo.set(k, g);
+  return g;
+}
+
+// Wall-free region around stretch k.
+function rtRegion(tr, k) {
+  const a = tr.fixT[k], b = tr.fixT[k + 1];
+  const i = bsearch(tr.walls, a + 1e-7), j = bsearch(tr.walls, b - 1e-7) + 1;
+  return [i >= 0 ? tr.walls[i] : 0, j < tr.walls.length ? tr.walls[j] : maxT];
+}
+
+// Speed allowed at fixed time k (shared by the stretches on both sides unless
+// it is a wall): the smoothed speed, but no faster than he could still stop
+// from (or have started from) within the neighbouring stretch at RT_ACCEL.
+function rtBoundary(tr, st, k, side) {
+  const wall = isWall(tr, tr.fixT[k]);
+  const key = wall ? k + ':' + side : k;
+  if (st.bnd.has(key)) return st.bnd.get(key);
+  const nbrs = wall ? [side] : [k - 1, k].filter(j => j >= 0 && j + 1 < tr.fixT.length && trackActiveAt(tr, (tr.fixT[j] + tr.fixT[j + 1]) / 2));
+  let b = Infinity;
+  for (const j of nbrs) { const g = rtGeo(tr, st, j); b = Math.min(b, Math.sqrt(2 * RT_ACCEL_MPS2 * g.L[g.L.length - 1])); }
+  const [lo, hi] = rtRegion(tr, nbrs.length ? nbrs[0] : side);
+  const u = smoothSpeed(tr, st, tr.fixT[k], lo, hi);
+  b = Math.min(b, u == null ? 0 : u);
+  if (!Number.isFinite(b)) b = 0;
+  st.bnd.set(key, b);
+  return b;
+}
+
+let rtStats = { stretches: 0, forced_slow_jumps: 0 };
+function rtBuild(tr, st, k) {
+  const g = rtGeo(tr, st, k), T = g.T, L = g.L, n = T.length, a = g.a, b = g.b, D = b - a, dL = L[n - 1];
+  if (D < 1e-6 || n < 3 || dL < 1e-3) return null;
+  const [lo, hi] = rtRegion(tr, k);
+  const bL = rtBoundary(tr, st, k, k), bR = rtBoundary(tr, st, k + 1, k);
+  const u = new Float64Array(n);
+  for (let i = 0; i < n; i++) {
+    const s = smoothSpeed(tr, st, T[i], lo, hi);
+    u[i] = Math.max(0, Math.min(s == null ? dL / D : s, bL + RT_ACCEL_MPS2 * (T[i] - a), bR + RT_ACCEL_MPS2 * (b - T[i])));
+  }
+  u[0] = bL; u[n - 1] = bR;
+  const integ = f => { let s = 0; for (let i = 0; i + 1 < n; i++) s += (f(i) + f(i + 1)) / 2 * (T[i + 1] - T[i]); return s; };
+  const psi = (i, r) => { const s = (T[i] - a) / D; return s < r ? smoothstep(s / r) : s > 1 - r ? smoothstep((1 - s) / r) : 1; };
+  const Iu = integ(i => u[i]);
+  const v = new Float64Array(n);
+  if (dL >= Iu) {                        // needs to cover more: a smooth bump, ramps long enough for RT_ACCEL
+    let r = 0.25, beta = 0;
+    for (let it = 0; it < 6; it++) {
+      beta = (dL - Iu) / integ(i => psi(i, r));
+      r = Math.max(0.15, Math.min(0.5, 1.5 * beta / (RT_ACCEL_MPS2 * D)));
+    }
+    beta = (dL - Iu) / integ(i => psi(i, r));
+    for (let i = 0; i < n; i++) v[i] = u[i] + beta * psi(i, r);
+  } else {                               // needs to cover less: slow down in the middle
+    let r = 0.25, gamma = (Iu - dL) / integ(i => u[i] * psi(i, r));
+    if (gamma > 1) {
+      let rlo = 0.005, rhi = 0.25;
+      for (let it = 0; it < 30; it++) { const rm = (rlo + rhi) / 2; if ((Iu - dL) / integ(i => u[i] * psi(i, rm)) > 1) rhi = rm; else rlo = rm; }
+      r = rlo; gamma = (Iu - dL) / integ(i => u[i] * psi(i, r));
+    }
+    if (gamma <= 1) for (let i = 0; i < n; i++) v[i] = u[i] * (1 - gamma * psi(i, r));
+    else { for (let i = 0; i < n; i++) v[i] = u[i] * dL / Iu; rtStats.forced_slow_jumps++; }
+  }
+  const S = new Float64Array(n);
+  for (let i = 1; i < n; i++) S[i] = S[i - 1] + (v[i - 1] + v[i]) / 2 * (T[i] - T[i - 1]);
+  const scale = S[n - 1] > 1e-9 ? dL / S[n - 1] : 0;
+  const tau = new Float64Array(n);
+  let j = 0;
+  for (let i = 0; i < n; i++) {
+    const target = S[i] * scale;
+    while (j + 1 < n - 1 && L[j + 1] < target) j++;
+    const span = L[j + 1] - L[j];
+    tau[i] = span > 1e-9 ? T[j] + (T[j + 1] - T[j]) * Math.min(1, Math.max(0, (target - L[j]) / span)) : T[j];
+  }
+  tau[0] = a; tau[n - 1] = b;
+  rtStats.stretches++;
+  return { T, tau };
+}
+
+function retimeT(tr, t) {
+  const F = tr.fixT;
+  if (!F) return t;
+  const k = bsearch(F, t);
+  if (k < 0 || k + 1 >= F.length || t <= F[k] + 1e-9) return t;
+  if (!trackActiveAt(tr, (F[k] + F[k + 1]) / 2)) return t;
+  const st = rtFor(tr);
+  let iv = st.iv.get(k);
+  if (iv === undefined) { iv = rtBuild(tr, st, k); st.iv.set(k, iv); }
+  if (!iv) return t;
+  const i = bsearch(iv.T, t);
+  if (i < 0) return iv.tau[0];
+  if (i + 1 >= iv.T.length) return iv.tau[iv.T.length - 1];
+  const f = (t - iv.T[i]) / (iv.T[i + 1] - iv.T[i]);
+  return iv.tau[i] + (iv.tau[i + 1] - iv.tau[i]) * f;
+}
+
 // ---- ball ---------------------------------------------------------------------
 
 function toHomeFrame(x, y, isHome) { return isHome ? [x, y] : [PITCH_LEN_M - x, PITCH_WID_M - y]; }
 
-function ballHomeAt(t) {
-  const B = MATCH_DATA.ball, n = B.t.length;
-  if (t <= B.t[0]) return [B.x[0], B.y[0]];
-  if (t >= B.t[n - 1]) return [B.x[n - 1], B.y[n - 1]];
-  const i = bsearch(B.t, t), f = (t - B.t[i]) / (B.t[i + 1] - B.t[i]);
-  return [B.x[i] + (B.x[i + 1] - B.x[i]) * f, B.y[i] + (B.y[i + 1] - B.y[i]) * f];
+// The drawn ball. Knots are real on-ball event locations (HOME frame), each at
+// its own event time (or its player's anchor time where build_match re-timed
+// that anchor, D9). The path is a chain of segments, each starting exactly
+// where the previous one ended, so the ball can never jump:
+//   flight   Pass / Shot: to the end location over the real duration (lofted
+//            passes also get a height, see apexFor)
+//   attach   a Carry, and any gap between two on-ball events of the SAME player
+//            (a receipt, then his pass, with or without a Carry recorded): the
+//            ball is on that player's drawn path, eased from where it was to
+//            the recorded location of his next event
+//   glide    after a receipt / recovery / keeper collection when someone else
+//            acts next: on the holder, then over the last moment to the next
+//            event's location
+//   loose    after a release (clearance, block, duel, miscontrol, ...): rolls at
+//            constant speed to the next event's location over the whole gap
+// Real-data conflicts are resolved without moving any location:
+//   - Ball Receipt* with outcome Incomplete (the intended receiver; the ball
+//     never got to him) and keeper events that do not touch the ball (Shot
+//     Faced, Goal Conceded, Penalty Conceded) are not knots;
+//   - a flight followed within 0.5 s by another on-ball event ends at that
+//     event (StatsBomb often records a pass end and the receipt at one instant
+//     a few metres apart: the ball arrives at the receiver instead of arriving
+//     elsewhere and jumping); a flight cut short by the next event ends where
+//     it was at that moment;
+//   - a single touch recorded at the same instant as where the ball was, but
+//     elsewhere, is reached after distance / BALL_CAP_MPS (at most
+//     MAX_HOP_S), never earlier than recorded; faster hops are slowed on screen
+//     by pacing.
+const BALL_TYPES = new Set(['Pass', 'Ball Receipt*', 'Carry', 'Shot', 'Clearance', 'Ball Recovery', 'Interception', 'Dribble',
+  'Miscontrol', 'Goal Keeper', 'Block', 'Duel', 'Dispossessed', '50/50', 'Foul Won', 'Referee Ball-Drop', 'Shield']);
+const HOLDING_TYPES = new Set(['Ball Receipt*', 'Carry', 'Ball Recovery', 'Shield', 'Dribble', 'Interception']);
+const GK_HOLDING = new Set(['Collected', 'Smother']);
+const GK_NOT_ON_BALL = new Set(['Shot Faced', 'Goal Conceded', 'Penalty Conceded']);
+const FOLD_S = 0.5, MAX_HOP_S = 0.5;
+// A flight / hop that would need more than EXTREME_S x slow motion is a data
+// error (e.g. a 20 m pass recorded as lasting 0.01 s): its time is lengthened
+// to need exactly that, the later events waiting for it (logged).
+const EXTREME_S = 3;
+
+function apexFor(height, dur) {
+  const phys = 9.81 * dur * dur / 8;  // projectile apex for a flight lasting dur
+  if (height === 'High Pass') return Math.min(30, Math.max(1.8, phys));
+  if (height === 'Low Pass') return Math.min(1.5, phys);
+  return 0;
 }
 
-let carrierIndex = null;
-function carrierAt(t) {
-  if (!carrierIndex) {
-    carrierIndex = [];
-    for (const side of ['home', 'away']) for (const tr of MATCH_DATA[side].tracks)
-      for (const c of tr.carryObjs) if (c.ok) carrierIndex.push([c.t0, c.tEnd, tr, c]);
-    carrierIndex.sort((a, b) => a[0] - b[0]);
-    carrierIndex.t0 = carrierIndex.map(c => c[0]);
+let BM = null;               // {G: segments, ta: segment start times, owners, ownersT, knots}
+let ballStats = {};
+function buildBallModel() {
+  const byId = new Map();
+  for (const side of ['home', 'away']) for (const tr of MATCH_DATA[side].tracks) byId.set(tr.id, tr);
+  const K = [];
+  for (const e of events) {
+    if (!BALL_TYPES.has(e.type) || e.x == null) continue;
+    if (e.type === 'Ball Receipt*' && e.receiptOutcome) continue;
+    if (e.type === 'Goal Keeper' && GK_NOT_ON_BALL.has(e.gkType)) continue;
+    const tr = byId.get(e.playerId) || null;
+    const [x0, y0] = toHomeFrame(e.x, e.y, e.isHome);
+    const d = { src: e, tr, type: e.type, t0: e.t, x0, y0, t1: e.t, x1: x0, y1: y0, flight: false, carry: false, H: 0,
+      holding: HOLDING_TYPES.has(e.type) || (e.type === 'Goal Keeper' && GK_HOLDING.has(e.gkType)) };
+    // Anchor-snapping (aligning this knot's time with a D9-retimed anchor) is
+    // applied ONLY to Carry knots, whose drawn ball position must stay
+    // consistent with tr.carryObjs (which anchor-snaps the same way). Every
+    // other on-ball event uses its own raw recorded time, like
+    // common/ballpath.py's authoritative ball proxy does. Reason: a Carry's
+    // end and the following event's own start often coincide exactly (same
+    // instant, same place) and get merged into ONE anchor by
+    // build_match.resolve_collisions; anchorTimeNear's forward search (up to
+    // 5 s, to reach a legitimately far-retimed anchor) would then also match
+    // that SAME retimed anchor for the following event's raw (unretimed)
+    // time, silently pushing it seconds into the future, past other real
+    // events, corrupting this knot list's chronological order (found via
+    // season QA: onscreen ball speed up to ~2100 m/s on 101 of 380 matches).
+    if (e.type === 'Carry') {
+      const ta = tr ? anchorTimeNear(tr, e.x, e.y, e.t) : null;
+      if (ta != null) d.t0 = ta;
+    }
+    if (e.endX != null && e.dur > 0 && (e.type === 'Pass' || e.type === 'Shot' || e.type === 'Carry')) {
+      [d.x1, d.y1] = toHomeFrame(e.endX, e.endY, e.isHome);
+      d.t1 = e.t + e.dur;
+      if (e.type === 'Carry') {
+        d.carry = true;
+        const te = tr ? anchorTimeNear(tr, e.endX, e.endY, e.t + e.dur) : null;
+        if (te != null) d.t1 = te;
+      } else {
+        d.flight = true;
+        d.H = apexFor(e.passHeight, e.dur);
+      }
+      if (d.t1 <= d.t0) { d.t1 = d.t0; d.flight = d.carry = false; d.x1 = x0; d.y1 = y0; }
+    }
+    K.push(d);
   }
-  const i = bsearch(carrierIndex.t0, t);
-  for (let k = i; k >= 0 && k >= i - 3; k--) { const c = carrierIndex[k]; if (c && t >= c[0] && t <= c[1]) return c; }
-  return null;
+  K.sort((a, b) => a.t0 - b.t0);
+  const G = [];
+  let folded = 0, hops = 0, maxHop = 0, clipped = 0, lengthened = 0;
+  let pT = K.length ? K[0].t0 : 0, pX = K.length ? K[0].x0 : PITCH_LEN_M / 2, pY = K.length ? K[0].y0 : PITCH_WID_M / 2, pEv = null;
+  for (let i = 0; i < K.length; i++) {
+    const d = K[i], n = K[i + 1];
+    const tNext = n ? n.t0 : Infinity;
+    let t0 = Math.max(d.t0, pT);
+    const dist = Math.hypot(d.x0 - pX, d.y0 - pY);
+    const start = d.flight || d.carry;
+    // Delay reaching this knot's own recorded location if the gap since the
+    // last one is too short for the distance at BALL_CAP_MPS (a real StatsBomb
+    // timestamp can land two touches a couple of metres apart a few ms apart) —
+    // regardless of whether this knot itself goes on to start a flight/carry:
+    // the gap segment leading INTO a flight needs the same protection as one
+    // leading into a point touch, or an instant hand-off into a shot/pass can
+    // still spike (found via season QA on 3754348: 0.003 s for 2.7 m = 890 m/s
+    // leading straight into a Shot's own start).
+    if (dist > 0.01 && t0 - pT < dist / BALL_CAP_MPS) {
+      const want = pT + Math.min(dist / BALL_CAP_MPS, Math.max(MAX_HOP_S, dist / (BALL_CAP_MPS * EXTREME_S)));
+      const t0n = Math.min(want, Math.max(t0, tNext - 1e-3));
+      if (t0n > t0) { hops++; maxHop = Math.max(maxHop, t0n - d.t0); t0 = t0n; }
+    }
+    // gap segment: from where the ball is to this event's location
+    if (t0 > pT + 1e-6) {
+      const kind = pEv && pEv.tr && d.tr === pEv.tr ? 'attach' : pEv && pEv.tr && pEv.holding ? 'glide' : 'loose';
+      const g = { kind, ta: pT, tb: t0, A: [pX, pY], B: [d.x0, d.y0], tr: kind === 'loose' ? null : pEv.tr };
+      if (kind === 'glide') g.tg = t0 - Math.min(t0 - pT, Math.max(0.3, Math.hypot(d.x0 - pX, d.y0 - pY) / BALL_GLIDE_MPS));
+      G.push(g);
+      pX = d.x0; pY = d.y0;
+    }
+    pT = t0;
+    if (start && d.t1 > t0 + 1e-6) {
+      let t1 = d.t1, x1 = d.x1, y1 = d.y1;
+      if (d.flight && n && n.t0 - t1 > -0.05 && n.t0 - t1 < FOLD_S && n.t0 > t0 + 0.05) {
+        t1 = n.t0; x1 = n.x0; y1 = n.y0; folded++;
+      }
+      if (t1 > tNext && tNext > t0 + 1e-3) {   // the next event happens before this one ends
+        const f = (tNext - t0) / (t1 - t0);
+        x1 = pX + (x1 - pX) * f; y1 = pY + (y1 - pY) * f; t1 = tNext; clipped++;
+      }
+      const minDur = Math.hypot(x1 - pX, y1 - pY) / (BALL_CAP_MPS * EXTREME_S);
+      if (d.flight && t1 - t0 < minDur) { t1 = t0 + minDur; lengthened++; }
+      if (t1 > t0 + 1e-6) {
+        G.push(d.flight ? { kind: 'flight', ta: t0, tb: t1, A: [pX, pY], B: [x1, y1], H: d.H, src: d.src }
+          : { kind: 'attach', ta: t0, tb: t1, A: [pX, pY], B: [x1, y1], tr: d.tr, carry: true });
+        pT = t1; pX = x1; pY = y1;
+      }
+    }
+    pEv = d;
+  }
+  const owners = [];
+  for (const g of G) {
+    if (g.kind === 'attach' && g.tr) owners.push([g.ta, g.tb, g.tr]);
+    else if (g.kind === 'glide') owners.push([g.ta, g.tg, g.tr]);
+  }
+  const merged = [];
+  for (const o of owners) {
+    const m = merged[merged.length - 1];
+    if (m && m[2] === o[2] && o[0] - m[1] < 0.05) m[1] = Math.max(m[1], o[1]);
+    else if (o[1] > o[0]) merged.push([...o]);
+  }
+  for (const side of ['home', 'away']) for (const tr of MATCH_DATA[side].tracks) tr.own = [];
+  for (const o of merged) o[2].own.push([o[0], o[1]]);
+  for (const side of ['home', 'away']) for (const tr of MATCH_DATA[side].tracks) tr.ownT = tr.own.map(o => o[0]);
+  BM = { G, ta: G.map(g => g.ta), owners: merged, ownersT: merged.map(o => o[0]), first: K.length ? [K[0].x0, K[0].y0] : [pX, pY] };
+  ballStats = { knots: K.length, segments: G.length, flights_ended_at_next_event: folded, flights_cut_short: clipped,
+    touches_reached_late: hops, max_late_s: +maxHop.toFixed(3), extreme_flights_lengthened: lengthened };
 }
 
-// Ball in the HOME frame: on the carrier (small fixed offset along the carry)
-// during a carry, otherwise the model's own ball path (pass flight over the real
-// duration, at rest between events).
-function ballHomePositionAt(t) {
-  const c = carrierAt(t);
-  if (c) {
-    const [, , tr, car] = c;
-    const p = playerPositionAt(tr, t);
-    const L = Math.max(car.len, 1e-6);
-    const bx = p[0] + (car.x1 - car.x0) / L * BALL_OFFSET_M, by = p[1] + (car.y1 - car.y0) / L * BALL_OFFSET_M;
-    return toHomeFrame(bx, by, tr.isHome);
+// 0..1: how much this player is the one on the ball at t (0.15 s ramps).
+function ownerAlpha(tr, t) {
+  if (!tr.own || !tr.own.length) return 0;
+  const i = bsearch(tr.ownT, t + OWNER_RAMP_S);
+  let a = 0;
+  for (let k = i; k >= 0 && k >= i - 1; k--) {
+    const [s, e] = tr.own[k];
+    a = Math.max(a, Math.min(1, (t - s) / OWNER_RAMP_S + 1, (e - t) / OWNER_RAMP_S + 1));
   }
-  return ballHomeAt(t);
+  return Math.max(0, a);
 }
+
+function ownerAt(t) {
+  const i = bsearch(BM.ownersT, t);
+  const o = BM.owners[i];
+  return o && t <= o[1] ? o[2] : null;
+}
+
+function playerHomeAt(tr, t) { const p = playerPositionAt(tr, t); return toHomeFrame(p[0], p[1], tr.isHome); }
+
+const attachCache = { tactical: new Map(), realism: new Map() };
+// On tr's drawn path between ta and tb, eased from A (at ta) to B (at tb),
+// plus a small lead in the direction he is moving, faded out at both ends.
+function attachedBall(g, t, tb) {
+  const cache = attachCache[displayMode];
+  let c = cache.get(g);
+  if (!c) {
+    const p0 = playerHomeAt(g.tr, g.ta), p1 = playerHomeAt(g.tr, tb);
+    c = [g.A[0] - p0[0], g.A[1] - p0[1], g.kind === 'glide' ? 0 : g.B[0] - p1[0], g.kind === 'glide' ? 0 : g.B[1] - p1[1]];
+    cache.set(g, c);
+  }
+  const p = playerHomeAt(g.tr, t), q = playerHomeAt(g.tr, t - 0.2), r = playerHomeAt(g.tr, t + 0.2);
+  const w = tb > g.ta ? smoothstep((t - g.ta) / (tb - g.ta)) : (t > g.ta ? 1 : 0);
+  let x = p[0] + c[0] * (1 - w) + c[2] * w, y = p[1] + c[1] * (1 - w) + c[3] * w;
+  const vx = (r[0] - q[0]) / 0.4, vy = (r[1] - q[1]) / 0.4, v = Math.hypot(vx, vy);
+  if (v > 0.05) {
+    const off = BALL_OFFSET_M * Math.min(1, v / 1.5) * Math.max(0, Math.min(1, (t - g.ta) / 0.3, (tb - t) / 0.3));
+    x += vx / v * off; y += vy / v * off;
+  }
+  return [x, y];
+}
+
+// Ball state from the event model alone (no stoppage treatment).
+function ballModelAt(t) {
+  const G = BM.G;
+  const k = bsearch(BM.ta, t);
+  if (k < 0) return { x: BM.first[0], y: BM.first[1], h: 0, flight: null };
+  const g = G[k];
+  if (t >= g.tb) return { x: g.B[0], y: g.B[1], h: 0, flight: null };
+  const f = (t - g.ta) / (g.tb - g.ta);
+  if (g.kind === 'flight')
+    return { x: g.A[0] + (g.B[0] - g.A[0]) * f, y: g.A[1] + (g.B[1] - g.A[1]) * f, h: 4 * g.H * f * (1 - f), flight: g, f };
+  if (g.kind === 'attach') { const [x, y] = attachedBall(g, t, g.tb); return { x, y, h: 0, flight: null }; }
+  if (g.kind === 'glide') {
+    if (t <= g.tg && g.tg > g.ta + 1e-6) { const [x, y] = attachedBall(g, t, g.tg); return { x, y, h: 0, flight: null }; }
+    const P = g.tg <= g.ta + 1e-6 ? g.A : g.hold && g.hold[displayMode] || ((g.hold = g.hold || {})[displayMode] = attachedBall(g, g.tg, g.tg));
+    const s = smoothstep((t - g.tg) / (g.tb - g.tg));
+    return { x: P[0] + (g.B[0] - P[0]) * s, y: P[1] + (g.B[1] - P[1]) * s, h: 0, flight: null };
+  }
+  return { x: g.A[0] + (g.B[0] - g.A[0]) * f, y: g.A[1] + (g.B[1] - g.A[1]) * f, h: 0, flight: null };
+}
+
+// Ball in the HOME frame, including the stoppage sequence: from the moment the
+// ball goes out / the whistle, it stays where it went dead through the hold,
+// is carried to the restart spot while the dead time is skipped, and waits
+// there for the restart.
+function ballStateAt(t) {
+  const s = stoppageAt(t);
+  if (s && s.x != null) {
+    const A = s.outBall[displayMode] || (s.outBall[displayMode] = ballModelAt(s.outT));
+    const a = s.hasSkip ? s.skipA : s.outT + (s.end - s.outT) * 0.3;
+    const b = s.hasSkip ? s.skipB : s.end - (s.end - s.outT) * 0.3;
+    const w = smoothstep((t - a) / Math.max(b - a, 1e-6));
+    return { x: A.x + (s.x - A.x) * w, y: A.y + (s.y - A.y) * w, h: 0, flight: null, dead: true };
+  }
+  return ballModelAt(t);
+}
+
+function ballHomePositionAt(t) { const b = ballStateAt(t); return [b.x, b.y]; }
 
 function periodAt(t) {
   const P = MATCH_DATA.periods || [{ period: 1, start: 0, end: maxT }];
@@ -438,39 +914,58 @@ function gapToAnchor(tr, t) {
   return Math.min(a, b);
 }
 
-function sidePositionsAt(side, t) {
+// Every drawn player at t, HOME frame: {tr, x, y, sd, own (0..1 on the ball),
+// sx, sy (display-only shift from real spacing, which the ball follows)}.
+function framePositions(t, withSpacing = true) {
   const out = [];
-  for (const tr of MATCH_DATA[side].tracks) if (trackActiveAt(tr, t)) out.push([tr, playerPositionAt(tr, t)]);
-  if (!realSpacing) return out;
-  const of = out.filter(([tr]) => tr.role !== 'GK');
-  if (!of.length) return out;
-  const cx = of.reduce((s, [, p]) => s + p[0], 0) / of.length, cy = of.reduce((s, [, p]) => s + p[1], 0) / of.length;
-  return out.map(([tr, p]) => {
-    if (tr.role === 'GK') return [tr, p];
-    const w = Math.min(1, gapToAnchor(tr, t) / SPACING_FADE_S), k = 1 + (SPACING_K - 1) * w;
-    return [tr, [cx + (p[0] - cx) * k, cy + (p[1] - cy) * k, p[2]]];
-  });
+  for (const side of ['home', 'away']) {
+    const list = [];
+    for (const tr of MATCH_DATA[side].tracks) if (trackActiveAt(tr, t)) list.push([tr, playerPositionAt(tr, t)]);
+    let cx = 0, cy = 0, n = 0;
+    if (withSpacing && realSpacing) for (const [tr, p] of list) if (tr.role !== 'GK') { cx += p[0]; cy += p[1]; n++; }
+    for (const [tr, p] of list) {
+      let x = p[0], y = p[1];
+      if (n && tr.role !== 'GK') {
+        const w = Math.min(1, gapToAnchor(tr, t) / SPACING_FADE_S), k = 1 + (SPACING_K - 1) * w;
+        x = cx / n + (x - cx / n) * k; y = cy / n + (y - cy / n) * k;
+      }
+      const [hx, hy] = toHomeFrame(x, y, tr.isHome), [rx, ry] = toHomeFrame(p[0], p[1], tr.isHome);
+      out.push({ tr, x: hx, y: hy, sd: p[2], own: ownerAlpha(tr, t), sx: hx - rx, sy: hy - ry });
+    }
+  }
+  return out;
 }
 
-function drawFormations(t, currEv, period) {
-  for (const side of ['home', 'away']) {
-    const isHome = side === 'home';
-    for (const [tr, pos0] of sidePositionsAt(side, t)) {
-      const [px, py, sd] = pos0;
-      const pos = transformCoords(px, py, isHome, period);
-      drawPlayerToken(pos.px, pos.py, tr.name, isHome ? '#7B003A' : '#E30613', isHome ? '#94BEE5' : '#FFFFFF',
-        currEv.playerId === tr.id, displayMode === 'realism' ? sd : null);
-    }
+const TEAM_STYLE = { home: { main: '#7B003A', accent: '#94BEE5' }, away: { main: '#E30613', accent: '#FFFFFF' } };
+
+function drawFormations(t, currEv, period, frame) {
+  const s = stoppageBannerAt(t);
+  const restartId = s && t >= (s.hasSkip ? s.skipB : s.outT) && t <= s.end + 0.8 ? s.playerId : null;
+  const order = frame.slice().sort((a, b) => a.own - b.own);   // the player on the ball is drawn on top
+  for (const f of order) {
+    const pos = transformCoords(f.x, f.y, true, period);
+    const st = f.tr.isHome ? TEAM_STYLE.home : TEAM_STYLE.away;
+    drawPlayerToken(pos.px, pos.py, f.tr.name, st.main, st.accent, currEv.playerId === f.tr.id,
+      displayMode === 'realism' ? f.sd : null, f.own, restartId === f.tr.id ? st.accent : null);
   }
 }
 
-function drawPlayerToken(x, y, name, mainColor, accentColor, isActive, sd) {
-  const r = isActive ? 12 : 9;
+function drawPlayerToken(x, y, name, mainColor, accentColor, isActive, sd, own = 0, restartColor = null) {
+  const r = isActive ? TOKEN_ACTIVE_R_PX : TOKEN_R_PX;
   const calib = MATCH_DATA.calibration;
   if (sd !== null && sd !== undefined && calib && showUncertainty) {
     const ringR = Math.min(metersToPixels(sd * calib.k68), 55);
     ctx.beginPath(); ctx.arc(x, y, ringR, 0, Math.PI * 2);
     ctx.strokeStyle = `rgba(148,163,184,${Math.max(0.08, 0.38 - ringR / 160)})`; ctx.lineWidth = 1; ctx.stroke();
+  }
+  if (own > 0.01) {   // on the ball: soft white halo
+    const g = ctx.createRadialGradient(x, y, r, x, y, r + 9);
+    g.addColorStop(0, `rgba(255,255,255,${0.55 * own})`); g.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r + 9, 0, Math.PI * 2); ctx.fill();
+  }
+  if (restartColor) {
+    ctx.strokeStyle = restartColor; ctx.lineWidth = 2; ctx.setLineDash([4, 3]);
+    ctx.beginPath(); ctx.arc(x, y, r + 7, 0, Math.PI * 2); ctx.stroke(); ctx.setLineDash([]);
   }
   if (isActive) {
     ctx.strokeStyle = '#38BDF8'; ctx.lineWidth = 2.5;
@@ -487,35 +982,313 @@ function drawPlayerToken(x, y, name, mainColor, accentColor, isActive, sd) {
   }
 }
 
-function drawBallAndTrail(t, ev, period) {
-  if (showTrails && ev && ev.endX != null && ev.type !== 'Carry' && t >= ev.t && t <= ev.t + Math.max(ev.dur, 0.3)) {
-    const s = transformCoords(ev.x, ev.y, ev.isHome, period);
-    const [bx, by] = ballHomePositionAt(t);
-    const b = transformCoords(bx, by, true, period);
-    ctx.beginPath(); ctx.moveTo(s.px, s.py); ctx.lineTo(b.px, b.py);
+// Ball drawn at its ground position; a lofted pass is drawn raised above its
+// ground shadow by its height (apexFor: from the pass's own real duration),
+// with a dashed ground trail. Ground position, and so the flight's timing and
+// every recorded location, are the same for all heights.
+function drawBallAndTrail(t, period, frame) {
+  const b = ballStateAt(t);
+  let x = b.x, y = b.y;
+  const own = ownerAt(t);
+  if (own) { const f = frame.find(q => q.tr === own); if (f) { x += f.sx; y += f.sy; } }
+  const g = transformCoords(x, y, true, period);
+  const d = b.flight;
+  if (showTrails && d && d.src.type !== 'Carry') {
+    const ev = d.src, s = transformCoords(d.A[0], d.A[1], true, period);
+    ctx.beginPath(); ctx.moveTo(s.px, s.py); ctx.lineTo(g.px, g.py);
     ctx.strokeStyle = ev.isGoal ? '#FACC15' : ev.isShot ? '#FB923C' : ev.passOutcome === 'Complete' ? (ev.isHome ? 'rgba(148,190,229,0.85)' : 'rgba(255,255,255,0.85)') : 'rgba(239,68,68,0.7)';
-    ctx.lineWidth = ev.isShot ? 3 : 2.5; ctx.stroke();
+    ctx.lineWidth = ev.isShot ? 3 : 2.5;
+    if (d.H > 1.6) ctx.setLineDash([7, 5]);
+    ctx.stroke(); ctx.setLineDash([]);
   }
-  const [bx, by] = ballHomePositionAt(t);
-  const b = transformCoords(bx, by, true, period);
-  ctx.fillStyle = 'rgba(0,0,0,0.4)'; ctx.beginPath(); ctx.ellipse(b.px + 1, b.py + 3, 5.5, 3.3, 0, 0, Math.PI * 2); ctx.fill();
-  ctx.fillStyle = '#FFFFFF'; ctx.beginPath(); ctx.arc(b.px, b.py, 5.5, 0, Math.PI * 2); ctx.fill();
+  const lift = metersToPixels(b.h) * LOFT_SCALE, grow = 1 + Math.min(b.h, 20) / 30;
+  const sh = Math.max(0.55, 1 / (1 + b.h / 10));   // the shadow marks the true ground position
+  ctx.fillStyle = `rgba(0,0,0,${b.h > 0.3 ? 0.55 : 0.4})`;
+  ctx.beginPath(); ctx.ellipse(g.px + (b.h > 0.3 ? 0 : 1), g.py + (b.h > 0.3 ? 0 : 3), 5.5 * sh, 3.3 * sh, 0, 0, Math.PI * 2); ctx.fill();
+  if (lift > 2) {
+    ctx.strokeStyle = 'rgba(255,255,255,0.25)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(g.px, g.py); ctx.lineTo(g.px, g.py - lift); ctx.stroke();
+  }
+  ctx.fillStyle = '#FFFFFF'; ctx.beginPath(); ctx.arc(g.px, g.py - lift, 5.5 * grow, 0, Math.PI * 2); ctx.fill();
   ctx.strokeStyle = '#0F172A'; ctx.lineWidth = 1.2; ctx.stroke();
 }
 
-function findStoppageAt(t) {
-  for (const s of MATCH_DATA.stoppages || []) if (t >= s.start && t < s.end) return s;
-  return null;
+// ---- stoppages ----------------------------------------------------------------
+// Each stoppage (pipeline/build_match.detect_stoppages) is shown as:
+//   outT .. outT+HOLD_OUT_S      real play: the ball arriving out / the foul,
+//                                 an incident pulse, the banner fades in
+//   skipA .. skipB               the dead time, skipped in SKIP_PLAYBACK_S of
+//                                 playback, pitch dimmed with a "skipping" chip;
+//                                 the ball is taken to the restart spot
+//   skipB .. end                 real play: the restart set-up (LEAD_IN_S)
+//   end .. end+BANNER_AFTER_S    the restart itself, then the banner fades out
+// Short stoppages (dead time < SKIP_MIN_S) keep the banner but are not skipped.
+let STOPS = [], STOPS_OUT = [], SKIPS = [], SKIPS_A = [];
+function buildStoppages() {
+  STOPS = (MATCH_DATA.stoppages || []).map(s => {
+    const outT = s.outT != null ? s.outT : s.start;
+    const skipA = outT + HOLD_OUT_S, skipB = s.end - LEAD_IN_S;
+    const hasSkip = skipB - skipA >= SKIP_MIN_S;
+    const o = { ...s, outT, skipA, skipB, hasSkip, outBall: {} };
+    if (hasSkip) { o.D = skipB - skipA; o.P = SKIP_PLAYBACK_S; o.lam = Math.min(1, o.P / o.D); }
+    return o;
+  }).sort((a, b) => a.outT - b.outT);
+  STOPS_OUT = STOPS.map(s => s.outT);
+  SKIPS = STOPS.filter(s => s.hasSkip);
+  SKIPS_A = SKIPS.map(s => s.skipA);
 }
 
-function drawStoppageLabel(label) {
-  const text = '⏩ ' + label;
-  ctx.font = '700 15px Inter, sans-serif';
-  const boxW = ctx.measureText(text).width + 28, boxH = 32, bx = (canvas.width - boxW) / 2, by = 14;
-  ctx.fillStyle = 'rgba(15,23,42,0.88)'; ctx.strokeStyle = 'rgba(250,204,21,0.9)'; ctx.lineWidth = 1.5;
-  ctx.beginPath(); ctx.roundRect(bx, by, boxW, boxH, 8); ctx.fill(); ctx.stroke();
-  ctx.fillStyle = '#FACC15'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  ctx.fillText(text, canvas.width / 2, by + boxH / 2 + 1);
+function stoppageAt(t) {   // the stoppage whose dead ball covers t
+  const s = STOPS[bsearch(STOPS_OUT, t)];
+  return s && t <= s.end ? s : null;
+}
+function stoppageBannerAt(t) {
+  const s = STOPS[bsearch(STOPS_OUT, t)];
+  return s && t <= s.end + BANNER_AFTER_S + BANNER_FADE_S ? s : null;
+}
+function skipAt(t) {
+  const s = SKIPS[bsearch(SKIPS_A, t)];
+  return s && t < s.skipB ? s : null;
+}
+function inSkip(t) { return !!skipAt(t); }
+
+// Inside a skip, playback fraction u in [0,1] -> match time. Rate at both ends
+// equals normal speed (lam), smoothly faster in between.
+function skipMatchAt(s, u) { return s.skipA + s.D * (s.lam * u + (1 - s.lam) * smoothstep(u)); }
+function skipUAt(s, t) {
+  let lo = 0, hi = 1;
+  for (let i = 0; i < 40; i++) { const m = (lo + hi) / 2; if (skipMatchAt(s, m) < t) lo = m; else hi = m; }
+  return (lo + hi) / 2;
+}
+
+function restartText(s) {
+  const team = s.isHome ? MATCH_DATA.home.name : MATCH_DATA.away.name;
+  const other = s.isHome ? MATCH_DATA.away.name : MATCH_DATA.home.name;
+  switch (s.kind) {
+    case 'throw_in': return `Throw-in — ${team}`;
+    case 'corner': return `Corner — ${team}`;
+    case 'goal_kick': return `Goal kick — ${team}`;
+    case 'foul': return `Foul — ${team} free kick`;
+    case 'offside': return `Offside — ${team} free kick`;
+    case 'penalty': return `Penalty — ${team}`;
+    case 'goal': return `Goal — ${other} · ${team} kick off`;
+    default: return `Free kick — ${team}`;
+  }
+}
+
+function drawStoppage(t, period) {
+  const s = stoppageBannerAt(t);
+  if (!s) return;
+  const w = canvas.width, h = canvas.height;
+  // incident pulse where the ball went dead
+  if (t >= s.outT && t <= s.outT + 0.9) {
+    const A = s.outBall[displayMode] || (s.outBall[displayMode] = ballModelAt(s.outT));
+    const p = transformCoords(A.x, A.y, true, period), f = (t - s.outT) / 0.9;
+    ctx.strokeStyle = s.kind === 'foul' || s.kind === 'offside' || s.kind === 'penalty' ? `rgba(250,204,21,${1 - f})`
+      : s.kind === 'goal' ? `rgba(250,204,21,${1 - f})` : `rgba(255,255,255,${1 - f})`;
+    ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(p.px, p.py, 8 + 22 * f, 0, Math.PI * 2); ctx.stroke();
+  }
+  // skipped dead time
+  if (s.hasSkip && t >= s.skipA && t < s.skipB) {
+    const u = skipUAt(s, t), env = Math.min(1, u / 0.15, (1 - u) / 0.15);
+    ctx.fillStyle = `rgba(6,10,20,${0.45 * env})`; ctx.fillRect(0, 0, w, h);
+    const secs = Math.round(s.D), txt = `⏩  skipping ${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')} of stoppage`;
+    ctx.font = '700 14px system-ui, sans-serif';
+    const bw = ctx.measureText(txt).width + 36, bh = 40, bx = (w - bw) / 2, by = h / 2 - bh / 2;
+    ctx.globalAlpha = env;
+    ctx.fillStyle = 'rgba(15,23,42,0.92)'; ctx.beginPath(); ctx.roundRect(bx, by, bw, bh, 10); ctx.fill();
+    ctx.fillStyle = '#E2E8F0'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(txt, w / 2, by + 16);
+    ctx.fillStyle = 'rgba(148,163,184,0.35)'; ctx.fillRect(bx + 14, by + bh - 9, bw - 28, 3);
+    ctx.fillStyle = '#FACC15'; ctx.fillRect(bx + 14, by + bh - 9, (bw - 28) * u, 3);
+    ctx.globalAlpha = 1;
+  }
+  // restart banner, team-coloured, eased in and out
+  const fin = (t - s.outT) / BANNER_FADE_S, fout = (s.end + BANNER_AFTER_S + BANNER_FADE_S - t) / BANNER_FADE_S;
+  const a = smoothstep(Math.min(fin, fout));
+  if (a <= 0) return;
+  const st = s.isHome ? TEAM_STYLE.home : TEAM_STYLE.away;
+  const txt = restartText(s);
+  ctx.font = '700 16px system-ui, sans-serif';
+  const bw = ctx.measureText(txt).width + 44, bh = 36, bx = (w - bw) / 2, by = 12 - 10 * (1 - a);
+  ctx.globalAlpha = a;
+  ctx.fillStyle = 'rgba(15,23,42,0.92)'; ctx.beginPath(); ctx.roundRect(bx, by, bw, bh, 9); ctx.fill();
+  ctx.fillStyle = st.main; ctx.beginPath(); ctx.roundRect(bx, by, 12, bh, [9, 0, 0, 9]); ctx.fill();
+  ctx.strokeStyle = st.accent; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.roundRect(bx, by, bw, bh, 9); ctx.stroke();
+  ctx.fillStyle = '#F8FAFC'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(txt, w / 2 + 6, by + bh / 2 + 1);
+  ctx.globalAlpha = 1;
+}
+
+// ---- pacing -------------------------------------------------------------------
+// S(t) = playback seconds per match second, on PACE_BIN_S bins, per display
+// mode, computed lazily in PACE_CHUNK_S chunks from what is actually drawn:
+//   stretch  max over players / ball of on-screen speed / its cap (CARRY_CAP
+//            for the player on the ball, RUN_CAP otherwise, BALL_CAP). Max-
+//            filtered over +-STRETCH_DILATE_S, then Gaussian-blurred with a
+//            support inside that window, so the blurred value is still >= the
+//            raw need everywhere (the cap holds) and slow-downs ease in.
+//   slack    max of speed / comfort, clamped to [1/COMPRESS_MAX, 1], max-
+//            filtered over +-SLACK_DILATE_S (only sustained idle play) and
+//            blurred.
+//   S = max(stretch, slack), at most STRETCH_MAX. Stoppage skips are handled
+//   separately (skipMatchAt). The user's playback speed multiplies on top.
+const pace = {};
+function paceProfile(mode) {
+  if (!pace[mode]) {
+    const n = Math.ceil(maxT / PACE_BIN_S) + 2;
+    pace[mode] = { S: new Float32Array(n).fill(1), done: new Uint8Array(Math.ceil(maxT / PACE_CHUNK_S) + 1), maxRaw: 0, capped: 0 };
+  }
+  return pace[mode];
+}
+function resetPacing() { for (const k of Object.keys(pace)) delete pace[k]; }
+
+function dilateBlur(raw, R, sigma) {
+  const n = raw.length, dil = new Float32Array(n), out = new Float32Array(n);
+  for (let i = 0; i < n; i++) { let m = -Infinity; for (let k = Math.max(0, i - R); k <= Math.min(n - 1, i + R); k++) if (raw[k] > m) m = raw[k]; dil[i] = m; }
+  const W = Math.min(R, Math.ceil(3 * sigma)), ker = [];
+  let sum = 0;
+  for (let k = -W; k <= W; k++) { const v = Math.exp(-0.5 * (k / sigma) ** 2); ker.push(v); sum += v; }
+  for (let i = 0; i < n; i++) {
+    let acc = 0, ws = 0;
+    for (let k = -W; k <= W; k++) { const j = i + k; if (j < 0 || j >= n) continue; acc += dil[j] * ker[k + W]; ws += ker[k + W]; }
+    out[i] = acc / ws;
+  }
+  return out;
+}
+
+// Peak speed inside one bin [t, t + PACE_BIN_S] from 4 sub-steps (a curve can
+// peak ~15 % above its bin average); only called for things already fast.
+function subBinPeak(posAt, t) {
+  const n = 4, h = PACE_BIN_S / n;
+  let prev = posAt(t), peak = 0;
+  for (let i = 1; i <= n; i++) {
+    const p = posAt(t + i * h);
+    peak = Math.max(peak, Math.hypot(p[0] - prev[0], p[1] - prev[1]) / h);
+    prev = p;
+  }
+  return peak;
+}
+
+function computePaceChunk(mode, c) {
+  const P = paceProfile(mode);
+  const margin = STRETCH_DILATE_S + SLACK_DILATE_S;
+  const b0 = Math.max(0, Math.round((c * PACE_CHUNK_S - margin) / PACE_BIN_S));
+  const b1 = Math.min(P.S.length, Math.round(((c + 1) * PACE_CHUNK_S + margin) / PACE_BIN_S));
+  const n = b1 - b0;
+  if (n <= 0) { P.done[c] = 1; return; }
+  const prevMode = displayMode; displayMode = mode;
+  const need = new Float32Array(n), slack = new Float32Array(n).fill(1 / COMPRESS_MAX);
+  const cuts = (MATCH_DATA.periods || []).slice(1).map(p => p.start);
+  let prev = null;
+  for (let k = 0; k <= n; k++) {
+    const t = (b0 + k) * PACE_BIN_S;
+    if (t > maxT || inSkip(t)) { prev = null; if (k < n) slack[k] = 1; continue; }
+    const fr = framePositions(t, false), ball = ballStateAt(t);
+    const cur = { t, map: new Map(fr.map(f => [f.tr, f])), ball };
+    if (prev && !cuts.some(x => prev.t < x && t >= x)) {
+      const i = k - 1;
+      let nd = 0, sl = 0;
+      for (const f of fr) {
+        const q = prev.map.get(f.tr);
+        if (!q) continue;
+        const cap = Math.max(f.own, q.own) > 0.5 ? CARRY_CAP_MPS : RUN_CAP_MPS;
+        let v = Math.hypot(f.x - q.x, f.y - q.y) / PACE_BIN_S;
+        sl = Math.max(sl, v / PLAYER_COMFORT_MPS);
+        if (v > 0.6 * cap) v = Math.max(v, subBinPeak(tt => playerHomeAt(f.tr, tt), prev.t));
+        nd = Math.max(nd, v / cap);
+      }
+      let vb = Math.hypot(ball.x - prev.ball.x, ball.y - prev.ball.y) / PACE_BIN_S;
+      sl = Math.max(sl, vb / BALL_COMFORT_MPS);
+      if (vb > 0.6 * BALL_CAP_MPS) vb = Math.max(vb, subBinPeak(tt => { const s = ballStateAt(tt); return [s.x, s.y]; }, prev.t));
+      nd = Math.max(nd, vb / BALL_CAP_MPS);
+      need[i] = nd; slack[i] = Math.min(1, Math.max(1 / COMPRESS_MAX, sl));
+    } else if (k > 0) slack[k - 1] = 1;
+    prev = cur;
+  }
+  // sub-bin events: real carries and ball flights shorter than a bin
+  const lo = b0 * PACE_BIN_S, hi = b1 * PACE_BIN_S;
+  const mark = (ta, tb, v) => {
+    for (let b = Math.floor(ta / PACE_BIN_S); b <= Math.floor(tb / PACE_BIN_S); b++) if (b >= b0 && b < b1) need[b - b0] = Math.max(need[b - b0], v);
+  };
+  for (const side of ['home', 'away']) for (const tr of MATCH_DATA[side].tracks) for (const c2 of tr.carryObjs) {
+    if (!c2.ok || c2.tEnd < lo || c2.t0 > hi || c2.tEnd - c2.t0 >= 2 * PACE_BIN_S) continue;
+    mark(c2.t0, c2.tEnd, c2.len / Math.max(c2.tEnd - c2.t0, 1e-6) / (1 - c2.r) / CARRY_CAP_MPS);
+  }
+  for (let k = Math.max(0, bsearch(BM.ta, lo)); k < BM.G.length && BM.G[k].ta <= hi; k++) {
+    const g = BM.G[k], a = g.kind === 'glide' ? g.tg : g.ta, len = Math.hypot(g.B[0] - g.A[0], g.B[1] - g.A[1]);
+    if (g.tb - a >= 2 * PACE_BIN_S) continue;
+    const peak = g.kind === 'flight' || g.kind === 'loose' ? 1 : 1.5;   // smoothstep peaks at 1.5x its mean
+    mark(a, g.tb, len * peak / Math.max(g.tb - a, 1e-6) / BALL_CAP_MPS);
+  }
+  const st = dilateBlur(need, Math.round(STRETCH_DILATE_S / PACE_BIN_S), STRETCH_SIGMA_S / PACE_BIN_S);
+  const sk = dilateBlur(slack, Math.round(SLACK_DILATE_S / PACE_BIN_S), SLACK_SIGMA_S / PACE_BIN_S);
+  const c0 = Math.round(c * PACE_CHUNK_S / PACE_BIN_S), c1 = Math.min(P.S.length, Math.round((c + 1) * PACE_CHUNK_S / PACE_BIN_S));
+  for (let b = c0; b < c1; b++) {
+    const i = b - b0;
+    let S = Math.max(st[i], sk[i]);
+    P.maxRaw = Math.max(P.maxRaw, need[i]);
+    if (S > STRETCH_MAX) { S = STRETCH_MAX; P.capped++; }
+    P.S[b] = S;
+  }
+  P.done[c] = 1;
+  displayMode = prevMode;
+}
+
+function paceS(t) {
+  const P = paceProfile(displayMode);
+  const b = Math.max(0, Math.min(P.S.length - 1, Math.floor(t / PACE_BIN_S + 1e-9)));
+  const c = Math.floor(b * PACE_BIN_S / PACE_CHUNK_S + 1e-9);
+  if (!P.done[c]) computePaceChunk(displayMode, c);
+  return P.S[b];
+}
+
+// Advance the match clock by `budget` seconds of 1x playback.
+function paceAdvance(t, budget) {
+  for (let guard = 0; budget > 1e-9 && t < maxT && guard < 100000; guard++) {
+    const s = skipAt(t);
+    if (s) {
+      const u = (t <= s.skipA ? 0 : skipUAt(s, t)) + budget / s.P;
+      if (u >= 1) { budget = (u - 1) * s.P; t = s.skipB; continue; }
+      return skipMatchAt(s, u);
+    }
+    const bin = Math.floor(t / PACE_BIN_S + 1e-9);
+    const S = paceS(t);
+    let tEnd = (bin + 1) * PACE_BIN_S;
+    const ns = SKIPS[bsearch(SKIPS_A, t) + 1];
+    if (ns && ns.skipA < tEnd && ns.skipA > t) tEnd = ns.skipA;
+    if (tEnd <= t) tEnd = t + 1e-7;
+    const need = (tEnd - t) * S;
+    if (budget < need) return t + budget / S;
+    budget -= need; t = tEnd;
+  }
+  return Math.min(t, maxT);
+}
+
+// Playback seconds (1x) between two match times, for reports.
+function playbackBetween(a, b) {
+  let p = 0, t = a;
+  while (t < b - 1e-9) {
+    const s = skipAt(t);
+    if (s) { const e = Math.min(b, s.skipB); p += (skipUAt(s, e) - (t <= s.skipA ? 0 : skipUAt(s, t))) * s.P; t = e; continue; }
+    let e = Math.min(b, (Math.floor(t / PACE_BIN_S + 1e-9) + 1) * PACE_BIN_S);
+    const ns = SKIPS[bsearch(SKIPS_A, t) + 1];
+    if (ns && ns.skipA < e && ns.skipA > t) e = ns.skipA;
+    if (e <= t) e = t + 1e-7;
+    p += (e - t) * paceS(t); t = e;
+  }
+  return p;
+}
+
+// Background filler: one chunk (~20 ms) per tick, starting just ahead of the
+// playhead, so playback almost never has to compute one on the spot.
+function fillPace() {
+  const P = paceProfile(displayMode), n = P.done.length;
+  const c0 = Math.max(0, Math.floor(matchClock / PACE_CHUNK_S));
+  let worked = false;
+  for (let i = 0; i < n; i++) {
+    const c = (c0 + i) % n;
+    if (!P.done[c]) { computePaceChunk(displayMode, c); worked = true; break; }
+  }
+  setTimeout(fillPace, !worked ? 1000 : isPlaying ? 30 : 10);   // idle once this mode is complete
 }
 
 let runningStats = [];
@@ -558,30 +1331,26 @@ function currentEventAt(clock) {
 
 function render(timestamp) {
   if (!lastTimestamp) lastTimestamp = timestamp;
-  const dt = (timestamp - lastTimestamp) / 1000;
+  const dt = Math.min(0.1, (timestamp - lastTimestamp) / 1000);   // a hidden tab must not jump the match
   lastTimestamp = timestamp;
   if (isPlaying) {
-    if (displayMode === 'tactical') {
-      if (!activeStoppage) {
-        const s = findStoppageAt(matchClock);
-        if (s) { activeStoppage = s; activeStoppageSpeed = (s.end - matchClock) / STOPPAGE_WARP_REAL_SECONDS; }
-      }
-      if (activeStoppage) {
-        matchClock += dt * Math.max(BASE_SPS * playbackSpeed, activeStoppageSpeed);
-        if (matchClock >= activeStoppage.end) { matchClock = activeStoppage.end; activeStoppage = null; }
-      } else matchClock += dt * BASE_SPS * playbackSpeed;
-    } else { activeStoppage = null; matchClock += dt * BASE_SPS * playbackSpeed; }
+    matchClock = paceAdvance(matchClock, dt * playbackSpeed);
     if (matchClock >= maxT) { matchClock = maxT; pause(); }
   }
-  const newIndex = currentEventAt(matchClock);
+  drawFrame(matchClock);
+  requestAnimationFrame(render);
+}
+
+function drawFrame(t) {
+  const newIndex = currentEventAt(t);
   if (newIndex !== currentIndex) { currentIndex = newIndex; onEventChanged(); }
   const currEv = events[currentIndex] || events[0];
-  const period = periodAt(matchClock);
+  const period = periodAt(t);
+  const frame = framePositions(t);
   drawPitch(period);
-  drawFormations(matchClock, currEv, period);
-  drawBallAndTrail(matchClock, currEv, period);
-  if (displayMode === 'tactical' && activeStoppage) drawStoppageLabel(activeStoppage.label);
-  requestAnimationFrame(render);
+  drawFormations(t, currEv, period, frame);
+  drawBallAndTrail(t, period, frame);
+  drawStoppage(t, period);
 }
 
 function onEventChanged() {
@@ -645,7 +1414,7 @@ function wireControls() {
   document.querySelectorAll('.btn-mode').forEach(btn => btn.addEventListener('click', () => {
     document.querySelectorAll('.btn-mode').forEach(b => { b.classList.remove('bg-sky-500', 'text-white'); b.classList.add('text-gray-400'); });
     btn.classList.add('bg-sky-500', 'text-white'); btn.classList.remove('text-gray-400');
-    displayMode = btn.dataset.mode; activeStoppage = null;
+    displayMode = btn.dataset.mode;
   }));
   document.getElementById('select-filter-team').addEventListener('change', e => { filterTeam = e.target.value; if (!eventMatchesFilter(events[currentIndex])) jumpToIndex(findNextMatchingIndex(currentIndex, 1)); });
   document.getElementById('select-filter-type').addEventListener('change', e => { filterType = e.target.value; if (!eventMatchesFilter(events[currentIndex])) jumpToIndex(findNextMatchingIndex(currentIndex, 1)); });
